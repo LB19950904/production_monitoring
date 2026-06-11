@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>配置Java线程池</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="./layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" href="./style/myself.css" th:href="@{/style/myself.css}" media="all">
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script th:src="@{/js/html5.min.js}"></script>
+    <script th:src="@{/js/respond.min.js}"></script>
+    <![endif]-->
+    <script type="text/javascript" charset="utf-8" th:inline="javascript">
+        var ctxPath = /*[[@{/}]]*/'';
+        var endpoint = /*[[${endpoint}]]*/'';
+        var tokenValue = /*[[${_csrf.token}]]*/'';
+    </script>
+    <style>
+        .layui-form-label-my {
+            width: 120px !important;
+        }
+
+        .layui-input-block-my {
+            margin-left: 150px !important;
+        }
+
+        .layui-input-readonly {
+            color: #d2d2d2;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form" lay-filter="layuiadmin-form-java-thread-pool"
+     id="layuiadmin-form-java-thread-pool" style="padding: 20px 20px 0 0;">
+    <!-- 隐藏字段 -->
+    <div class="layui-form-item layui-hide">
+        <label class="layui-form-label layui-form-label-my" for="endpoint">应用端点</label>
+        <div class="layui-input-block layui-input-block-my">
+            <input type="hidden" id="endpoint" name="endpoint" class="layui-input"
+                   th:value="${endpoint}" readonly>
+        </div>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <label class="layui-form-label layui-form-label-my" for="instanceId">应用实例ID</label>
+        <div class="layui-input-block layui-input-block-my">
+            <input type="hidden" id="instanceId" name="instanceId" class="layui-input"
+                   th:value="${javaThreadPoolInfo.instanceId}" readonly>
+        </div>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <label class="layui-form-label layui-form-label-my" for="name">Java线程池名称</label>
+        <div class="layui-input-block layui-input-block-my">
+            <input type="hidden" id="name" name="name" class="layui-input"
+                   th:value="${javaThreadPoolInfo.name}" readonly>
+        </div>
+    </div>
+    <!-- 核心线程 -->
+    <div class="layui-form-item">
+        <label class="layui-form-label layui-form-label-my" for="corePoolSize">核心线程</label>
+        <div class="layui-input-block layui-input-block-my">
+            <input type="number" id="corePoolSize" name="corePoolSize" class="layui-input"
+                   lay-verify="required|number|corePoolSize" th:value="${javaThreadPoolInfo.corePoolSize}"
+                   autocomplete="off" min="0">
+        </div>
+    </div>
+    <!-- 最大线程 -->
+    <div class="layui-form-item">
+        <label class="layui-form-label layui-form-label-my" for="maximumPoolSize">最大线程</label>
+        <div class="layui-input-block layui-input-block-my">
+            <input type="number" id="maximumPoolSize" name="maximumPoolSize" class="layui-input"
+                   th:classappend="${javaThreadPoolInfo.queueType == 'DelayedWorkQueue'} ? 'layui-input-readonly' : ''"
+                   th:readonly="${javaThreadPoolInfo.queueType == 'DelayedWorkQueue'}"
+                   lay-verify="required|number|maximumPoolSize" th:value="${javaThreadPoolInfo.maximumPoolSize}"
+                   autocomplete="off" min="1">
+        </div>
+    </div>
+    <!-- 队列类型 -->
+    <div class="layui-form-item">
+        <label class="layui-form-label layui-form-label-my" for="queueType">队列类型</label>
+        <div class="layui-input-block layui-input-block-my">
+            <!-- DelayedWorkQueue是ScheduledThreadPoolExecutor的内部私有队列，disabled的select不会提交值，需要hidden input辅助 -->
+            <input th:if="${javaThreadPoolInfo.queueType == 'DelayedWorkQueue'}" type="hidden"
+                   name="queueType" th:value="${javaThreadPoolInfo.queueType}">
+            <select id="queueType" name="queueType" lay-filter="queueType"
+                    th:attr="lay-verify=${javaThreadPoolInfo.queueType == 'DelayedWorkQueue'} ? '' : 'required'"
+                    th:disabled="${javaThreadPoolInfo.queueType == 'DelayedWorkQueue'}">
+                <option value="">请选择</option>
+                <option th:value="DelayedWorkQueue" th:text="DelayedWorkQueue"
+                        th:selected="${javaThreadPoolInfo.queueType == 'DelayedWorkQueue'}"
+                        th:if="${javaThreadPoolInfo.queueType == 'DelayedWorkQueue'}">
+                </option>
+                <option th:value="ArrayBlockingQueue" th:text="ArrayBlockingQueue"
+                        th:selected="${javaThreadPoolInfo.queueType == 'ArrayBlockingQueue'}">
+                </option>
+                <option th:value="LinkedBlockingQueue" th:text="LinkedBlockingQueue"
+                        th:selected="${javaThreadPoolInfo.queueType == 'LinkedBlockingQueue'}">
+                </option>
+                <option th:value="LinkedBlockingDeque" th:text="LinkedBlockingDeque"
+                        th:selected="${javaThreadPoolInfo.queueType == 'LinkedBlockingDeque'}">
+                </option>
+                <option th:value="SynchronousQueue" th:text="SynchronousQueue"
+                        th:selected="${javaThreadPoolInfo.queueType == 'SynchronousQueue'}">
+                </option>
+                <option th:value="LinkedTransferQueue" th:text="LinkedTransferQueue"
+                        th:selected="${javaThreadPoolInfo.queueType == 'LinkedTransferQueue'}">
+                </option>
+                <option th:value="PriorityBlockingQueue" th:text="PriorityBlockingQueue"
+                        th:selected="${javaThreadPoolInfo.queueType == 'PriorityBlockingQueue'}">
+                </option>
+                <option th:value="ResizableLinkedBlockingQueue"
+                        th:text="'ResizableLinkedBlockingQueue(动态修改队列大小)'"
+                        th:selected="${javaThreadPoolInfo.queueType == 'ResizableLinkedBlockingQueue'}">
+                </option>
+            </select>
+        </div>
+    </div>
+    <!-- 队列容量 -->
+    <div class="layui-form-item">
+        <label class="layui-form-label layui-form-label-my" for="queueCapacity">队列容量</label>
+        <div class="layui-input-block layui-input-block-my">
+            <input type="number" id="queueCapacity" name="queueCapacity" class="layui-input"
+                   th:classappend="${javaThreadPoolInfo.queueType == 'DelayedWorkQueue' or javaThreadPoolInfo.queueType == 'SynchronousQueue' or javaThreadPoolInfo.queueType == 'LinkedTransferQueue'} ? 'layui-input-readonly' : ''"
+                   th:readonly="${javaThreadPoolInfo.queueType == 'DelayedWorkQueue' or javaThreadPoolInfo.queueType == 'SynchronousQueue' or javaThreadPoolInfo.queueType == 'LinkedTransferQueue'}"
+                   lay-verify="required|number" th:value="${javaThreadPoolInfo.queueCapacity}"
+                   autocomplete="off" min="0">
+        </div>
+    </div>
+    <!-- 核心线程空闲回收 -->
+    <div class="layui-form-item">
+        <label class="layui-form-label layui-form-label-my" for="allowCoreThreadTimeOut">核心线程空闲回收</label>
+        <div class="layui-input-block layui-input-block-my">
+            <input type="checkbox" id="allowCoreThreadTimeOut" name="allowCoreThreadTimeOut" lay-skin="switch"
+                   lay-text="回收|不回收" th:checked="${javaThreadPoolInfo.allowCoreThreadTimeOut}">
+        </div>
+    </div>
+    <!-- 空闲回收 -->
+    <div class="layui-form-item">
+        <label class="layui-form-label layui-form-label-my" for="keepAliveTime">空闲回收(秒)</label>
+        <div class="layui-input-block layui-input-block-my">
+            <input type="number" id="keepAliveTime" name="keepAliveTime" class="layui-input"
+                   lay-verify="required|number" th:value="${javaThreadPoolInfo.keepAliveTime}"
+                   autocomplete="off" min="0">
+        </div>
+    </div>
+    <!-- 拒绝策略 -->
+    <div class="layui-form-item">
+        <label class="layui-form-label layui-form-label-my" for="rejectedExecutionHandlerName">拒绝策略</label>
+        <div class="layui-input-block layui-input-block-my">
+            <select id="rejectedExecutionHandlerName" name="rejectedExecutionHandlerName" lay-verify="required">
+                <option value="">请选择</option>
+                <option th:value="AbortPolicy" th:text="AbortPolicy"
+                        th:selected="${javaThreadPoolInfo.rejectedExecutionHandlerName == 'AbortPolicy'}">
+                </option>
+                <option th:value="CallerRunsPolicy" th:text="CallerRunsPolicy"
+                        th:selected="${javaThreadPoolInfo.rejectedExecutionHandlerName == 'CallerRunsPolicy'}">
+                </option>
+                <option th:value="DiscardOldestPolicy" th:text="DiscardOldestPolicy"
+                        th:selected="${javaThreadPoolInfo.rejectedExecutionHandlerName == 'DiscardOldestPolicy'}">
+                </option>
+                <option th:value="DiscardPolicy" th:text="DiscardPolicy"
+                        th:selected="${javaThreadPoolInfo.rejectedExecutionHandlerName == 'DiscardPolicy'}">
+                </option>
+                <option th:value="RunsOldestTaskPolicy" th:text="RunsOldestTaskPolicy"
+                        th:selected="${javaThreadPoolInfo.rejectedExecutionHandlerName == 'RunsOldestTaskPolicy'}">
+                </option>
+                <option th:value="SyncPutQueuePolicy" th:text="SyncPutQueuePolicy"
+                        th:selected="${javaThreadPoolInfo.rejectedExecutionHandlerName == 'SyncPutQueuePolicy'}">
+                </option>
+                <option th:value="CustomRejectedPolicy" th:text="'CustomRejectedPolicy(自定义SPI策略)'"
+                        th:selected="${javaThreadPoolInfo.rejectedExecutionHandlerName == 'CustomRejectedPolicy'}">
+                </option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-front-submit" id="LAY-front-submit" value="确认">
+    </div>
+</div>
+<script th:src="@{/layui/layui.js}"></script>
+<script type="text/javascript" charset="utf-8" th:inline="javascript">
+    layui.config({
+        base: ctxPath //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form'], function () {
+        var form = layui.form, $ = layui.$;
+        // 核心线程自定义校验：不能大于最大线程
+        form.verify({
+            corePoolSize: function (value) {
+                var max = parseInt($('#maximumPoolSize').val());
+                if (parseInt(value) > max) {
+                    return '核心线程不能大于最大线程';
+                }
+            },
+            maximumPoolSize: function (value) {
+                var core = parseInt($('#corePoolSize').val());
+                if (parseInt(value) < core) {
+                    return '最大线程不能小于核心线程';
+                }
+            }
+        });
+        // 队列类型切换时，联动队列容量字段的可编辑状态
+        form.on('select(queueType)', function (data) {
+            var queueCapacityInput = $('#queueCapacity');
+            var selectedType = data.value;
+            // SynchronousQueue 和 LinkedTransferQueue 不支持容量设置
+            if (selectedType === 'SynchronousQueue' || selectedType === 'LinkedTransferQueue') {
+                queueCapacityInput.val(0);
+                queueCapacityInput.addClass('layui-input-readonly').prop('readonly', true);
+            } else {
+                queueCapacityInput.removeClass('layui-input-readonly').prop('readonly', false);
+            }
+        });
+        form.render();
+    });
+</script>
+</body>
+</html>

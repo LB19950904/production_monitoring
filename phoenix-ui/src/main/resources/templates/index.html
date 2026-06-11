@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="utf-8">
+    <title th:text="#{common.projectName}">生产通讯保障系统</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="icon" th:href="@{/favicon16.png}" type="image/png" sizes="16x16">
+    <link rel="icon" th:href="@{/favicon32.png}" type="image/png" sizes="32x32">
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">
+    <link rel="icon" th:href="@{/favicon.svg}" type="image/svg+xml" sizes="128x128">
+    <link rel="alternate icon" th:href="@{/favicon.ico}" sizes="any">
+    <link rel="shortcut icon" th:href="@{/favicon.ico}" type="image/x-icon">
+    <link rel="shortcut icon" th:href="@{/favicon.ico}" type="image/vnd.microsoft.icon">
+    <link rel="apple-touch-icon" th:href="@{/apple-touch-icon.png}" type="image/png" sizes="128x128">
+    <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon">
+    <link rel="dns-prefetch" th:href="@{/favicon32.png}" type="image/png" sizes="32x32">
+    <link rel="stylesheet" href="./layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" href="./style/admin.css" th:href="@{/style/admin.css}" media="all">
+    <link rel="stylesheet" href="./style/myself.css" th:href="@{/style/myself.css}" media="all">
+    <!-- 引入国际化工具 -->
+    <script th:src="@{/js/i18n/i18n-config.js}"></script>
+    <script th:src="@{/js/i18n/i18n-utils.js}"></script>
+    <script th:src="@{/js/i18n/i18n-menu.js}"></script>
+    <script th:src="@{/js/i18n/messages/zh_CN.js}"></script>
+    <script th:src="@{/js/i18n/messages/en_US.js}"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="./js/html5.min.js" th:src="@{/js/html5.min.js}"></script>
+    <script src="./js/respond.min.js" th:src="@{/js/respond.min.js}"></script>
+    <![endif]-->
+    <script type="text/javascript" charset="utf-8" th:inline="javascript">
+        var ctxPath = /*[[@{/}]]*/'';
+    </script>
+</head>
+<body class="layui-layout-body">
+<div id="LAY_app">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <!-- 头部区域 -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item layadmin-flexible" lay-unselect>
+                    <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+                        <img src="/images/new-ui/pack-up.png" alt="侧边伸缩"/>
+                    </a>
+                </li>
+                <li class="layui-nav-item" lay-unselect>
+                    <a href="javascript:;" layadmin-event="refresh" title="刷新">
+                        <img src="/images/new-ui/refresh.png" alt="刷新"/>
+                    </a>
+                </li>
+            </ul>
+            <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+                <!-- 语言切换器 -->
+                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <div th:replace="~{fragments/language-switcher :: language-switcher}"></div>
+                </li>
+                <!--<li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a href="javascript:;" layadmin-event="theme">
+                        <img src="/images/new-ui/palette.png" alt="调色盘"/>
+                    </a>
+                </li>-->
+                <!--<li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a href="javascript:;" layadmin-event="note">
+                        <img src="/images/new-ui/note.png" alt="笔记"/>
+                    </a>
+                </li>-->
+                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a href="javascript:;" layadmin-event="fullscreen">
+                        <img src="/images/new-ui/full-screen.png" alt="全屏"/>
+                    </a>
+                </li>
+                <li style="margin-right: 10px" class="layui-nav-item" lay-unselect>
+                    <a href="javascript:;" style="display: flex; align-items: center; gap: 8px;">
+                        <img src="/images/new-ui/avatar.png" alt="用户" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;"/>
+                        <cite sec:authentication="principal.usrname">超级管理员</cite>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a th:attr="lay-href=@{/myself/info}" th:text="#{user.profile}">基本资料</a></dd>
+                        <dd><a th:attr="lay-href=@{/myself/password}" th:text="#{user.modify.password}">修改密码</a></dd>
+                        <hr>
+                        <dd style="text-align: center;"><a href="javascript:;" id="logout" th:text="#{menu.logout}">退出</a></dd>
+                        <!-- 一个隐藏的表单，用来提交退出登录请求 -->
+                        <form th:action="@{/logout}" method="post" style="display: none;">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            <input type="submit" value="提交" id="logout-submit">
+                        </form>
+                    </dl>
+                </li>
+                <!--<li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a href="javascript:;" layadmin-event="about">
+                        &lt;!&ndash;<i class="layui-icon layui-icon-more-vertical"></i>&ndash;&gt;
+                        <img src="/images/new-ui/more-options.png" alt="更多"/>
+                    </a>
+                </li>-->
+                <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-unselect>
+                    <a href="javascript:;" layadmin-event="more">
+                        <i class="layui-icon layui-icon-more-vertical"></i></a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 侧边菜单 -->
+        <div class="layui-side layui-side-menu">
+            <div class="layui-side-scroll">
+                <div class="layui-logo" th:attr="lay-href=@{/home}">
+                    <span th:text="#{common.projectName}">生产通讯保障系统</span>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu"
+                    lay-filter="layadmin-system-side-menu">
+                    <li data-name="home" class="layui-nav-item layui-nav-itemed my-menu-font-size">
+                        <a href="javascript:;" lay-tips="" lay-direction="2"
+                           th:attr="lay-href=@{/home}">
+                            <i class="layui-icon layui-icon-home"></i>
+                            <cite th:text="#{menu.home}">主页</cite>
+                        </a>
+                    </li>
+                    <li data-name="server" class="layui-nav-item my-menu-font-size">
+                        <a href="javascript:;" lay-tips="" lay-direction="2"
+                           th:attr="lay-href=@{/monitor-server/list}">
+                            <i class="layui-icon layui-icon-server"></i>
+                            <cite th:text="#{menu.server}">服务器</cite>
+                        </a>
+                    </li>
+                    <li data-name="instance" class="layui-nav-item my-menu-font-size">
+                        <a href="javascript:;" lay-tips="" lay-direction="2"
+                           th:attr="lay-href=@{/monitor-instance/list}">
+                            <i class="layui-icon layui-icon-app"></i>
+                            <cite th:text="#{menu.instance}">应用程序</cite>
+                        </a>
+                    </li>
+                    <li data-name="database" class="layui-nav-item my-menu-font-size">
+                        <a href="javascript:;" lay-tips="" lay-direction="2"
+                           th:attr="lay-href=@{/monitor-db/list}">
+                            <i class="layui-icon layui-icon-db"></i>
+                            <cite th:text="#{menu.database}">数据库</cite>
+                        </a>
+                    </li>
+                    <li data-name="network" class="layui-nav-item my-menu-font-size">
+                        <a href="javascript:;" lay-tips="" lay-direction="2"
+                           th:attr="lay-href=@{/monitor-network/list}">
+                            <i class="layui-icon layui-icon-website"></i>
+                            <cite th:text="#{menu.network}">网络(PING)</cite>
+                        </a>
+                    </li>
+                    <li data-name="tcp" class="layui-nav-item my-menu-font-size">
+                        <a href="javascript:;" lay-tips="" lay-direction="2"
+                           th:attr="lay-href=@{/monitor-tcp/list}">
+                            <i class="layui-icon layui-icon-tcp"></i>
+                            <cite th:text="#{menu.tcp}">端口(TCP)</cite>
+                        </a>
+                    </li>
+                    <li data-name="http" class="layui-nav-item my-menu-font-size">
+                        <a href="javascript:;" lay-tips="" lay-direction="2"
+                           th:attr="lay-href=@{/monitor-http/list}">
+                            <i class="layui-icon layui-icon-http"></i>
+                            <cite th:text="#{menu.http}">接口(HTTP)</cite>
+                        </a>
+                    </li>
+                    <li data-name="docker" class="layui-nav-item my-menu-font-size">
+                        <a href="javascript:;" lay-tips="" lay-direction="2">
+                            <i class="layui-icon layui-icon-docker"></i>
+                            <cite th:text="#{menu.docker}">DOCKER</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a th:attr="lay-href=@{/monitor-docker/list}" th:text="#{docker.services}">服务</a>
+                            </dd>
+                            <dd>
+                                <a th:attr="lay-href=@{/monitor-docker-container/list}" th:text="#{docker.containers}">容器</a>
+                            </dd>
+                            <dd>
+                                <a th:attr="lay-href=@{/monitor-docker-image/list}" th:text="#{docker.images}">镜像</a>
+                            </dd>
+                            <dd>
+                                <a th:attr="lay-href=@{/monitor-docker-event/list}" th:text="#{docker.events}">事件</a>
+                            </dd>
+                            <dd>
+                                <a th:attr="lay-href=@{/monitor-docker-stats/list}" th:text="#{docker.resources}">资源</a>
+                            </dd>
+                        </dl>
+                    </li>
+                    <li data-name="network-device" class="layui-nav-item my-menu-font-size">
+                        <a href="javascript:;" lay-tips="" lay-direction="2"
+                           th:attr="lay-href=@{/monitor-network-device/list}">
+                            <i class="layui-icon layui-icon-network-device"></i>
+                            <cite th:text="#{menu.networkDevice}">网络设备</cite>
+                        </a>
+                    </li>
+                    <li data-name="topology" class="layui-nav-item my-menu-font-size">
+                        <a href="javascript:;" lay-tips="" lay-direction="2">
+                            <i class="layui-icon layui-icon-topology"></i>
+                            <cite th:text="#{menu.topology}">拓扑图</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a th:attr="lay-href=@{/monitor-topology/topology-server}" th:text="#{topology.servers}">服务器拓扑图</a>
+                            </dd>
+                            <dd>
+                                <a th:attr="lay-href=@{/monitor-topology/topology-instance}" th:text="#{topology.application}">应用程序拓扑图</a>
+                            </dd>
+                            <dd>
+                                <a th:attr="lay-href=@{/monitor-topology/topology-network}" th:text="#{topology.network}">网络拓扑图</a>
+                            </dd>
+                            <dd>
+                                <a th:attr="lay-href=@{/monitor-topology/topology-tcp}" th:text="#{topology.port}">端口拓扑图</a>
+                            </dd>
+                            <dd>
+                                <a th:attr="lay-href=@{/monitor-topology/topology-http}" th:text="#{topology.interface}">接口拓扑图</a>
+                            </dd>
+                        </dl>
+                    </li>
+                    <li data-name="alarm" class="layui-nav-item my-menu-font-size">
+                        <a href="javascript:;" lay-tips="" lay-direction="2"
+                           th:attr="lay-href=@{/monitor-alarm-record/list}">
+                            <i class="layui-icon layui-icon-notice"></i>
+                            <cite th:text="#{menu.alarm}">告警</cite>
+                        </a>
+                    </li>
+                    <li data-name="set" class="layui-nav-item my-menu-font-size" sec:authorize="hasAuthority('超级管理员')">
+                        <a href="javascript:;" lay-tips="" lay-direction="2">
+                            <i class="layui-icon layui-icon-set"></i>
+                            <cite th:text="#{menu.config}">配置管理</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a th:attr="lay-href=@{/monitor-env/list}" th:text="#{config.envManagement}">环境管理</a>
+                            </dd>
+                            <dd>
+                                <a th:attr="lay-href=@{/monitor-group/list}" th:text="#{config.groupManagement}">分组管理</a>
+                            </dd>
+                            <dd>
+                                <a th:attr="lay-href=@{/monitor-config/config}" th:text="#{config.monitorConfig}">监控配置</a>
+                            </dd>
+                            <dd>
+                                <a th:attr="lay-href=@{/monitor-alarm-definition/list}" th:text="#{config.alarmDefinition}">告警定义</a>
+                            </dd>
+                        </dl>
+                    </li>
+                    <li data-name="user" class="layui-nav-item my-menu-font-size" sec:authorize="hasAuthority('超级管理员')">
+                        <a href="javascript:;" lay-tips="" lay-direction="2">
+                            <i class="layui-icon layui-icon-user"></i>
+                            <cite th:text="#{menu.user}">用户管理</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a th:attr="lay-href=@{/user/list}" th:text="#{menu.userList}">用户</a>
+                            </dd>
+                            <dd>
+                                <a th:attr="lay-href=@{/role/list}" th:text="#{menu.roleList}">角色</a>
+                            </dd>
+                        </dl>
+                    </li>
+                    <li data-name="log" class="layui-nav-item my-menu-font-size" sec:authorize="hasAuthority('超级管理员')">
+                        <a href="javascript:;" lay-tips="" lay-direction="2">
+                            <i class="layui-icon layui-icon-log-my"></i>
+                            <cite th:text="#{menu.log}">日志</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a th:attr="lay-href=@{/monitor-log-operation/list}" th:text="#{menu.operationLog}">操作日志</a>
+                            </dd>
+                            <dd>
+                                <a th:attr="lay-href=@{/monitor-log-exception/list}" th:text="#{menu.exceptionLog}">异常日志</a>
+                            </dd>
+                        </dl>
+                    </li>
+                    <!--<li data-name="druid" class="layui-nav-item my-menu-font-size" sec:authorize="hasAuthority('超级管理员')">
+                        <a href="javascript:;" lay-tips="" lay-direction="2"
+                           th:attr="lay-href=@{/druid/webapp.html}">
+                            <i class="layui-icon layui-icon-snowflake"></i>
+                            <cite th:text="#{menu.druid}">Druid</cite>
+                        </a>
+                    </li>
+                    <li data-name="Knife4j" class="layui-nav-item my-menu-font-size" sec:authorize="hasAuthority('超级管理员')">
+                        <a href="javascript:;" lay-tips="" lay-direction="2"
+                           th:attr="lay-href=@{/doc.html}">
+                            <i class="layui-icon layui-icon-component"></i>
+                            <cite th:text="#{menu.knife4j}">Knife4j</cite>
+                        </a>
+                    </li>-->
+                    <li data-name="myself" class="layui-nav-item my-menu-font-size">
+                        <a href="javascript:;" lay-tips="我的" lay-direction="2">
+                            <i class="layui-icon layui-icon-username"></i>
+                            <cite th:text="#{menu.my}">我的</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a th:attr="lay-href=@{/myself/info}" th:text="#{user.profile}">基本资料</a>
+                            </dd>
+                            <dd>
+                                <a th:attr="lay-href=@{/myself/password}" th:text="#{user.modify.password}">修改密码</a>
+                            </dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 页面标签 -->
+        <div class="layadmin-pagetabs" id="LAY_app_tabs">
+            <div class="layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage">
+                <img src="/images/new-ui/左翻页.png" alt=""/>
+            </div>
+            <div class="layadmin-tabs-control layui-icon-next" layadmin-event="rightPage">
+                <img src="/images/new-ui/右翻页.png" alt=""/>
+            </div>
+            <div class="layui-icon layadmin-tabs-control layui-icon-down">
+                <img src="/images/new-ui/tag下拉.png" alt=""/>
+                <div class="dropdown-menu">
+                    <dl class="layui-nav-child layui-anim-fadein">
+                        <dd layadmin-event="closeThisTabs"><a href="javascript:;">关闭当前标签页</a></dd>
+                        <dd layadmin-event="closeOtherTabs"><a href="javascript:;">关闭其它标签页</a></dd>
+                        <dd layadmin-event="closeAllTabs"><a href="javascript:;">关闭全部标签页</a></dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
+                <ul class="layui-tab-title" id="LAY_app_tabsheader">
+                    <li th:attr="lay-id=@{/home},lay-attr=@{/home}" class="layui-this"><i
+                            class="layui-icon layui-icon-home"></i><span class="tab-text" th:text="#{menu.home}">主页</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 主体内容 -->
+        <div class="layui-body" id="LAY_app_body">
+            <div class="layadmin-tabsbody-item layui-show">
+                <iframe th:src="@{/home}" frameborder="0" class="layadmin-iframe"></iframe>
+            </div>
+        </div>
+
+        <!-- 辅助元素，一般用于移动设备下遮罩 -->
+        <div class="layadmin-body-shade" layadmin-event="shade"></div>
+    </div>
+</div>
+<script src="./layui/layui.js" th:src="@{/layui/layui.js}" charset="utf-8"></script>
+<script charset="utf-8" th:inline="javascript">
+    // 初始化国际化配置
+    I18nConfig.init();
+    console.log('I18n initialized:', I18nConfig.getCurrentLocale());
+
+    layui.config({
+        base: ctxPath //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['jquery', 'index', 'layer'], function () {
+        var $ = layui.$, layer = layui.layer;
+
+        // 翻译退出确认对话框
+        $('#logout').click(function () {
+            var confirmMsg = I18nUtils.t('system.operation.confirm') || '确定要退出登录吗？';
+            var confirmBtn = I18nUtils.t('common.confirm') || '确定';
+            var cancelBtn = I18nUtils.t('common.cancel') || '取消';
+
+            layer.confirm(confirmMsg, {
+                btn: [confirmBtn, cancelBtn]
+            }, function () {
+                // 触发表单提交
+                $('#logout-submit').click();
+            }, function (index) {
+                layer.close(index);
+            });
+        });
+
+        // 初始化菜单国际化
+        if (typeof I18nMenu !== 'undefined') {
+            I18nMenu.init();
+        }
+    });
+
+    // 定义语言切换函数
+    window.changeLanguage = function(lang) {
+        // 设置Cookie
+        document.cookie = "language=" + lang + "; path=/; max-age=2592000";
+        // 刷新页面
+        location.reload();
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>新增网络设备信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="./layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" href="./style/myself.css" th:href="@{/style/myself.css}" media="all">
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script th:src="@{/js/html5.min.js}"></script>
+    <script th:src="@{/js/respond.min.js}"></script>
+    <![endif]-->
+    <script type="text/javascript" charset="utf-8" th:inline="javascript">
+        var ctxPath = /*[[@{/}]]*/'';
+    </script>
+</head>
+<body>
+<div class="layui-form" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin"
+     style="padding: 20px 20px 0 0;">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label" for="ipTarget">IP</label>
+            <div class="layui-input-inline">
+                <input type="text" id="ipTarget" name="ipTarget" class="layui-input" autocomplete="off"
+                       lay-verify="ip" lay-verType="tips">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label" for="cpPort">端口号</label>
+            <div class="layui-input-inline">
+                <input type="number" id="cpPort" name="cpPort" class="layui-input" autocomplete="off"
+                       value="161" lay-verify="port" lay-verType="tips">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label" for="cpName">通信协议</label>
+            <div class="layui-input-inline">
+                <select id="cpName" name="cpName">
+                    <option value="SNMP(UDP)">SNMP(UDP)</option>
+                    <option value="SNMP(TCP)">SNMP(TCP)</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label" for="cpVersion">协议版本</label>
+            <div class="layui-input-inline">
+                <select id="cpVersion" name="cpVersion">
+                    <option value="version2c">version2c</option>
+                    <option value="version3">version3</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="cpCommunity">社区字符串</label>
+        <div class="layui-input-block">
+            <input type="text" id="cpCommunity" name="cpCommunity" class="layui-input" autocomplete="off"
+                   value="public">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="mib-oid"></label>
+        <div class="layui-input-block">
+            <div class="layui-btn-group">
+                <button id="mib-oid" type="button" class="layui-btn layui-btn-primary layui-btn-sm">
+                    <i class="layui-icon">&#xe654;</i>配置OID
+                </button>
+            </div>
+            <strong id="mib-oid-config-tip" style="color: red;padding-left: 10px;display: none;">
+                您可以自定义 MIB OID，否则将使用默认值。
+            </strong>
+            <input type="hidden" id="oid" name="oid">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="networkDeviceType">设备类型</label>
+        <div class="layui-input-block">
+            <input type="text" id="networkDeviceType" name="networkDeviceType" class="layui-input" autocomplete="off">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="monitorEnv">环境</label>
+        <div class="layui-input-inline">
+            <select id="monitorEnv" name="monitorEnv">
+                <option value="">不设置</option>
+                <option th:each="monitorEnv:${monitorEnvs}" th:value="${monitorEnv}"
+                        th:text="${monitorEnv}"></option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="monitorGroup">分组</label>
+        <div class="layui-input-inline">
+            <select id="monitorGroup" name="monitorGroup">
+                <option value="">不设置</option>
+                <option th:each="monitorGroup:${monitorGroups}" th:value="${monitorGroup}"
+                        th:text="${monitorGroup}"></option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="isEnableMonitor">是否监控</label>
+        <div class="layui-input-inline">
+            <input type="checkbox" name="isEnableMonitor" lay-text="是|否"
+                   id="isEnableMonitor" value="1" checked="checked" lay-skin="switch">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="isEnableAlarm">是否告警</label>
+        <div class="layui-input-inline">
+            <input type="checkbox" name="isEnableAlarm" lay-text="是|否"
+                   id="isEnableAlarm" value="1" checked="checked" lay-skin="switch">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="networkDeviceSummary">描述</label>
+        <div class="layui-input-block">
+            <textarea id="networkDeviceSummary" name="networkDeviceSummary" placeholder="请输入描述"
+                      maxlength="500" class="layui-textarea" autocomplete="off"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-front-submit" id="LAY-front-submit" value="确认">
+    </div>
+</div>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/js/js-yaml.min.js}" charset="utf-8"></script>
+<script charset="utf-8" th:inline="javascript">
+    layui.config({
+        base: ctxPath //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form'], function () {
+        var form = layui.form, $ = layui.$;
+        // 校验IP地址合法性
+        form.verify({
+            ip: function (value) {
+                var reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+                if (!reg.test(value)) {
+                    return '请输入合法IP';
+                }
+            },
+            port: function (value) {
+                var reg = /^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/;
+                if (!reg.test(value)) {
+                    return '请输入合法端口';
+                }
+            }
+        });
+        var $mibOid = $('#mib-oid');
+        // 监听光标移入事件
+        $mibOid.on('mouseenter', function () {
+            $('#mib-oid-config-tip').show();
+        });
+        // 监听光标移出事件
+        $mibOid.on('mouseleave', function () {
+            $('#mib-oid-config-tip').hide();
+        });
+        // 点击配置OID
+        $mibOid.on('click', function () {
+            window.parent.layer.open({
+                type: 2,
+                title: 'MIB OID配置',
+                content: ctxPath + 'monitor-network-device/mib-oid-config',
+                maxmin: true,
+                area: ['100%', '100%'],
+                btn: ['确定', '取消'],
+                yes: function (index, layero) {
+                    var iframeWindow = window.parent.window['layui-layer-iframe' + index],
+                        submitID = 'LAY-front-submit',
+                        submit = layero.find('iframe').contents().find('#' + submitID);
+                    //监听提交
+                    iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                        //获取提交的字段
+                        var field = data.field;
+                        var mibOidValid = field.mibOidValid;
+                        if (mibOidValid === '0') {
+                            window.parent.layer.msg('YAML格式错误！', {icon: 5, shift: 6});
+                            return;
+                        }
+                        var mibOidTextarea = field.mibOidTextarea;
+                        var jsonData = jsyaml.load(mibOidTextarea);
+                        // 显示 JSON 预览
+                        jsonData = JSON.stringify(jsonData, null, 2);
+                        // 设置到input
+                        $('#oid').val(jsonData);
+                        window.parent.layer.msg('MIB OID配置成功！', {icon: 6});
+                        //关闭弹层
+                        window.parent.layer.close(index);
+                    });
+                    submit.trigger('click');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

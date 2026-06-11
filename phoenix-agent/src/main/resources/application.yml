@@ -1,0 +1,110 @@
+##############################################server配置#################################################
+server:
+  servlet:
+    context-path: /phoenix-agent
+  undertow:
+    accesslog:
+      #Undertow日志存放目录
+      dir: liblog4phoenix/logs/phoenix-agent/undertow
+      #是否启动日志
+      enabled: true
+      #日志格式
+      pattern: common
+      #日志文件名前缀
+      #prefix: access_log
+      #日志文件名后缀
+      #suffix: log
+  #开启优雅停机
+  shutdown: graceful
+
+
+###############################################日志配置####################################################
+logging:
+  config: classpath:logback-spring.xml
+  #监控相关的日志级别设置成info
+  level:
+    org.springframework.retry.support.RetryTemplate: info
+    com.gitee.pifeng.monitoring: info
+    oshi: error
+
+
+###############################################spring配置#################################################
+spring:
+  jmx:
+    #关闭jmx，因为用不到
+    enabled: false
+  mvc:
+    async:
+      #接口访问超时时间
+      request-timeout: 5000
+  jackson:
+    #设置时区
+    time-zone: GMT+5
+  #main:
+  #支持名称相同的bean的覆盖
+  #allow-bean-definition-overriding: true
+  application:
+    name: phoenix-agent
+  profiles:
+    active:
+      - dev
+  devtools:
+    livereload:
+      port: 35730
+  lifecycle:
+    #设置缓冲期，最大等待时间
+    timeout-per-shutdown-phase: 30s
+
+
+############################################springboot端点配置#############################################
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: shutdown,health
+  server:
+    #处于安全考虑，只允许在本地进行关闭操作
+    address: 127.0.0.1
+
+
+##############################################接口文档配置#################################################
+knife4j:
+  #开启增强配置
+  enable: true
+  #是否开启生产环境保护策略
+  production: false
+  setting:
+    #Ui默认显示语言
+    language: ZH_CN
+    #是否在每个Debug调试栏后显示刷新变量按钮，默认不显示
+    enable-reload-cache-parameter: true
+    #是否开启界面中对某接口的版本控制，如果开启，后端变化后Ui界面会存在小蓝点
+    enable-version: true
+    #是否开启动态参数调试功能
+    enable-dynamic-parameter: true
+    #针对RequestMapping的接口请求类型，在不指定参数类型的情况下，如果不过滤，默认会显示7个类型的接口地址参数，如果开启此配置，默认展示一个Post类型的接口地址
+    enable-filter-multipart-apis: true
+  basic:
+    #开启Swagger的Basic认证功能，默认是false
+    enable: true
+    username: admin
+    password: admin
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+    show-extensions: true
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.gitee.pifeng.monitoring.agent.business
+  default-flat-param-object: true

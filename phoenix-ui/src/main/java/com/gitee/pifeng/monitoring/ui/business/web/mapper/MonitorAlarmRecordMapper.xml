@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitee.pifeng.monitoring.ui.business.web.dao.IMonitorAlarmRecordDao">
+
+    <!-- 获取告警类型统计信息 -->
+    <select id="getAlarmRecordTypeStatistics" resultType="java.util.Map" databaseId="mysql">
+        SELECT d.totals AS totals,
+               CASE
+                   d.types
+                   WHEN 'INSTANCE' THEN
+                       '应用程序'
+                   WHEN 'SERVER' THEN
+                       '服务器'
+                   WHEN 'NET' THEN
+                       '网络'
+                   WHEN 'DATABASE' THEN
+                       '数据库'
+                   WHEN 'CUSTOM' THEN
+                       '自定义'
+                   WHEN 'TCP4SERVICE' THEN
+                       'TCP'
+                   WHEN 'HTTP4SERVICE' THEN
+                       'HTTP'
+                   WHEN 'DOCKER' THEN
+                       'DOCKER'
+                   WHEN 'NETWORK_DEVICE' THEN
+                       '网络设备'
+                   END  AS types
+        FROM (SELECT t.types,
+                     COUNT(mar.ID) AS totals
+              FROM (SELECT 'INSTANCE' types
+                    FROM DUAL
+                    UNION
+                    SELECT 'SERVER' types
+                    FROM DUAL
+                    UNION
+                    SELECT 'NET' types
+                    FROM DUAL
+                    UNION
+                    SELECT 'DATABASE' types
+                    FROM DUAL
+                    UNION
+                    SELECT 'CUSTOM' types
+                    FROM DUAL
+                    UNION
+                    SELECT 'TCP4SERVICE' types
+                    FROM DUAL
+                    UNION
+                    SELECT 'HTTP4SERVICE' types
+                    FROM DUAL
+                    UNION
+                    SELECT 'DOCKER' types
+                    FROM DUAL
+                    UNION
+                    SELECT 'NETWORK_DEVICE' types
+                    FROM DUAL) t
+                       LEFT JOIN MONITOR_ALARM_RECORD mar ON (mar.`TYPE` = t.types)
+              GROUP BY t.types) d
+        ORDER BY d.totals DESC
+    </select>
+
+</mapper>

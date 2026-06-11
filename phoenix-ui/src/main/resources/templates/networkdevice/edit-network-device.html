@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>编辑网络设备信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="./layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" href="./style/myself.css" th:href="@{/style/myself.css}" media="all">
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script th:src="@{/js/html5.min.js}"></script>
+    <script th:src="@{/js/respond.min.js}"></script>
+    <![endif]-->
+    <script type="text/javascript" charset="utf-8" th:inline="javascript">
+        var ctxPath = /*[[@{/}]]*/'';
+        // 应用实例表的主键ID
+        var id = [[${id}]];
+        // IP地址
+        var ip = [[${ip}]];
+    </script>
+</head>
+<body>
+<div class="layui-form" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin"
+     style="padding: 20px 20px 0 0;">
+    <div class="layui-form-item" style="display: none">
+        <label class="layui-form-label" for="id">ID</label>
+        <div class="layui-input-block">
+            <input type="hidden" id="id" name="id" class="layui-input" th:value="${id}" readonly>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="insertType">添加方式</label>
+        <div class="layui-input-inline">
+            <select id="insertType" name="insertType" lay-filter="insertType">
+                <option value="1" th:selected="${monitorNetworkDeviceVo.insertType=='1'}">手动</option>
+                <option value="2" th:selected="${monitorNetworkDeviceVo.insertType=='2'}">自动</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label" for="ipTarget">IP</label>
+            <div class="layui-input-inline">
+                <input type="text" id="ipTarget" name="ipTarget" class="layui-input" th:value="${ip}"
+                       autocomplete="off" lay-verify="ip" lay-verType="tips"
+                       th:readonly="${monitorNetworkDeviceVo.insertType == '2' ? 'readonly' : null}">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label" for="cpPort">端口号</label>
+            <div class="layui-input-inline">
+                <input type="number" id="cpPort" name="cpPort" class="layui-input"
+                       th:value="${monitorNetworkDeviceVo.cpPort}" autocomplete="off"
+                       lay-verify="port" lay-verType="tips"
+                       th:readonly="${monitorNetworkDeviceVo.insertType == '2' ? 'readonly' : null}">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label" for="cpName">通信协议</label>
+            <div class="layui-input-inline">
+                <select id="cpName" name="cpName"
+                        th:disabled="${monitorNetworkDeviceVo.insertType == '2' ? 'disabled' : null}">
+                    <option value="SNMP(UDP)" th:selected="${monitorNetworkDeviceVo.cpName=='SNMP(UDP)'}">SNMP(UDP)
+                    </option>
+                    <option value="SNMP(TCP)" th:selected="${monitorNetworkDeviceVo.cpName=='SNMP(TCP)'}">SNMP(TCP)
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label" for="cpVersion">协议版本</label>
+            <div class="layui-input-inline">
+                <select id="cpVersion" name="cpVersion"
+                        th:disabled="${monitorNetworkDeviceVo.insertType == '2' ? 'disabled' : null}">
+                    <option value="version2c" th:selected="${monitorNetworkDeviceVo.cpVersion=='version2c'}">version2c
+                    </option>
+                    <option value="version3" th:selected="${monitorNetworkDeviceVo.cpVersion=='version3'}">version3
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="cpCommunity">社区字符串</label>
+        <div class="layui-input-block">
+            <input type="text" id="cpCommunity" name="cpCommunity" class="layui-input"
+                   th:value="${monitorNetworkDeviceVo.cpCommunity}" autocomplete="off"
+                   th:readonly="${monitorNetworkDeviceVo.insertType == '2' ? 'readonly' : null}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="mib-oid"></label>
+        <div class="layui-input-block">
+            <div class="layui-btn-group">
+                <button id="mib-oid" type="button" class="layui-btn layui-btn-primary layui-btn-sm">
+                    <i class="layui-icon">&#xe654;</i>配置OID
+                </button>
+            </div>
+            <strong id="mib-oid-config-tip" style="color: red;padding-left: 10px;display: none;">
+                您可以自定义 MIB OID，否则将使用默认值。
+            </strong>
+            <input type="hidden" id="oid" name="oid" th:value="${monitorNetworkDeviceVo.oid}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="networkDeviceType">设备类型</label>
+        <div class="layui-input-block">
+            <input type="text" id="networkDeviceType" name="networkDeviceType" class="layui-input"
+                   th:value="${monitorNetworkDeviceVo.networkDeviceType}" autocomplete="off">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="monitorEnv">环境</label>
+        <div class="layui-input-inline">
+            <select id="monitorEnv" name="monitorEnv">
+                <option value="">不设置</option>
+                <option th:each="monitorEnv:${monitorEnvs}" th:value="${monitorEnv}"
+                        th:text="${monitorEnv}" th:selected="${monitorEnv==env}"></option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="monitorGroup">分组</label>
+        <div class="layui-input-inline">
+            <select id="monitorGroup" name="monitorGroup">
+                <option value="">不设置</option>
+                <option th:each="monitorGroup:${monitorGroups}" th:value="${monitorGroup}"
+                        th:text="${monitorGroup}" th:selected="${monitorGroup==group}"></option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="isEnableMonitor">是否监控</label>
+        <div class="layui-input-inline">
+            <input type="checkbox" name="isEnableMonitor" lay-text="是|否"
+                   id="isEnableMonitor" value="1" lay-skin="switch"
+                   th:checked="${isEnableMonitor=='1'}? true : false">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="isEnableAlarm">是否告警</label>
+        <div class="layui-input-inline">
+            <input type="checkbox" name="isEnableAlarm" lay-text="是|否"
+                   id="isEnableAlarm" value="1" lay-skin="switch"
+                   th:checked="${isEnableAlarm=='1'}? true : false">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="networkDeviceSummary">描述</label>
+        <div class="layui-input-block">
+            <textarea id="networkDeviceSummary" name="networkDeviceSummary" placeholder="请输入描述"
+                      maxlength="500" class="layui-textarea" autocomplete="off"
+                      th:text="${monitorNetworkDeviceVo.networkDeviceSummary}"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-front-submit" id="LAY-front-submit" value="确认">
+    </div>
+</div>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/js/js-yaml.min.js}" charset="utf-8"></script>
+<script charset="utf-8" th:inline="javascript">
+    layui.config({
+        base: ctxPath //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form'], function () {
+        var form = layui.form, $ = layui.$, layer = layui.layer;
+        // 新增方式（1：手动新增；2.自动发现）
+        var defaultInsertType = [[${monitorNetworkDeviceVo.insertType}]];
+        var insertType = [[${monitorNetworkDeviceVo.insertType}]];
+        // 校验IP地址合法性
+        form.verify({
+            ip: function (value) {
+                var reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+                if (!reg.test(value)) {
+                    return '请输入合法IP';
+                }
+            },
+            port: function (value) {
+                var reg = /^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/;
+                if (!reg.test(value)) {
+                    return '请输入合法端口';
+                }
+            }
+        });
+        // 修改添加方式
+        form.on('select(insertType)', function (data) {
+            if (defaultInsertType === '1' && data.value === '2') {
+                layer.msg('手动新增的设备不能改成自动发现！', {icon: 5, shift: 6});
+                $('#insertType').val(defaultInsertType);
+                // 重新渲染表单
+                form.render();
+                return;
+            }
+            insertType = data.value;
+            // 自动添加
+            if (insertType === '2') {
+                // 恢复原有值
+                if (defaultInsertType === '2') {
+                    $('#ipTarget').val([[${monitorNetworkDeviceVo.ipTarget}]]);
+                    $('#cpPort').val([[${monitorNetworkDeviceVo.cpPort}]]);
+                    $('#cpCommunity').val([[${monitorNetworkDeviceVo.cpCommunity}]]);
+                    $('#cpName').val([[${monitorNetworkDeviceVo.cpName}]]);
+                    $('#cpVersion').val([[${monitorNetworkDeviceVo.cpVersion}]]);
+                    $('#oid').val([[${oid}]]);
+                }
+                $('#ipTarget,#cpPort,#cpCommunity').prop('readonly', true);
+                $('#cpName,#cpVersion').prop('disabled', true);
+            }
+            // 不是自动添加
+            else {
+                $('#ipTarget,#cpPort,#cpCommunity').prop('readonly', false);
+                $('#cpName,#cpVersion').prop('disabled', false);
+            }
+            // 重新渲染表单
+            form.render();
+        });
+        $('#ipTarget,#cpPort,#cpCommunity').on('click', function () {
+            var that = this;
+            if (insertType === '2') {
+                layer.tips('参数不可修改！', that);
+            }
+        });
+        var $mibOid = $('#mib-oid');
+        // 监听光标移入事件
+        $mibOid.on('mouseenter', function () {
+            $('#mib-oid-config-tip').show();
+        });
+        // 监听光标移出事件
+        $mibOid.on('mouseleave', function () {
+            $('#mib-oid-config-tip').hide();
+        });
+        // 点击配置OID
+        $mibOid.on('click', function () {
+            var that = this;
+            if (insertType === '2') {
+                layer.tips('参数不可修改！', that);
+                return;
+            }
+            window.parent.layer.open({
+                type: 2,
+                title: 'MIB OID配置',
+                content: ctxPath + 'monitor-network-device/mib-oid-config?id=' + id + '&ip=' + ip,
+                maxmin: true,
+                area: ['100%', '100%'],
+                btn: ['确定', '取消'],
+                yes: function (index, layero) {
+                    var iframeWindow = window.parent.window['layui-layer-iframe' + index],
+                        submitID = 'LAY-front-submit',
+                        submit = layero.find('iframe').contents().find('#' + submitID);
+                    //监听提交
+                    iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                        //获取提交的字段
+                        var field = data.field;
+                        var mibOidValid = field.mibOidValid;
+                        if (mibOidValid === '0') {
+                            window.parent.layer.msg('YAML格式错误！', {icon: 5, shift: 6});
+                            return;
+                        }
+                        var mibOidTextarea = field.mibOidTextarea;
+                        var jsonData = jsyaml.load(mibOidTextarea);
+                        // 显示 JSON 预览
+                        jsonData = JSON.stringify(jsonData, null, 2);
+                        // 设置到input
+                        $('#oid').val(jsonData);
+                        window.parent.layer.msg('MIB OID配置成功！', {icon: 6});
+                        //关闭弹层
+                        window.parent.layer.close(index);
+                    });
+                    submit.trigger('click');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

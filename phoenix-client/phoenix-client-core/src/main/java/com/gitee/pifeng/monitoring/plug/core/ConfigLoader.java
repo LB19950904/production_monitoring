@@ -1,0 +1,931 @@
+package com.gitee.pifeng.monitoring.plug.core;
+
+import com.gitee.pifeng.monitoring.common.constant.EndpointTypeEnums;
+import com.gitee.pifeng.monitoring.common.constant.LanguageTypeConstants;
+import com.gitee.pifeng.monitoring.common.constant.SecurerEnums;
+import com.gitee.pifeng.monitoring.common.constant.snmp.SnmpDefaultConstants;
+import com.gitee.pifeng.monitoring.common.exception.ErrorConfigParamException;
+import com.gitee.pifeng.monitoring.common.exception.NotFoundConfigFileException;
+import com.gitee.pifeng.monitoring.common.exception.NotFoundConfigParamException;
+import com.gitee.pifeng.monitoring.common.init.InitSecure;
+import com.gitee.pifeng.monitoring.common.property.client.*;
+import com.gitee.pifeng.monitoring.common.util.DirUtils;
+import com.gitee.pifeng.monitoring.common.util.PropertiesUtils;
+import com.gitee.pifeng.monitoring.common.util.server.IpAddressUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+
+/**
+ * <p>
+ * 监控客户端加载监控配置文件信息
+ * </p>
+ *
+ * @author 皮锋
+ * @custom.date 2020年3月5日 下午3:06:21
+ */
+@Slf4j
+public class ConfigLoader {
+
+    /**
+     * <p>
+     * 私有化构造方法
+     * </p>
+     *
+     * @author 皮锋
+     * @custom.date 2020/10/27 13:26
+     */
+    private ConfigLoader() {
+    }
+
+    /**
+     * 监控属性
+     */
+    private static final MonitoringProperties MONITORING_PROPERTIES = new MonitoringProperties();
+
+    /**
+     * <p>
+     * 获取监控属性
+     * </p>
+     * 注意：这个方法名称不能随意改动，因为在 {@link  InitSecure} 用了反射来调用这个方法
+     *
+     * @return {@link MonitoringProperties}
+     * @author 皮锋
+     * @custom.date 2023年5月19日 下午8:23:32
+     */
+    public static MonitoringProperties getMonitoringProperties() {
+        return MONITORING_PROPERTIES;
+    }
+
+    /**
+     * <p>
+     * 验证监控属性配置是否正确
+     * </p>
+     *
+     * @param monitoringProperties {@link MonitoringProperties}
+     * @return {@link MonitoringProperties}
+     * @author 皮锋
+     * @custom.date 2024/4/7 10:57
+     */
+    public static MonitoringProperties verify(MonitoringProperties monitoringProperties) {
+        // 解析配置信息
+        analysis(null, monitoringProperties, true);
+        log.info("监控配置项：{}", MONITORING_PROPERTIES.toJsonString());
+        log.info("验证监控配置成功！");
+        // 返回监控属性
+        return MONITORING_PROPERTIES;
+    }
+
+    /**
+     * <p>
+     * 加载监控配置信息
+     * </p>
+     * 指定的filepath &gt; 当前工作目录/config/ &gt; 当前工作目录/ &gt; 指定的classpath &gt; classpath:/config/ &gt; classpath:/
+     *
+     * @param configPath 配置文件路径
+     * @param configName 配置文件名称
+     * @return {@link MonitoringProperties}
+     * @throws NotFoundConfigParamException 找不到配置参数异常
+     * @throws NotFoundConfigFileException  找不到配置文件异常
+     * @throws ErrorConfigParamException    错误的配置参数异常
+     * @author 皮锋
+     * @custom.date 2020年3月5日 下午3:36:32
+     */
+    public static MonitoringProperties load(String configPath, String configName)
+            throws NotFoundConfigParamException, NotFoundConfigFileException, ErrorConfigParamException {
+        // 如果没有填写配置文件路径，默认在根路径
+        configPath = StringUtils.defaultIfBlank(configPath, "");
+        // 如果没有写配置文件名字，默认为：monitoring.properties
+        configName = StringUtils.defaultIfBlank(configName, "monitoring.properties");
+        Properties properties;
+        try {
+            if (!StringUtils.startsWith(configPath, "filepath:")) {
+                throw new IllegalArgumentException();
+            }
+            String path = StringUtils.removeStart(configPath, "filepath:");
+            properties = PropertiesUtils.loadPropertiesInFilepath(StringUtils.replace(path + configName, "/", File.separator));
+        } catch (Throwable e1) {
+            try {
+                String filePath;
+                try {
+                    // 获取Jar同级目录
+                    filePath = DirUtils.getJarDirectory() + File.separator + "config" + File.separator + configName;
+                } catch (Throwable e) {
+                    filePath = "config" + File.separator + configName;
+                }
+                properties = PropertiesUtils.loadPropertiesInFilepath(filePath);
+            } catch (Throwable e2) {
+                try {
+                    String filePath;
+                    try {
+                        // 获取Jar同级目录
+                        filePath = DirUtils.getJarDirectory() + File.separator + configName;
+                    } catch (Throwable e) {
+                        filePath = configName;
+                    }
+                    properties = PropertiesUtils.loadPropertiesInFilepath(filePath);
+                } catch (Throwable e3) {
+                    try {
+                        if (!StringUtils.startsWith(configPath, "classpath:")) {
+                            throw new IllegalArgumentException();
+                        }
+                        String path = StringUtils.removeStart(configPath, "classpath:");
+                        properties = PropertiesUtils.loadPropertiesInClasspath(path + configName);
+                    } catch (Throwable e4) {
+                        try {
+                            properties = PropertiesUtils.loadPropertiesInClasspath("config/" + configName);
+                        } catch (Throwable e5) {
+                            try {
+                                properties = PropertiesUtils.loadPropertiesInClasspath(configName);
+                            } catch (Throwable e6) {
+                                throw new NotFoundConfigFileException("监控程序找不到监控配置文件！");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        log.info("监控配置项：{}", properties);
+        // 解析配置文件
+        analysis(properties, null, false);
+        log.info("加载监控配置成功！");
+        // 返回监控属性
+        return MONITORING_PROPERTIES;
+    }
+
+    /**
+     * <p>
+     * 解析配置信息
+     * </p>
+     *
+     * @param properties              配置属性
+     * @param monitoringProperties    {@link MonitoringProperties}
+     * @param hasMonitoringProperties 是否有监控属性类
+     * @throws NotFoundConfigParamException 找不到配置参数异常
+     * @throws ErrorConfigParamException    错误的配置参数异常
+     * @author 皮锋
+     * @custom.date 2020年3月5日 下午3:51:47
+     */
+    private static void analysis(Properties properties, MonitoringProperties monitoringProperties, boolean hasMonitoringProperties)
+            throws NotFoundConfigParamException, ErrorConfigParamException {
+        // 封装数据
+        wrapMonitoringSecureProperties(properties, monitoringProperties, hasMonitoringProperties);
+        wrapMonitoringCommProperties(properties, monitoringProperties, hasMonitoringProperties);
+        wrapMonitoringInstanceProperties(properties, monitoringProperties, hasMonitoringProperties);
+        wrapMonitoringHeartbeatProperties(properties, monitoringProperties, hasMonitoringProperties);
+        wrapMonitoringServerInfoProperties(properties, monitoringProperties, hasMonitoringProperties);
+        wrapMonitoringNetworkDeviceInfoProperties(properties, monitoringProperties, hasMonitoringProperties);
+        wrapMonitoringJvmInfoProperties(properties, monitoringProperties, hasMonitoringProperties);
+        wrapMonitoringJavaThreadPoolInfoProperties(properties, monitoringProperties, hasMonitoringProperties);
+        wrapMonitoringDockerInfoProperties(properties, monitoringProperties, hasMonitoringProperties);
+        wrapMonitoringArthasProperties(properties, monitoringProperties, hasMonitoringProperties);
+    }
+
+    /**
+     * <p>
+     * 封装与安全相关的监控属性
+     * </p>
+     *
+     * @param properties              配置属性
+     * @param monitoringProperties    {@link MonitoringProperties}
+     * @param hasMonitoringProperties 是否有监控属性类
+     * @throws NotFoundConfigParamException 找不到配置参数异常
+     * @throws ErrorConfigParamException    错误的配置参数异常
+     * @author 皮锋
+     * @custom.date 2025/12/7 13:15
+     */
+    private static void wrapMonitoringSecureProperties(Properties properties,
+                                                       MonitoringProperties monitoringProperties,
+                                                       boolean hasMonitoringProperties)
+            throws NotFoundConfigParamException, ErrorConfigParamException {
+        // 与安全相关监控属性
+        MonitoringSecureProperties monitoringSecureProperties;
+        // 加密算法类型
+        String encryptionAlgorithmType;
+        if (hasMonitoringProperties) {
+            monitoringSecureProperties = monitoringProperties.getSecure() == null ? new MonitoringSecureProperties() : monitoringProperties.getSecure();
+            SecurerEnums securerEnums = monitoringSecureProperties.getEncryptionAlgorithmType();
+            encryptionAlgorithmType = securerEnums == null ? null : securerEnums.name();
+        } else {
+            monitoringSecureProperties = new MonitoringSecureProperties();
+            encryptionAlgorithmType = StringUtils.trimToNull(properties.getProperty("monitoring.secure.encryption-algorithm-type"));
+        }
+        // AES加解密
+        if (StringUtils.equalsIgnoreCase(encryptionAlgorithmType, SecurerEnums.AES.name())) {
+            monitoringSecureProperties.setEncryptionAlgorithmType(SecurerEnums.AES);
+            // 封装AES加密算法属性
+            MonitoringSecureAesProperties monitoringSecureAesProperties = wrapMonitoringSecureAesProperties(properties, monitoringProperties, hasMonitoringProperties);
+            monitoringSecureProperties.setAes(monitoringSecureAesProperties);
+        }
+        // DES加解密
+        else if (StringUtils.equalsIgnoreCase(encryptionAlgorithmType, SecurerEnums.DES.name())) {
+            monitoringSecureProperties.setEncryptionAlgorithmType(SecurerEnums.DES);
+            // 封装DES加密算法属性
+            MonitoringSecureDesProperties monitoringSecureDesProperties = wrapMonitoringSecureDesProperties(properties, monitoringProperties, hasMonitoringProperties);
+            monitoringSecureProperties.setDes(monitoringSecureDesProperties);
+        }
+        // 国密SM4加解密
+        else if (StringUtils.equalsIgnoreCase(encryptionAlgorithmType, SecurerEnums.SM4.name())) {
+            monitoringSecureProperties.setEncryptionAlgorithmType(SecurerEnums.SM4);
+            // 封装国密SM4加密算法属性
+            MonitoringSecureSm4Properties monitoringSecureSm4Properties = wrapMonitoringSecureSm4Properties(properties, monitoringProperties, hasMonitoringProperties);
+            monitoringSecureProperties.setSm4(monitoringSecureSm4Properties);
+        }
+        MONITORING_PROPERTIES.setSecure(monitoringSecureProperties);
+    }
+
+    /**
+     * <p>
+     * 封装AES加密算法属性
+     * </p>
+     *
+     * @param properties              配置属性
+     * @param monitoringProperties    {@link MonitoringProperties}
+     * @param hasMonitoringProperties 是否有监控属性类
+     * @return {MonitoringSecureAesProperties} AES加密算法属性
+     * @throws NotFoundConfigParamException 找不到配置参数异常
+     * @throws ErrorConfigParamException    错误的配置参数异常
+     * @author 皮锋
+     * @custom.date 2025/12/7 13:51
+     */
+    private static MonitoringSecureAesProperties wrapMonitoringSecureAesProperties(Properties properties,
+                                                                                   MonitoringProperties monitoringProperties,
+                                                                                   boolean hasMonitoringProperties)
+            throws NotFoundConfigParamException, ErrorConfigParamException {
+        // 秘钥
+        String key;
+        if (hasMonitoringProperties) {
+            MonitoringSecureProperties secure = monitoringProperties.getSecure() == null ? new MonitoringSecureProperties() : monitoringProperties.getSecure();
+            MonitoringSecureAesProperties aes = secure.getAes() == null ? new MonitoringSecureAesProperties() : secure.getAes();
+            key = aes.getKey();
+        } else {
+            key = StringUtils.trimToNull(properties.getProperty("monitoring.secure.aes.key"));
+        }
+        MonitoringSecureAesProperties monitoringSecureAesProperties = new MonitoringSecureAesProperties();
+        monitoringSecureAesProperties.setKey(key);
+        return monitoringSecureAesProperties;
+    }
+
+    /**
+     * <p>
+     * 封装DES加密算法属性
+     * </p>
+     *
+     * @param properties              配置属性
+     * @param monitoringProperties    {@link MonitoringProperties}
+     * @param hasMonitoringProperties 是否有监控属性类
+     * @return {MonitoringSecureDesProperties} DES加密算法属性
+     * @throws NotFoundConfigParamException 找不到配置参数异常
+     * @throws ErrorConfigParamException    错误的配置参数异常
+     * @author 皮锋
+     * @custom.date 2025/12/7 13:39
+     */
+    private static MonitoringSecureDesProperties wrapMonitoringSecureDesProperties(Properties properties,
+                                                                                   MonitoringProperties monitoringProperties,
+                                                                                   boolean hasMonitoringProperties)
+            throws NotFoundConfigParamException, ErrorConfigParamException {
+        // 秘钥
+        String key;
+        if (hasMonitoringProperties) {
+            MonitoringSecureProperties secure = monitoringProperties.getSecure() == null ? new MonitoringSecureProperties() : monitoringProperties.getSecure();
+            MonitoringSecureDesProperties des = secure.getDes() == null ? new MonitoringSecureDesProperties() : secure.getDes();
+            key = des.getKey();
+        } else {
+            key = StringUtils.trimToNull(properties.getProperty("monitoring.secure.des.key"));
+        }
+        MonitoringSecureDesProperties monitoringSecureDesProperties = new MonitoringSecureDesProperties();
+        monitoringSecureDesProperties.setKey(key);
+        return monitoringSecureDesProperties;
+    }
+
+    /**
+     * <p>
+     * 封装国密SM4加密算法属性
+     * </p>
+     *
+     * @param properties              配置属性
+     * @param monitoringProperties    {@link MonitoringProperties}
+     * @param hasMonitoringProperties 是否有监控属性类
+     * @return {MonitoringSecureSm4Properties} SM4加密算法属性
+     * @throws NotFoundConfigParamException 找不到配置参数异常
+     * @throws ErrorConfigParamException    错误的配置参数异常
+     * @author 皮锋
+     * @custom.date 2025/12/7 13:21
+     */
+    private static MonitoringSecureSm4Properties wrapMonitoringSecureSm4Properties(Properties properties,
+                                                                                   MonitoringProperties monitoringProperties,
+                                                                                   boolean hasMonitoringProperties)
+            throws NotFoundConfigParamException, ErrorConfigParamException {
+        // 秘钥
+        String key;
+        if (hasMonitoringProperties) {
+            MonitoringSecureProperties secure = monitoringProperties.getSecure() == null ? new MonitoringSecureProperties() : monitoringProperties.getSecure();
+            MonitoringSecureSm4Properties sm4 = secure.getSm4() == null ? new MonitoringSecureSm4Properties() : secure.getSm4();
+            key = sm4.getKey();
+        } else {
+            key = StringUtils.trimToNull(properties.getProperty("monitoring.secure.sm4.key"));
+        }
+        MonitoringSecureSm4Properties monitoringSecureSm4Properties = new MonitoringSecureSm4Properties();
+        monitoringSecureSm4Properties.setKey(key);
+        return monitoringSecureSm4Properties;
+    }
+
+    /**
+     * <p>
+     * 封装与通信相关的监控属性
+     * </p>
+     *
+     * @param properties              配置属性
+     * @param monitoringProperties    {@link MonitoringProperties}
+     * @param hasMonitoringProperties 是否有监控属性类
+     * @throws NotFoundConfigParamException 找不到配置参数异常
+     * @throws ErrorConfigParamException    错误的配置参数异常
+     * @author 皮锋
+     * @custom.date 2020/10/27 20:29
+     */
+    private static void wrapMonitoringCommProperties(Properties properties,
+                                                     MonitoringProperties monitoringProperties,
+                                                     boolean hasMonitoringProperties)
+            throws NotFoundConfigParamException, ErrorConfigParamException {
+        // 与通信相关的监控属性
+        MonitoringCommProperties monitoringCommProperties;
+        if (hasMonitoringProperties) {
+            monitoringCommProperties = monitoringProperties.getComm() == null ? new MonitoringCommProperties() : monitoringProperties.getComm();
+            // 封装与HTTP通信相关的监控属性
+            MonitoringCommHttpProperties monitoringCommHttpProperties = wrapMonitoringCommHttpProperties(properties, monitoringProperties, true);
+            monitoringCommProperties.setHttp(monitoringCommHttpProperties);
+            // 封装与WebSocket通信相关的监控属性
+            MonitoringCommWebSocketProperties monitoringCommWebSocketProperties = wrapMonitoringCommWebSocketProperties(properties, monitoringProperties, true);
+            monitoringCommProperties.setWebsocket(monitoringCommWebSocketProperties);
+        } else {
+            monitoringCommProperties = new MonitoringCommProperties();
+            // 封装与HTTP通信相关的监控属性
+            MonitoringCommHttpProperties monitoringCommHttpProperties = wrapMonitoringCommHttpProperties(properties, monitoringProperties, false);
+            monitoringCommProperties.setHttp(monitoringCommHttpProperties);
+            // 封装与WebSocket通信相关的监控属性
+            MonitoringCommWebSocketProperties monitoringCommWebSocketProperties = wrapMonitoringCommWebSocketProperties(properties, monitoringProperties, false);
+            monitoringCommProperties.setWebsocket(monitoringCommWebSocketProperties);
+        }
+        MONITORING_PROPERTIES.setComm(monitoringCommProperties);
+    }
+
+    /**
+     * <p>
+     * 封装与HTTP通信相关的监控属性
+     * </p>
+     *
+     * @param properties              配置属性
+     * @param monitoringProperties    {@link MonitoringProperties}
+     * @param hasMonitoringProperties 是否有监控属性类
+     * @return {@link MonitoringCommHttpProperties} 与HTTP通信相关的监控属性
+     * @throws NotFoundConfigParamException 找不到配置参数异常
+     * @throws ErrorConfigParamException    错误的配置参数异常
+     * @author 皮锋
+     * @custom.date 2020/10/27 20:29
+     */
+    private static MonitoringCommHttpProperties wrapMonitoringCommHttpProperties(Properties properties,
+                                                                                 MonitoringProperties monitoringProperties,
+                                                                                 boolean hasMonitoringProperties)
+            throws NotFoundConfigParamException, ErrorConfigParamException {
+        // 监控服务端url
+        String serverUrl;
+        // 缺省[连接超时时间（毫秒），默认：15秒]
+        int connectTimeout;
+        // 缺省[等待数据超时时间（毫秒），默认：15秒]
+        int socketTimeout;
+        // 缺省[从连接池获取连接的等待超时时间（毫秒），默认：15秒]
+        int connectionRequestTimeout;
+        if (hasMonitoringProperties) {
+            MonitoringCommProperties comm = monitoringProperties.getComm() == null ? new MonitoringCommProperties() : monitoringProperties.getComm();
+            MonitoringCommHttpProperties http = comm.getHttp() == null ? new MonitoringCommHttpProperties() : comm.getHttp();
+            serverUrl = http.getUrl();
+            connectTimeout = http.getConnectTimeout() == null ? 15000 : http.getConnectTimeout();
+            socketTimeout = http.getSocketTimeout() == null ? 15000 : http.getSocketTimeout();
+            connectionRequestTimeout = http.getConnectionRequestTimeout() == null ? 15000 : http.getConnectionRequestTimeout();
+        } else {
+            serverUrl = StringUtils.trimToNull(properties.getProperty("monitoring.comm.http.url"));
+            String connectTimeoutStr = StringUtils.trimToNull(properties.getProperty("monitoring.comm.http.connect-timeout"));
+            connectTimeout = StringUtils.isBlank(connectTimeoutStr) ? 15000 : Integer.parseInt(connectTimeoutStr);
+            String socketTimeoutStr = StringUtils.trimToNull(properties.getProperty("monitoring.comm.http.socket-timeout"));
+            socketTimeout = StringUtils.isBlank(socketTimeoutStr) ? 15000 : Integer.parseInt(socketTimeoutStr);
+            String connectionRequestTimeoutStr = StringUtils.trimToNull(properties.getProperty("monitoring.comm.http.connection-request-timeout"));
+            connectionRequestTimeout = StringUtils.isBlank(connectionRequestTimeoutStr) ? 15000 : Integer.parseInt(connectionRequestTimeoutStr);
+        }
+        // 没有配置连接
+        if (StringUtils.isBlank(serverUrl)) {
+            throw new NotFoundConfigParamException("监控程序找不到监控服务端(代理端)HTTP(S) URL配置！");
+        }
+        // 如果以 / 结尾，则去掉末尾的 /
+        serverUrl = StringUtils.removeEnd(serverUrl, "/");
+        int minTimeout = 0;
+        if (connectTimeout <= minTimeout) {
+            throw new ErrorConfigParamException("HTTP(S)连接超时时间必须大于0秒！");
+        }
+        if (socketTimeout <= minTimeout) {
+            throw new ErrorConfigParamException("HTTP(S)等待数据超时时间必须大于0秒！");
+        }
+        if (connectionRequestTimeout <= minTimeout) {
+            throw new ErrorConfigParamException("从连接池获取HTTP(S)连接的等待超时时间必须大于0秒！");
+        }
+        MonitoringCommHttpProperties monitoringCommHttpProperties = new MonitoringCommHttpProperties();
+        monitoringCommHttpProperties.setUrl(serverUrl);
+        monitoringCommHttpProperties.setConnectTimeout(connectTimeout);
+        monitoringCommHttpProperties.setSocketTimeout(socketTimeout);
+        monitoringCommHttpProperties.setConnectionRequestTimeout(connectionRequestTimeout);
+        return monitoringCommHttpProperties;
+    }
+
+    /**
+     * <p>
+     * 封装与WebSocket通信相关的监控属性
+     * </p>
+     *
+     * @param properties              properties              配置属性
+     * @param monitoringProperties    {@link MonitoringProperties}
+     * @param hasMonitoringProperties 是否有监控属性类
+     * @return {@link MonitoringCommWebSocketProperties} 与WebSocket通信相关的监控属性
+     * @author 皮锋
+     * @custom.date 2026/2/3 10:08
+     */
+    private static MonitoringCommWebSocketProperties wrapMonitoringCommWebSocketProperties(Properties properties,
+                                                                                           MonitoringProperties monitoringProperties,
+                                                                                           boolean hasMonitoringProperties) {
+        // 缺省[websocket通信url，如果上游服务是监控服务端，默认为空，否则与http通信共用IP和端口]
+        String serverUrl;
+        if (hasMonitoringProperties) {
+            MonitoringCommProperties comm = monitoringProperties.getComm() == null ? new MonitoringCommProperties() : monitoringProperties.getComm();
+            MonitoringCommWebSocketProperties webSocket = comm.getWebsocket() == null ? new MonitoringCommWebSocketProperties() : comm.getWebsocket();
+            serverUrl = webSocket.getUrl();
+            if (StringUtils.isBlank(serverUrl)) {
+                MonitoringCommHttpProperties http = comm.getHttp() == null ? new MonitoringCommHttpProperties() : comm.getHttp();
+                serverUrl = http.getUrl();
+                if (StringUtils.isNotBlank(serverUrl)) {
+                    // 如果以 / 结尾，则去掉末尾的 /
+                    serverUrl = StringUtils.removeEnd(serverUrl, "/");
+                    // 上游服务不是监控服务端
+                    if (!StringUtils.endsWith(serverUrl, EndpointTypeEnums.SERVER.getNameEn())) {
+                        // 替换 HTTP 为 WS
+                        serverUrl = serverUrl.replaceFirst("^http://", "ws://")
+                                // 替换 HTTPS 为 WSS
+                                .replaceFirst("^https://", "wss://");
+                    } else {
+                        serverUrl = null;
+                    }
+                }
+            }
+        } else {
+            serverUrl = StringUtils.trimToNull(properties.getProperty("monitoring.comm.websocket.url"));
+            if (StringUtils.isBlank(serverUrl)) {
+                serverUrl = StringUtils.trimToNull(properties.getProperty("monitoring.comm.http.url"));
+                if (StringUtils.isNotBlank(serverUrl)) {
+                    // 如果以 / 结尾，则去掉末尾的 /
+                    serverUrl = StringUtils.removeEnd(serverUrl, "/");
+                    // 上游服务不是监控服务端
+                    if (!StringUtils.endsWith(serverUrl, EndpointTypeEnums.SERVER.getNameEn())) {
+                        // 替换 HTTP 为 WS
+                        serverUrl = serverUrl.replaceFirst("^http://", "ws://")
+                                // 替换 HTTPS 为 WSS
+                                .replaceFirst("^https://", "wss://");
+                    } else {
+                        serverUrl = null;
+                    }
+                }
+            }
+        }
+        // 没有配置连接
+        if (StringUtils.isBlank(serverUrl)) {
+            log.warn("监控程序找不到监控服务端(代理端)WS(S) URL配置，将无法使用WebSocket协议！");
+        }
+        // 如果以 / 结尾，则去掉末尾的 /
+        serverUrl = StringUtils.removeEnd(serverUrl, "/");
+        MonitoringCommWebSocketProperties monitoringCommWebSocketProperties = new MonitoringCommWebSocketProperties();
+        monitoringCommWebSocketProperties.setUrl(serverUrl);
+        return monitoringCommWebSocketProperties;
+    }
+
+    /**
+     * <p>
+     * 封装应用程序监控属性
+     * </p>
+     *
+     * @param properties              配置属性
+     * @param monitoringProperties    {@link MonitoringProperties}
+     * @param hasMonitoringProperties 是否有监控属性类
+     * @throws ErrorConfigParamException    错误的配置参数异常
+     * @throws NotFoundConfigParamException 找不到配置参数异常
+     * @author 皮锋
+     * @custom.date 2020/10/27 20:29
+     */
+    private static void wrapMonitoringInstanceProperties(Properties properties,
+                                                         MonitoringProperties monitoringProperties,
+                                                         boolean hasMonitoringProperties)
+            throws ErrorConfigParamException, NotFoundConfigParamException {
+        // 缺省[实例次序(整数)，默认为1]
+        int instanceOrder;
+        // 缺省[实例端点类型（服务端、代理端、客户端、UI端），默认客户端]
+        String instanceEndpoint;
+        // 必填[实例名称，一般为项目名]
+        String instanceName;
+        // 缺省[实例描述，默认没有描述信息]
+        String instanceDesc;
+        // 缺省[程序语言，默认：JAVA]
+        String instanceLanguage;
+        if (hasMonitoringProperties) {
+            MonitoringInstanceProperties instance = monitoringProperties.getInstance() == null ? new MonitoringInstanceProperties() : monitoringProperties.getInstance();
+            instanceOrder = instance.getOrder() == null ? 1 : instance.getOrder();
+            instanceEndpoint = instance.getEndpoint();
+            instanceName = instance.getName();
+            instanceDesc = instance.getDesc();
+            instanceLanguage = instance.getLanguage();
+        } else {
+            String instanceOrderStr = StringUtils.trimToNull(properties.getProperty("monitoring.instance.order"));
+            instanceOrder = StringUtils.isBlank(instanceOrderStr) ? 1 : Integer.parseInt(instanceOrderStr);
+            instanceEndpoint = StringUtils.trimToNull(properties.getProperty("monitoring.instance.endpoint"));
+            instanceName = StringUtils.trimToNull(properties.getProperty("monitoring.instance.name"));
+            instanceDesc = StringUtils.trimToNull(properties.getProperty("monitoring.instance.desc"));
+            instanceLanguage = StringUtils.trimToNull(properties.getProperty("monitoring.instance.language"));
+        }
+        if (StringUtils.isBlank(instanceEndpoint)) {
+            instanceEndpoint = EndpointTypeEnums.CLIENT.getNameEn();
+        }
+        if (!(StringUtils.equalsIgnoreCase(instanceEndpoint, EndpointTypeEnums.CLIENT.getNameEn())
+                || StringUtils.equalsIgnoreCase(instanceEndpoint, EndpointTypeEnums.AGENT.getNameEn())
+                || StringUtils.equalsIgnoreCase(instanceEndpoint, EndpointTypeEnums.SERVER.getNameEn())
+                || StringUtils.equalsIgnoreCase(instanceEndpoint, EndpointTypeEnums.UI.getNameEn())
+        )) {
+            throw new ErrorConfigParamException("实例端点类型只能为（server、agent、client、ui）其中之一！");
+        }
+        // 没有实例名称
+        if (StringUtils.isBlank(instanceName)) {
+            throw new NotFoundConfigParamException("监控程序找不到实例名称配置！");
+        }
+        if (StringUtils.isBlank(instanceLanguage)) {
+            instanceLanguage = LanguageTypeConstants.JAVA;
+        }
+        MonitoringInstanceProperties instanceProperties = new MonitoringInstanceProperties();
+        instanceProperties.setOrder(instanceOrder);
+        instanceProperties.setEndpoint(instanceEndpoint);
+        instanceProperties.setName(instanceName);
+        instanceProperties.setDesc(instanceDesc);
+        instanceProperties.setLanguage(instanceLanguage);
+        MONITORING_PROPERTIES.setInstance(instanceProperties);
+    }
+
+    /**
+     * <p>
+     * 封装心跳属性
+     * </p>
+     *
+     * @param properties              配置属性
+     * @param monitoringProperties    {@link MonitoringProperties}
+     * @param hasMonitoringProperties 是否有监控属性类
+     * @throws ErrorConfigParamException 错误的配置参数异常
+     * @author 皮锋
+     * @custom.date 2020/10/27 20:32
+     */
+    private static void wrapMonitoringHeartbeatProperties(Properties properties,
+                                                          MonitoringProperties monitoringProperties,
+                                                          boolean hasMonitoringProperties)
+            throws ErrorConfigParamException {
+        // 缺省[与服务端或者代理端发心跳包的频率（秒），默认30秒，最小不能小于30秒]
+        long heartbeatRate;
+        if (hasMonitoringProperties) {
+            MonitoringHeartbeatProperties heartbeat = monitoringProperties.getHeartbeat() == null ? new MonitoringHeartbeatProperties() : monitoringProperties.getHeartbeat();
+            heartbeatRate = heartbeat.getRate() == null ? 30L : heartbeat.getRate();
+        } else {
+            // 缺省[与服务端或者代理端发心跳包的频率（秒），默认30秒，最小不能小于30秒]
+            String heartbeatRateStr = StringUtils.trimToNull(properties.getProperty("monitoring.heartbeat.rate"));
+            heartbeatRate = StringUtils.isBlank(heartbeatRateStr) ? 30L : Long.parseLong(heartbeatRateStr);
+        }
+        // 频率配置不正确
+        long minimum = 30L;
+        if (heartbeatRate < minimum) {
+            throw new ErrorConfigParamException("心跳频率最小不能小于30秒！");
+        }
+        MonitoringHeartbeatProperties heartbeatProperties = new MonitoringHeartbeatProperties();
+        heartbeatProperties.setRate(heartbeatRate);
+        MONITORING_PROPERTIES.setHeartbeat(heartbeatProperties);
+    }
+
+    /**
+     * <p>
+     * 封装服务器信息属性
+     * </p>
+     *
+     * @param properties              配置属性
+     * @param monitoringProperties    {@link MonitoringProperties}
+     * @param hasMonitoringProperties 是否有监控属性类
+     * @throws ErrorConfigParamException 错误的配置参数异常
+     * @author 皮锋
+     * @custom.date 2020/10/27 20:30
+     */
+    private static void wrapMonitoringServerInfoProperties(Properties properties,
+                                                           MonitoringProperties monitoringProperties,
+                                                           boolean hasMonitoringProperties)
+            throws ErrorConfigParamException {
+        // 缺省[是否采集服务器信息，默认false]
+        boolean serverInfoEnable;
+        // 缺省[与服务端或者代理端发服务器信息包的频率（秒），默认60秒，最小不能小于30秒]
+        long serverInfoRate;
+        // 缺省[服务器本机ip地址，默认：自动获取]
+        String serverInfoIp;
+        // 缺省[是否使用sigar采集服务器信息，默认：false]
+        boolean serverInfoUserSigarEnable;
+        if (hasMonitoringProperties) {
+            MonitoringServerInfoProperties serverInfo = monitoringProperties.getServerInfo() == null ? new MonitoringServerInfoProperties() : monitoringProperties.getServerInfo();
+            serverInfoEnable = serverInfo.getEnable() != null && serverInfo.getEnable();
+            serverInfoRate = serverInfo.getRate() == null ? 60L : serverInfo.getRate();
+            serverInfoIp = serverInfo.getIp();
+            serverInfoUserSigarEnable = serverInfo.getUserSigarEnable() != null && serverInfo.getUserSigarEnable();
+        } else {
+            // 缺省[是否采集服务器信息，默认false]
+            String serverInfoEnableStr = StringUtils.trimToNull(properties.getProperty("monitoring.server-info.enable"));
+            serverInfoEnable = !StringUtils.isBlank(serverInfoEnableStr) && Boolean.parseBoolean(serverInfoEnableStr);
+            // 缺省[与服务端或者代理端发服务器信息包的频率（秒），默认60秒，最小不能小于30秒]
+            String serverInfoRateStr = StringUtils.trimToNull(properties.getProperty("monitoring.server-info.rate"));
+            serverInfoRate = StringUtils.isBlank(serverInfoRateStr) ? 60L : Long.parseLong(serverInfoRateStr);
+            // 缺省[服务器本机ip地址，默认：自动获取]
+            serverInfoIp = StringUtils.trimToNull(properties.getProperty("monitoring.server-info.ip"));
+            // 缺省[是否使用sigar采集服务器信息，默认：false]
+            String serverInfoUserSigarEnableStr = StringUtils.trimToNull(properties.getProperty("monitoring.server-info.user-sigar-enable"));
+            serverInfoUserSigarEnable = StringUtils.isNotBlank(serverInfoUserSigarEnableStr) && Boolean.parseBoolean(serverInfoUserSigarEnableStr);
+        }
+        // 频率配置不正确
+        long minimum = 30L;
+        if (serverInfoRate < minimum) {
+            throw new ErrorConfigParamException("获取服务器信息频率最小不能小于30秒！");
+        }
+        // 是否为合法IP地址（为空的情况不考虑）
+        if ((null != serverInfoIp) && (!IpAddressUtils.isIpAddress(serverInfoIp))) {
+            throw new ErrorConfigParamException("服务器本机IP不是合法的IPv4地址！");
+        }
+        MonitoringServerInfoProperties monitoringServerInfoProperties = new MonitoringServerInfoProperties();
+        monitoringServerInfoProperties.setEnable(serverInfoEnable);
+        monitoringServerInfoProperties.setUserSigarEnable(serverInfoUserSigarEnable);
+        monitoringServerInfoProperties.setRate(serverInfoRate);
+        monitoringServerInfoProperties.setIp(serverInfoIp);
+        MONITORING_PROPERTIES.setServerInfo(monitoringServerInfoProperties);
+    }
+
+    /**
+     * <p>
+     * 封装网络设备信息属性
+     * </p>
+     *
+     * @param properties              配置属性
+     * @param monitoringProperties    {@link MonitoringProperties}
+     * @param hasMonitoringProperties 是否有监控属性类
+     * @throws ErrorConfigParamException 错误的配置参数异常
+     * @author 皮锋
+     * @custom.date 2024/11/19 16:45
+     */
+    private static void wrapMonitoringNetworkDeviceInfoProperties(Properties properties,
+                                                                  MonitoringProperties monitoringProperties,
+                                                                  boolean hasMonitoringProperties)
+            throws ErrorConfigParamException {
+        // 缺省[是否采集网络设备信息，默认false]
+        boolean networkDeviceInfoEnable;
+        // 缺省[与服务端或者代理端发送网络设备信息的频率（秒），默认300秒，最小不能小于300秒]
+        long networkDeviceInfoRate;
+        // 缺省[采集网络设备信息snmp协议连接社区字符串，多个用英文逗号分隔，默认public]
+        List<String> networkDeviceInfoSnmpConnectionCommunities;
+        if (hasMonitoringProperties) {
+            MonitoringNetworkDeviceInfoProperties networkDeviceInfo = monitoringProperties.getNetworkDeviceInfo() == null ? new MonitoringNetworkDeviceInfoProperties() : monitoringProperties.getNetworkDeviceInfo();
+            networkDeviceInfoEnable = networkDeviceInfo.getEnable() != null && networkDeviceInfo.getEnable();
+            networkDeviceInfoRate = networkDeviceInfo.getRate() == null ? 300L : networkDeviceInfo.getRate();
+            networkDeviceInfoSnmpConnectionCommunities = CollectionUtils.isEmpty(networkDeviceInfo.getSnmpConnectionCommunities()) ? Collections.singletonList(SnmpDefaultConstants.DEFAULT_COMMUNITY_STRING) : networkDeviceInfo.getSnmpConnectionCommunities();
+        } else {
+            // 缺省[是否采集网络设备信息，默认false]
+            String networkDeviceInfoEnableStr = StringUtils.trimToNull(properties.getProperty("monitoring.network-device-info.enable"));
+            networkDeviceInfoEnable = !StringUtils.isBlank(networkDeviceInfoEnableStr) && Boolean.parseBoolean(networkDeviceInfoEnableStr);
+            // 缺省[与服务端或者代理端发送网络设备信息的频率（秒），默认300秒，最小不能小于300秒]
+            String networkDeviceInfoRateStr = StringUtils.trimToNull(properties.getProperty("monitoring.network-device-info.rate"));
+            networkDeviceInfoRate = StringUtils.isBlank(networkDeviceInfoRateStr) ? 300L : Long.parseLong(networkDeviceInfoRateStr);
+            // 缺省[采集网络设备信息snmp协议连接社区字符串，多个用英文逗号分隔，默认public]
+            String networkDeviceInfoSnmpConnectionCommunitiesStr = StringUtils.trimToNull(properties.getProperty("monitoring.network-device-info.snmp-connection-communities"));
+            networkDeviceInfoSnmpConnectionCommunities = StringUtils.isBlank(networkDeviceInfoSnmpConnectionCommunitiesStr) ? Collections.singletonList(SnmpDefaultConstants.DEFAULT_COMMUNITY_STRING) : Arrays.asList(networkDeviceInfoSnmpConnectionCommunitiesStr.split(","));
+        }
+        // 频率配置不正确
+        long minimum = 300L;
+        if (networkDeviceInfoRate < minimum) {
+            throw new ErrorConfigParamException("获取网络设备信息频率最小不能小于300秒！");
+        }
+        MonitoringNetworkDeviceInfoProperties monitoringNetworkDeviceInfoProperties = new MonitoringNetworkDeviceInfoProperties();
+        monitoringNetworkDeviceInfoProperties.setEnable(networkDeviceInfoEnable);
+        monitoringNetworkDeviceInfoProperties.setRate(networkDeviceInfoRate);
+        monitoringNetworkDeviceInfoProperties.setSnmpConnectionCommunities(networkDeviceInfoSnmpConnectionCommunities);
+        MONITORING_PROPERTIES.setNetworkDeviceInfo(monitoringNetworkDeviceInfoProperties);
+    }
+
+    /**
+     * <p>
+     * 封装Java虚拟机信息属性
+     * </p>
+     *
+     * @param properties              配置属性
+     * @param monitoringProperties    {@link MonitoringProperties}
+     * @param hasMonitoringProperties 是否有监控属性类
+     * @throws ErrorConfigParamException 错误的配置参数异常
+     * @author 皮锋
+     * @custom.date 2020/10/27 20:31
+     */
+    private static void wrapMonitoringJvmInfoProperties(Properties properties,
+                                                        MonitoringProperties monitoringProperties,
+                                                        boolean hasMonitoringProperties)
+            throws ErrorConfigParamException {
+        // 缺省[是否采集Java虚拟机信息，默认false]
+        boolean jvmInfoEnable;
+        // 缺省[与服务端或者代理端发送Java虚拟机信息的频率（秒），默认60秒，最小不能小于30秒]
+        long jvmInfoRate;
+        if (hasMonitoringProperties) {
+            MonitoringJvmInfoProperties jvmInfo = monitoringProperties.getJvmInfo() == null ? new MonitoringJvmInfoProperties() : monitoringProperties.getJvmInfo();
+            jvmInfoEnable = jvmInfo.getEnable() != null && jvmInfo.getEnable();
+            jvmInfoRate = jvmInfo.getRate() == null ? 60L : jvmInfo.getRate();
+        } else {
+            // 缺省[是否采集Java虚拟机信息，默认false]
+            String jvmInfoEnableStr = StringUtils.trimToNull(properties.getProperty("monitoring.jvm-info.enable"));
+            jvmInfoEnable = !StringUtils.isBlank(jvmInfoEnableStr) && Boolean.parseBoolean(jvmInfoEnableStr);
+            // 缺省[与服务端或者代理端发送Java虚拟机信息的频率（秒），默认60秒，最小不能小于30秒]
+            String jvmInfoRateStr = StringUtils.trimToNull(properties.getProperty("monitoring.jvm-info.rate"));
+            jvmInfoRate = StringUtils.isBlank(jvmInfoRateStr) ? 60L : Long.parseLong(jvmInfoRateStr);
+        }
+        // 频率配置不正确
+        long minimum = 30L;
+        if (jvmInfoRate < minimum) {
+            throw new ErrorConfigParamException("获取Java虚拟机信息频率最小不能小于30秒！");
+        }
+        MonitoringJvmInfoProperties monitoringJvmInfoProperties = new MonitoringJvmInfoProperties();
+        monitoringJvmInfoProperties.setEnable(jvmInfoEnable);
+        monitoringJvmInfoProperties.setRate(jvmInfoRate);
+        MONITORING_PROPERTIES.setJvmInfo(monitoringJvmInfoProperties);
+    }
+
+    /**
+     * <p>
+     * 封装Java线程池信息属性
+     * </p>
+     *
+     * @param properties              配置属性
+     * @param monitoringProperties    {@link MonitoringProperties}
+     * @param hasMonitoringProperties 是否有监控属性类
+     * @throws ErrorConfigParamException 错误的配置参数异常
+     * @author 皮锋
+     * @custom.date 2026/3/13 22:49
+     */
+    private static void wrapMonitoringJavaThreadPoolInfoProperties(Properties properties,
+                                                                   MonitoringProperties monitoringProperties,
+                                                                   boolean hasMonitoringProperties)
+            throws ErrorConfigParamException {
+        // 缺省[是否采集Java线程池信息，默认false]
+        boolean javaThreadPoolInfoEnable;
+        // 缺省[与服务端或者代理端发送Java线程池信息的频率（秒），默认60秒，最小不能小于30秒]
+        long javaThreadPoolInfoRate;
+        if (hasMonitoringProperties) {
+            MonitoringJavaThreadPoolInfoProperties javaThreadPoolInfo = monitoringProperties.getJavaThreadPoolInfo() == null ? new MonitoringJavaThreadPoolInfoProperties() : monitoringProperties.getJavaThreadPoolInfo();
+            javaThreadPoolInfoEnable = javaThreadPoolInfo.getEnable() != null && javaThreadPoolInfo.getEnable();
+            javaThreadPoolInfoRate = javaThreadPoolInfo.getRate() == null ? 60L : javaThreadPoolInfo.getRate();
+        } else {
+            // 缺省[是否采集Java线程池信息，默认false]
+            String javaThreadPoolInfoEnableStr = StringUtils.trimToNull(properties.getProperty("monitoring.java-thread-pool-info.enable"));
+            javaThreadPoolInfoEnable = !StringUtils.isBlank(javaThreadPoolInfoEnableStr) && Boolean.parseBoolean(javaThreadPoolInfoEnableStr);
+            // 缺省[与服务端或者代理端发送Java线程池信息的频率（秒），默认60秒，最小不能小于30秒]
+            String javaThreadPoolInfoRateStr = StringUtils.trimToNull(properties.getProperty("monitoring.java-thread-pool-info.rate"));
+            javaThreadPoolInfoRate = StringUtils.isBlank(javaThreadPoolInfoRateStr) ? 60L : Long.parseLong(javaThreadPoolInfoRateStr);
+        }
+        // 频率配置不正确
+        long minimum = 30L;
+        if (javaThreadPoolInfoRate < minimum) {
+            throw new ErrorConfigParamException("获取Java线程池信息频率最小不能小于30秒！");
+        }
+        MonitoringJavaThreadPoolInfoProperties monitoringJavaThreadPoolInfoProperties = new MonitoringJavaThreadPoolInfoProperties();
+        monitoringJavaThreadPoolInfoProperties.setEnable(javaThreadPoolInfoEnable);
+        monitoringJavaThreadPoolInfoProperties.setRate(javaThreadPoolInfoRate);
+        MONITORING_PROPERTIES.setJavaThreadPoolInfo(monitoringJavaThreadPoolInfoProperties);
+    }
+
+    /**
+     * <p>
+     * 封装docker信息属性
+     * </p>
+     *
+     * @param properties              配置属性
+     * @param monitoringProperties    {@link MonitoringProperties}
+     * @param hasMonitoringProperties 是否有监控属性类
+     * @throws ErrorConfigParamException 错误的配置参数异常
+     * @author YangRui
+     * @custom.date 2022/6/23 15:47
+     */
+    private static void wrapMonitoringDockerInfoProperties(Properties properties,
+                                                           MonitoringProperties monitoringProperties,
+                                                           boolean hasMonitoringProperties)
+            throws ErrorConfigParamException {
+        // 缺省[是否采集docker信息，默认false]
+        boolean dockerInfoEnable;
+        // 缺省[与服务端或者代理端发送docker信息的频率（秒），默认60秒，最小不能小于30秒]
+        long dockerInfoRate;
+        // 缺省[被监控的docker主机，默认：tcp://localhost:2375]
+        String dockerHost;
+        // 缺省[启用/禁用TLS验证，默认false]
+        boolean tlsVerify;
+        // 缺省[验证所需证书的路径，默认：不填写]
+        String certPath;
+        // 缺省[其他docker配置文件的路径，默认：不填写]
+        String config;
+        // 缺省[API版本，默认：不填写]
+        String apiVersion;
+        // 缺省[注册地址，默认：不填写]
+        String registryUrl;
+        // 缺省[注册用户名，默认：不填写]
+        String registryUsername;
+        // 缺省[注册密码，默认：不填写]
+        String registryPassword;
+        // 缺省[注册电子邮箱，默认：不填写]
+        String registryEmail;
+        if (hasMonitoringProperties) {
+            MonitoringDockerInfoProperties dockerInfo = monitoringProperties.getDockerInfo() == null ? new MonitoringDockerInfoProperties() : monitoringProperties.getDockerInfo();
+            dockerInfoEnable = dockerInfo.getEnable() != null && dockerInfo.getEnable();
+            dockerInfoRate = dockerInfo.getRate() == null ? 60L : dockerInfo.getRate();
+            dockerHost = dockerInfo.getHost();
+            tlsVerify = dockerInfo.getTlsVerify() != null && dockerInfo.getTlsVerify();
+            certPath = dockerInfo.getCertPath();
+            config = dockerInfo.getConfig();
+            apiVersion = dockerInfo.getApiVersion();
+            registryUrl = dockerInfo.getRegistryUrl();
+            registryUsername = dockerInfo.getRegistryUsername();
+            registryPassword = dockerInfo.getRegistryPassword();
+            registryEmail = dockerInfo.getRegistryEmail();
+        } else {
+            String dockerInfoEnableStr = StringUtils.trimToNull(properties.getProperty("monitoring.docker-info.enable"));
+            dockerInfoEnable = !StringUtils.isBlank(dockerInfoEnableStr) && Boolean.parseBoolean(dockerInfoEnableStr);
+            String dockerInfoRateStr = StringUtils.trimToNull(properties.getProperty("monitoring.docker-info.rate"));
+            dockerInfoRate = StringUtils.isBlank(dockerInfoRateStr) ? 60L : Long.parseLong(dockerInfoRateStr);
+            dockerHost = StringUtils.trimToNull(properties.getProperty("monitoring.docker-info.host"));
+            String tlsVerifyStr = StringUtils.trimToNull(properties.getProperty("monitoring.docker-info.tls-verify"));
+            tlsVerify = !StringUtils.isBlank(tlsVerifyStr) && Boolean.parseBoolean(tlsVerifyStr);
+            certPath = StringUtils.trimToNull(properties.getProperty("monitoring.docker-info.cert-path"));
+            config = StringUtils.trimToNull(properties.getProperty("monitoring.docker-info.config"));
+            apiVersion = StringUtils.trimToNull(properties.getProperty("monitoring.docker-info.api-version"));
+            registryUrl = StringUtils.trimToNull(properties.getProperty("monitoring.docker-info.registry-url"));
+            registryUsername = StringUtils.trimToNull(properties.getProperty("monitoring.docker-info.registry-username"));
+            registryPassword = StringUtils.trimToNull(properties.getProperty("monitoring.docker-info.registry-password"));
+            registryEmail = StringUtils.trimToNull(properties.getProperty("monitoring.docker-info.registry-email"));
+        }
+        // 频率配置不正确
+        long minimum = 30L;
+        if (dockerInfoRate < minimum) {
+            throw new ErrorConfigParamException("获取Docker信息频率最小不能小于30秒！");
+        }
+        if (StringUtils.isBlank(dockerHost)) {
+            dockerHost = "tcp://localhost:2375";
+        }
+        MonitoringDockerInfoProperties monitoringDockerInfoProperties = new MonitoringDockerInfoProperties();
+        monitoringDockerInfoProperties.setEnable(dockerInfoEnable);
+        monitoringDockerInfoProperties.setRate(dockerInfoRate);
+        monitoringDockerInfoProperties.setHost(dockerHost);
+        monitoringDockerInfoProperties.setTlsVerify(tlsVerify);
+        monitoringDockerInfoProperties.setCertPath(certPath);
+        monitoringDockerInfoProperties.setConfig(config);
+        monitoringDockerInfoProperties.setApiVersion(apiVersion);
+        monitoringDockerInfoProperties.setRegistryUrl(registryUrl);
+        monitoringDockerInfoProperties.setRegistryUsername(registryUsername);
+        monitoringDockerInfoProperties.setRegistryPassword(registryPassword);
+        monitoringDockerInfoProperties.setRegistryEmail(registryEmail);
+        MONITORING_PROPERTIES.setDockerInfo(monitoringDockerInfoProperties);
+    }
+
+    /**
+     * <p>
+     * 封装Arthas属性
+     * </p>
+     *
+     * @param properties              配置属性
+     * @param monitoringProperties    {@link MonitoringProperties}
+     * @param hasMonitoringProperties 是否有监控属性类
+     * @author 皮锋
+     * @custom.date 2023/3/26 16:14
+     */
+    private static void wrapMonitoringArthasProperties(Properties properties,
+                                                       MonitoringProperties monitoringProperties,
+                                                       boolean hasMonitoringProperties) {
+        // 缺省[是否开启arthas，默认false]
+        boolean arthasEnable;
+        if (hasMonitoringProperties) {
+            MonitoringArthasProperties arthas = monitoringProperties.getArthas() == null ? new MonitoringArthasProperties() : monitoringProperties.getArthas();
+            arthasEnable = arthas.getEnable() != null && arthas.getEnable();
+        } else {
+            // 缺省[是否开启arthas，默认false]
+            String arthasEnableStr = StringUtils.trimToNull(properties.getProperty("monitoring.arthas.enable"));
+            arthasEnable = !StringUtils.isBlank(arthasEnableStr) && Boolean.parseBoolean(arthasEnableStr);
+        }
+        MonitoringArthasProperties monitoringArthasProperties = new MonitoringArthasProperties();
+        monitoringArthasProperties.setEnable(arthasEnable);
+        MONITORING_PROPERTIES.setArthas(monitoringArthasProperties);
+    }
+
+}

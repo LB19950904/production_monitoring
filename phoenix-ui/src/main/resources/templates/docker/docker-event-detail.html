@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>docker事件详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="./layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" href="./style/admin.css" th:href="@{/style/admin.css}" media="all">
+    <link rel="stylesheet" href="./style/myself.css" th:href="@{/style/myself.css}" media="all">
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="./js/html5.min.js" th:src="@{/js/html5.min.js}"></script>
+    <script src="./js/respond.min.js" th:src="@{/js/respond.min.js}"></script>
+    <![endif]-->
+    <script type="text/javascript" charset="utf-8" th:inline="javascript">
+        var ctxPath = /*[[@{/}]]*/'';
+        var tokenValue = /*[[${_csrf.token}]]*/'';
+        // docker容器的主键
+        var serverIp = [[${serverIp}]];
+        var id = [[${id}]];
+        var eventId = [[${eventId}]];
+    </script>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-tab layui-tab-brief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">详情</li>
+                <li>时光轴</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-collapse">
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">事件</h2>
+                            <div class="layui-colla-content layui-show">
+                                <div class="layui-row layui-col-space10" style="word-break: break-all;">
+                                    <div class="layui-col-md12">
+                                        <label class="label-font-weight">服务器IP：</label>[[${monitorDockerEventVo.serverIp}]]
+                                    </div>
+                                    <div class="layui-col-md12">
+                                        <label class="label-font-weight">事件ID：</label>[[${monitorDockerEventVo.eventId}]]
+                                    </div>
+                                    <div class="layui-col-md12">
+                                        <label class="label-font-weight">事件状态：</label>[[${monitorDockerEventVo.eventStatus}]]
+                                    </div>
+                                    <div class="layui-col-md12">
+                                        <label class="label-font-weight">事件来源：</label>[[${monitorDockerEventVo.eventFrom}]]
+                                    </div>
+                                    <div class="layui-col-md12">
+                                        <label class="label-font-weight">事件类型：</label>[[${monitorDockerEventVo.eventType}]]
+                                    </div>
+                                    <div class="layui-col-md12">
+                                        <label class="label-font-weight">事件动作：</label>[[${monitorDockerEventVo.eventAction}]]
+                                    </div>
+                                    <div class="layui-col-md12">
+                                        <label class="label-font-weight">事件属性：</label>[[${monitorDockerEventVo.eventAttribute}]]
+                                    </div>
+                                    <div class="layui-col-md12">
+                                        <label class="label-font-weight">事件发生时间：</label>
+                                        [[${#dates.format(monitorDockerEventVo.happenTime,'yyyy-MM-dd HH:mm:ss')}]]
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">管理信息</h2>
+                            <div class="layui-colla-content layui-show">
+                                <div class="layui-row layui-col-space10" style="word-wrap:break-word;">
+                                    <div class="layui-col-md12">
+                                        <label class="label-font-weight">新增时间：</label>
+                                        [[${#dates.format(monitorDockerEventVo.insertTime,'yyyy-MM-dd HH:mm:ss')}]]
+                                    </div>
+                                    <div class="layui-col-md12">
+                                        <label class="label-font-weight">更新时间：</label>
+                                        [[${#dates.format(monitorDockerEventVo.updateTime,'yyyy-MM-dd HH:mm:ss')}]]
+                                    </div>
+                                    <div class="layui-col-md12">
+                                        <label class="label-font-weight">docker服务状态：</label>
+                                        [[${monitorDockerEventVo.isOnline=='0'?'离线':'在线'}]]
+                                    </div>
+                                    <div class="layui-col-md12">
+                                        <label class="label-font-weight">监控环境：</label>[[${monitorDockerEventVo.monitorEnv}]]
+                                    </div>
+                                    <div class="layui-col-md12">
+                                        <label class="label-font-weight">监控分组：</label>[[${monitorDockerEventVo.monitorGroup}]]
+                                    </div>
+                                    <div class="layui-col-md12">
+                                        <label class="label-font-weight">摘要：</label>[[${monitorDockerEventVo.dockerSummary}]]
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <ul class="layui-timeline" id="docker-event-detail-flow-auto">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./js/common.js" th:src="@{/js/common.js}" charset="utf-8"></script>
+<script src="./layui/layui.js" th:src="@{/layui/layui.js}"></script>
+<script>
+    layui.config({
+        base: ctxPath //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+        dockerEventDetail: 'docker/dockerEventDetail' // docker事件详情模块
+    }).use(['index', 'element', 'dockerEventDetail']);
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitee.pifeng.monitoring.ui.business.web.dao.IMonitorDockerDao">
+
+    <!-- docker服务在线率统计 -->
+    <select id="getDockerNormalRateStatistics" resultType="java.util.Map" databaseId="mysql">
+        SELECT tmp.dockerSum                                                         AS dockerSum,
+               tmp.dockerOnLineSum                                                   AS dockerOnLineSum,
+               tmp.dockerOffLineSum                                                  AS dockerOffLineSum,
+               tmp.dockerUnknownLineSum                                              AS dockerUnknownLineSum,
+               IFNULL(ROUND(tmp.dockerOnLineSum * 100 / tmp.dockerSum, 2), '100.00') AS dockerOnLineRate
+        FROM (SELECT COUNT(1)                                                     AS dockerSum,
+                     IFNULL(SUM(CASE WHEN md.IS_ONLINE = 1 THEN 1 ELSE 0 END), 0) AS dockerOnLineSum,
+                     IFNULL(SUM(CASE WHEN md.IS_ONLINE = 0 THEN 1 ELSE 0 END), 0) AS dockerOffLineSum,
+                     IFNULL(SUM(CASE WHEN md.IS_ONLINE IS NULL OR md.IS_ONLINE = '' THEN 1 ELSE 0 END),
+                            0)                                                    AS dockerUnknownLineSum
+              FROM MONITOR_DOCKER md) tmp
+    </select>
+
+</mapper>

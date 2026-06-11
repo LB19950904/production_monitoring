@@ -1,0 +1,308 @@
+package com.gitee.pifeng.monitoring.common.constant.snmp;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+
+/**
+ * <p>
+ * 网络接口类型枚举
+ * </p>
+ *
+ * <a href="https://www.iana.org/assignments/ianaiftype-mib/ianaiftype-mib">
+ * 参考文档：https://www.iana.org/assignments/ianaiftype-mib/ianaiftype-mib
+ * </a>
+ *
+ * @author 皮锋
+ * @custom.date 2022/11/10 21:08
+ */
+@Getter
+@ToString
+@AllArgsConstructor
+public enum IfTypeEnums {
+
+    OTHER(1, "other", "其他"),
+    REGULAR1822(2, "regular1822", "1822标准"),
+    HDH1822(3, "hdh1822", "1822 HDH"),
+    DDNX25(4, "ddnX25", "DDN X.25"),
+    RFC877X25(5, "rfc877x25", "RFC 877 X.25"),
+    ETHERNETCSMACD(6, "ethernetCsmacd", "以太网类接口"),
+    ISO88023CSMACD(7, "iso88023Csmacd", "已废弃，应使用ethernetCsmacd"),
+    ISO88024TOKENBUS(8, "iso88024TokenBus", "ISO 8802-4 令牌总线"),
+    ISO88025TOKENRING(9, "iso88025TokenRing", "ISO 8802-5 令牌环"),
+    ISO88026MAN(10, "iso88026Man", "ISO 8802-6 MAN"),
+    STARLAN(11, "starLan", "已废弃，应使用ethernetCsmacd"),
+    PROTEON10MBIT(12, "proteon10Mbit", "Proteon 10 Mbit"),
+    PROTEON80MBIT(13, "proteon80Mbit", "Proteon 80 Mbit"),
+    HYPERCHANNEL(14, "hyperchannel", "HyperChannel"),
+    FDDI(15, "fddi", "FDDI"),
+    LAPB(16, "lapb", "LAPB"),
+    SDL(17, "sdlc", "SDLC"),
+    DS1(18, "ds1", "DS1"),
+    E1(19, "e1", "已废弃，应使用DS1"),
+    BASICISDN(20, "basicISDN", "已不再使用"),
+    PRIMARYISDN(21, "primaryISDN", "已不再使用"),
+    PROPPROPOINTTOPOINTSERIAL(22, "propPointToPointSerial", "专有串行"),
+    PPP(23, "ppp", "PPP"),
+    SOFTWARELOOPBACK(24, "softwareLoopback", "软件回环"),
+    EON(25, "eon", "CLNP over IP"),
+    ETHERNET3MBIT(26, "ethernet3Mbit", "3 Mbit以太网"),
+    NSIP(27, "nsip", "XNS over IP"),
+    SLIP(28, "slip", "通用SLIP"),
+    ULTRA(29, "ultra", "ULTRA技术"),
+    DS3(30, "ds3", "DS3"),
+    SIP(31, "sip", "SMDS, coffee"),
+    FRAMERELAY(32, "frameRelay", "帧中继"),
+    RS232(33, "rs232", "RS-232"),
+    PARA(34, "para", "并行端口"),
+    ARCNET(35, "arcnet", "Arcnet"),
+    ARCNETPLUS(36, "arcnetPlus", "Arcnet Plus"),
+    ATM(37, "atm", "ATM单元"),
+    MIOX25(38, "miox25", "未定义"),
+    SONET(39, "sonet", "SONET或SDH"),
+    X25PLE(40, "x25ple", "未定义"),
+    ISO88022LLC(41, "iso88022llc", "未定义"),
+    LOCALTALK(42, "localTalk", "LocalTalk"),
+    SMDSDXI(43, "smdsDxi", "未定义"),
+    FRAMERELAYSERVICE(44, "frameRelayService", "帧中继服务"),
+    V35(45, "v35", "V.35"),
+    HSSI(46, "hssi", "HSSI"),
+    HIPPI(47, "hippi", "HIPPI"),
+    MODEM(48, "modem", "通用调制解调器"),
+    AAL5(49, "aal5", "AAL5 over ATM"),
+    SONETPATH(50, "sonetPath", "未定义"),
+    SONETVT(51, "sonetVT", "未定义"),
+    SMDSICIP(52, "smdsIcip", "SMDS InterCarrier Interface"),
+    PROPVIRTUAL(53, "propVirtual", "专有虚拟/内部"),
+    PROPMULTIPLEXOR(54, "propMultiplexor", "专有多路复用"),
+    IEEE80212(55, "ieee80212", "100BaseVG"),
+    FIBRECHANNEL(56, "fibreChannel", "光纤通道"),
+    HIPPIINTERFACE(57, "hippiInterface", "HIPPI接口"),
+    FRAMERELAYINTERCONNECT(58, "frameRelayInterconnect", "已废弃，应使用frameRelay或frameRelayService"),
+    AFLANE8023(59, "aflane8023", "ATM Emulated LAN for 802.3"),
+    AFLANE8025(60, "aflane8025", "ATM Emulated LAN for 802.5"),
+    CCTEMUL(61, "cctEmul", "ATM Emulated电路"),
+    FASTETHER(62, "fastEther", "已废弃，应使用ethernetCsmacd"),
+    ISDN(63, "isdn", "ISDN和X.25"),
+    V11(64, "v11", "CCITT V.11/X.21"),
+    V36(65, "v36", "CCITT V.36"),
+    G703AT64K(66, "g703at64k", "CCITT G703 at 64Kbps"),
+    G703AT2MB(67, "g703at2mb", "已废弃，应使用DS1"),
+    QLLC(68, "qllc", "SNA QLLC"),
+    FASTETHERFX(69, "fastEtherFX", "已废弃，应使用ethernetCsmacd"),
+    CHANNEL(70, "channel", "通道"),
+    IEEE80211(71, "ieee80211", "无线电扩频"),
+    IBM370PARCHAN(72, "ibm370parChan", "IBM System 360/370 OEMI通道"),
+    ESCON(73, "escon", "IBM Enterprise Systems Connection"),
+    DLSW(74, "dlsw", "数据链路切换"),
+    ISDNS(75, "isdns", "ISDN S/T接口"),
+    ISDNU(76, "isdnu", "ISDN U接口"),
+    LAPD(77, "lapd", "链路访问协议D"),
+    IPSWITCH(78, "ipSwitch", "IP切换对象"),
+    RSRB(79, "rsrb", "远程源路由桥接"),
+    ATMLOGICAL(80, "atmLogical", "ATM逻辑端口"),
+    DS0(81, "ds0", "数字信号级别0"),
+    DS0BUNDLE(82, "ds0Bundle", "同一DS1上的ds0组"),
+    BSC(83, "bsc", "同步协议"),
+    ASYNC(84, "async", "异步协议"),
+    CNR(85, "cnr", "战斗网络无线电"),
+    ISO88025DTR(86, "iso88025Dtr", "ISO 8802-5r DTR"),
+    EPLRS(87, "eplrs", "扩展位置报告系统"),
+    ARAP(88, "arap", "AppleTalk远程访问协议"),
+    PROPCNLS(89, "propCnls", "专有无连接协议"),
+    HOSTPAD(90, "hostPad", "CCITT-ITU X.29 PAD协议"),
+    TERMPAD(91, "termPad", "CCITT-ITU X.3 PAD设施"),
+    FRAMERELAYMPI(92, "frameRelayMPI", "帧中继多协议互联"),
+    X213(93, "x213", "CCITT-ITU X213"),
+    ADSL(94, "adsl", "非对称数字用户线路"),
+    RADSL(95, "radsl", "速率自适应数字用户线路"),
+    SDSL(96, "sdsl", "对称数字用户线路"),
+    VDSL(97, "vdsl", "非常高速数字用户线路"),
+    ISO88025CRFPINT(98, "iso88025CRFPInt", "ISO 8802-5 CRFP"),
+    MYRINET(99, "myrinet", "Myricom Myrinet"),
+    VOICEEM(100, "voiceEM", "语音接收和传输"),
+    VOICEFXO(101, "voiceFXO", "语音外线办公室"),
+    VOICEFXS(102, "voiceFXS", "语音外线站"),
+    VOICEENCAP(103, "voiceEncap", "语音封装"),
+    VOICEOVERIP(104, "voiceOverIp", "语音过IP封装"),
+    ATMDXI(105, "atmDxi", "ATM DXI"),
+    ATMFUNI(106, "atmFuni", "ATM FUNI"),
+    ATMIMA(107, "atmIma", "ATM IMA"),
+    PPPMULTILINKBUNDLE(108, "pppMultilinkBundle", "PPP多链路捆绑"),
+    IPOVERCDLC(109, "ipOverCdlc", "IBM ipOverCdlc"),
+    IPOVERCLAW(110, "ipOverClaw", "IBM公共链接访问工作站"),
+    STACKTOSTACK(111, "stackToStack", "IBM堆栈到堆栈"),
+    VIRTUALIPADDRESS(112, "virtualIpAddress", "IBM VIPA"),
+    MPC(113, "mpc", "IBM多协议通道支持"),
+    IPOVERATM(114, "ipOverAtm", "IBM ipOverAtm"),
+    ISO88025FIBER(115, "iso88025Fiber", "ISO 8802-5j光纤令牌环"),
+    TDL(116, "tdlc", "IBM双轴数据链路控制"),
+    GIGABITETHERNET(117, "gigabitEthernet", "已废弃，应使用ethernetCsmacd"),
+    HDLC(118, "hdlc", "HDLC"),
+    LAPF(119, "lapf", "LAP F"),
+    V37(120, "v37", "V.37"),
+    X25MLP(121, "x25mlp", "多链路协议"),
+    X25HUNTGROUP(122, "x25huntGroup", "X25猎群"),
+    TRANSPHDLC(123, "transpHdlc", "传输HDLC"),
+    INTERLEAVE(124, "interleave", "交错通道"),
+    FAST(125, "fast", "快速通道"),
+    IP(126, "ip", "IP（用于APPN HPR在IP网络中）"),
+    DOCSCABLEMACLAYER(127, "docsCableMaclayer", "CATV MAC层"),
+    DOCSCABLEDOWNSTREAM(128, "docsCableDownstream", "CATV下游接口"),
+    DOCSCABLEUPSTREAM(129, "docsCableUpstream", "CATV上游接口"),
+    A12MPPSWITCH(130, "a12MppSwitch", "Avalon并行处理器"),
+    TUNNEL(131, "tunnel", "封装接口"),
+    COFFEE(132, "coffee", "咖啡壶"),
+    CES(133, "ces", "电路仿真服务"),
+    ATMSUBINTERFACE(134, "atmSubInterface", "ATM子接口"),
+    L2VLAN(135, "l2vlan", "第2层虚拟局域网使用802.1Q"),
+    L3IPVLAN(136, "l3ipvlan", "第3层虚拟局域网使用IP"),
+    L3IPXVLAN(137, "l3ipxvlan", "第3层虚拟局域网使用IPX"),
+    DIGITALPOWERLINE(138, "digitalPowerline", "IP过电力线"),
+    MEDIAMAILOVERIP(139, "mediaMailOverIp", "多媒体邮件过IP"),
+    DTM(140, "dtm", "动态同步传输模式"),
+    DCN(141, "dcn", "数据通信网络"),
+    IPFORWARD(142, "ipForward", "IP转发接口"),
+    MSDSL(143, "msdsl", "多速率对称DSL"),
+    IEEE1394(144, "ieee1394", "IEEE1394高性能串行总线"),
+    IF_GSN(145, "if-gsn", "HIPPI-6400"),
+    DVBRCCMACLAYER(146, "dvbRccMacLayer", "DVB-RCC MAC层"),
+    DVBRCCDOWNSTREAM(147, "dvbRccDownstream", "DVB-RCC下游通道"),
+    DVBRCCTHUPSTREAM(148, "dvbRccUpstream", "DVB-RCC上游通道"),
+    ATMVIRTUAL(149, "atmVirtual", "ATM虚拟接口"),
+    MPSTUNNEL(150, "mplsTunnel", "MPLS隧道虚拟接口"),
+    SRP(151, "srp", "空间重用协议"),
+    VOICEOVERATM(152, "voiceOverAtm", "语音过ATM"),
+    VOICEOVERFRAMERELAY(153, "voiceOverFrameRelay", "语音过帧中继"),
+    IDSL(154, "idsl", "数字用户线路过ISDN"),
+    COMPOSITELINK(155, "compositeLink", "Avici复合链接接口"),
+    SS7SIGLINK(156, "ss7SigLink", "SS7信令链路"),
+    PROPWIRELESSP2P(157, "propWirelessP2P", "专有P2P无线"),
+    FRFORWARD(158, "frForward", "帧中继转发"),
+    RFC1483(159, "rfc1483", "多协议过ATM AAL5"),
+    USB(160, "usb", "USB接口"),
+    IEEE8023ADLAG(161, "ieee8023adLag", "IEEE 802.3ad链路聚合"),
+    BGPPOLICYACCOUNTING(162, "bgppolicyaccounting", "BGP策略计费"),
+    FRF16MFRBUNDLE(163, "frf16MfrBundle", "FRF .16多链路帧中继"),
+    H323GATEKEEPER(164, "h323Gatekeeper", "H323网守"),
+    H323PROXY(165, "h323Proxy", "H323语音和视频代理"),
+    MPLS(166, "mpls", "MPLS"),
+    MFSIGLINK(167, "mfSigLink", "多频率信令链路"),
+    HDSL2(168, "hdsl2", "高比特率DSL - 第二代"),
+    SHDSL(169, "shdsl", "多速率HDSL2"),
+    DS1FDL(170, "ds1FDL", "DS1上的4Kbps设施数据链路"),
+    POS(171, "pos", "包过SONET/SDH接口"),
+    DVBASIIN(172, "dvbAsiIn", "DVB-ASI输入"),
+    DVBASIOUT(173, "dvbAsiOut", "DVB-ASI输出"),
+    PLC(174, "plc", "电力线通信"),
+    NFAS(175, "nfas", "非设施关联信令"),
+    TR008(176, "tr008", "TR008"),
+    GR303RDT(177, "gr303RDT", "远程数字终端"),
+    GR303IDT(178, "gr303IDT", "集成数字终端"),
+    ISUP(179, "isup", "ISUP"),
+    PROPDOCSWIRELESSMACLAYER(180, "propDocsWirelessMaclayer", "Cisco专有MAC层"),
+    PROPDOCSWIRELESSDOWNSTREAM(181, "propDocsWirelessDownstream", "Cisco专有下游"),
+    PROPDOCSWIRELESSUPSTREAM(182, "propDocsWirelessUpstream", "Cisco专有上游"),
+    HUPERLAN2(183, "hiperlan2", "HIPERLAN Type 2无线电接口"),
+    PROPBWAP2MP(184, "propBWAp2Mp", "专有宽带无线接入点到多点"),
+    SONETOVERHEADCHANNEL(185, "sonetOverheadChannel", "SONET开销通道"),
+    DIGITALWRAPPEROVERHEADCHANNEL(186, "digitalWrapperOverheadChannel", "数字包装开销通道"),
+    AAL2(187, "aal2", "ATM适配层2"),
+    RADIO_MAC(188, "radioMAC", "无线电链路上的MAC层"),
+    ATM_RADIO(189, "atmRadio", "ATM过无线电链路"),
+    IMT(190, "imt", "机器间中继"),
+    MVL(191, "mvl", "多虚拟线路DSL"),
+    REACHDSL(192, "reachDSL", "长距离DSL"),
+    FRDLCIENDPT(193, "frDlciEndPt", "帧中继DLCI终点"),
+    ATMVCIENDPT(194, "atmVciEndPt", "ATM VCI终点"),
+    OPTICAL_CHANNEL(195, "opticalChannel", "光通道"),
+    OPTICAL_TRANSPORT(196, "opticalTransport", "光传输"),
+    PROPATM(197, "propAtm", "专有ATM"),
+    VOICE_OVER_CABLE(198, "voiceOverCable", "电缆语音接口"),
+    INFINIBAND(199, "infiniband", "Infiniband"),
+    TELINK(200, "teLink", "TE链路"),
+    Q2931(201, "q2931", "Q.2931"),
+    VIRTUALTG(202, "virtualTg", "虚拟中继组"),
+    SIPTG(203, "sipTg", "SIP中继组"),
+    SIPSIG(204, "sipSig", "SIP信令"),
+    DOCSCABLEUPSTREAM_CHANNEL(205, "docsCableUpstreamChannel", "CATV上游通道"),
+    DOCSCABLERFPORT_UPSTREAM(256, "docsCableUpstreamRfPort", "DOCSIS CATV上游RF端口"),
+    CABLE_DOWNSTREAM_RF_PORT(257, "cableDownstreamRfPort", "CATV下游RF端口"),
+    VMWARE_VIRTUAL_NIC(258, "vmwareVirtualNic", "VMware虚拟网络接口"),
+    IEEE802154(259, "ieee802154", "IEEE 802.15.4 WPAN接口"),
+    OTN_ODU(260, "otnOdu", "OTN光数据单元"),
+    OTN_OTU(261, "otnOtu", "OTN光通道传输单元"),
+    IF_VFI_TYPE(262, "ifVfiType", "VPLS转发实例接口类型"),
+    G9981(263, "g9981", "G.998.1绑定接口"),
+    G9982(264, "g9982", "G.998.2绑定接口"),
+    G9983(265, "g9983", "G.998.3绑定接口"),
+    ALUEPON(266, "aluEpon", "以太网无源光网络（E-PON）"),
+    ALUEPON_ONU(267, "aluEponOnu", "E-PON光网络单元"),
+    ALUEPON_PHYSICAL_UNI(268, "aluEponPhysicalUni", "E-PON物理用户到网络接口"),
+    ALUEPON_LOGICAL_LINK(269, "aluEponLogicalLink", "E-PON逻辑链路仿真"),
+    ALUGPON_ONU(270, "aluGponOnu", "GPON光网络单元"),
+    ALUGPON_PHYSICAL_UNI(271, "aluGponPhysicalUni", "GPON物理用户到网络接口"),
+    VMWARE_NIC_TEAM(272, "vmwareNicTeam", "VMware NIC团队"),
+    DOCSOFDM_DOWNSTREAM(277, "docsOfdmDownstream", "CATV下游OFDM接口"),
+    DOCSOFDMA_UPSTREAM(278, "docsOfdmaUpstream", "CATV上游OFDMA接口"),
+    GFAST(279, "gfast", "G.fast端口"),
+    SDCI(280, "sdci", "SDCI（IO-Link）"),
+    XBOX_WIRELESS(281, "xboxWireless", "Xbox无线"),
+    FASTDSL(282, "fastdsl", "FastDSL"),
+    DOCS_CABLE_SCTE55D1_FWD_OOB(283, "docsCableScte55d1FwdOob", "Cable SCTE 55-1 OOB前向通道"),
+    DOCS_CABLE_SCTE55D1_RET_OOB(284, "docsCableScte55d1RetOob", "Cable SCTE 55-1 OOB返回通道"),
+    DOCS_CABLE_SCTE55D2_DS_OOB(285, "docsCableScte55d2DsOob", "Cable SCTE 55-2 OOB下行通道"),
+    DOCS_CABLE_SCTE55D2_US_OOB(286, "docsCableScte55d2UsOob", "Cable SCTE 55-2 OOB上行通道"),
+    DOCS_CABLE_NDF(287, "docsCableNdf", "Cable窄带数字前向"),
+    DOCS_CABLE_NDR(288, "docsCableNdr", "Cable窄带数字返回"),
+    PTM(289, "ptm", "包传输模式"),
+    GHN(290, "ghn", "G.hn端口"),
+    OTN_OTSIG(291, "otnOtsi", "OTN光支路信号"),
+    OTN_OTUC(292, "otnOtuc", "OTN OTUCn"),
+    OTN_ODUC(293, "otnOduc", "OTN ODUC"),
+    OTN_OTUC_SIGNAL(294, "otnOtsig", "OTN OTUC信号"),
+    MICROWAVE_CARRIER_TERMINATION(295, "microwaveCarrierTermination", "单微波载波的空中接口"),
+    MICROWAVE_RADIO_LINK_TERMINAL(296, "microwaveRadioLinkTerminal", "一个或多个聚合微波载波的无线电链路接口"),
+    IEEE8021AX_DRNI(297, "ieee8021axDrni", "IEEE 802.1AX分布式弹性网络接口"),
+    AX25(298, "ax25", "AX.25网络接口"),
+    IEEE19061NANOCOM(299, "ieee19061nanocom", "纳米和分子通信"),
+    CPRI(300, "cpri", "公共公共无线电接口"),
+    OMNI(301, "omni", "叠加多链路网络接口（OMNI）"),
+    ROE(302, "roe", "无线电过以太网接口"),
+    P2POVERLAN(303, "p2pOverLan", "点对点过局域网接口");
+
+    /**
+     * 网络接口类型ID
+     */
+    private final int id;
+
+    /**
+     * 网络接口类型名字（英文）
+     */
+    private final String nameEn;
+
+    /**
+     * 网络接口类型名字（中文）
+     */
+    private final String nameCn;
+
+    /**
+     * <p>
+     * 网络接口类型ID转中文名字
+     * </p>
+     *
+     * @param id 网络接口类型ID
+     * @return 网络接口类型中文名字
+     * @author 皮锋
+     * @custom.date 2024/11/10 21:17
+     */
+    public static String getNameCnById(int id) {
+        for (IfTypeEnums type : IfTypeEnums.values()) {
+            if (type.getId() == id) {
+                return type.getNameCn() + "(" + type.getNameEn() + ")";
+            }
+        }
+        return null;
+    }
+
+}

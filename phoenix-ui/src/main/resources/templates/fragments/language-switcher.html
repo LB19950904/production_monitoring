@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Language Switcher</title>
+</head>
+<body>
+
+<!-- 定义语言切换器片段 -->
+<div th:fragment="language-switcher">
+    <a href="javascript:;" onclick="toggleLanguage()" style="padding: 0 15px;">
+        <img th:if="${langCode == 'zh_CN'}" src="/images/new-ui/中文.png" alt="中文">
+        <img th:if="${langCode == 'en_US'}" src="/images/new-ui/英文.png" alt="English">
+    </a>
+</div>
+
+</body>
+</html>

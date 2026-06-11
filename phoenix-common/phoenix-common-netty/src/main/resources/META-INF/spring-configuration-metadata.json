@@ -1,0 +1,72 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.netty.config.property.WebSocketProperties",
+      "name": "ws",
+      "type": "com.gitee.pifeng.monitoring.common.netty.config.property.WebSocketProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.netty.config.property.WebSocketProperties",
+      "name": "ws.server.enable",
+      "description": "是否开启WebSocket",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.netty.config.property.WebSocketProperties",
+      "name": "ws.server.host",
+      "description": "主机名",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.netty.config.property.WebSocketProperties",
+      "name": "ws.server.port",
+      "description": "端口号",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.netty.config.property.WebSocketProperties",
+      "name": "ws.server.path",
+      "description": "路径",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.netty.config.property.WebSocketProperties",
+      "name": "ws.server.client-connect-host",
+      "description": "客户端连接的地址，集群部署时需要，不配置则会自动获取",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.netty.config.property.WebSocketProperties",
+      "name": "ws.server.ssl.enabled",
+      "description": "是否使用SSL",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.netty.config.property.WebSocketProperties",
+      "name": "ws.server.ssl.key-store",
+      "description": "证书名字",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.netty.config.property.WebSocketProperties",
+      "name": "ws.server.ssl.key-store-password",
+      "description": "密钥库密码",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.netty.config.property.WebSocketProperties",
+      "name": "ws.server.ssl.key-store-type",
+      "description": "密钥库类型",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.netty.config.property.WebSocketProperties",
+      "name": "ws.server.ssl.key-alias",
+      "description": "秘钥别名",
+      "type": "java.lang.String"
+    }
+  ]
+}

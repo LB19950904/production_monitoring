@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitee.pifeng.monitoring.ui.business.web.dao.IMonitorDockerStatsDao">
+
+    <!-- 获取docker资源统计列表 -->
+    <select id="getMonitorDockerStatsList"
+            resultType="com.gitee.pifeng.monitoring.ui.business.web.vo.MonitorDockerStatsVo">
+        SELECT s.*,d.MONITOR_ENV,d.MONITOR_GROUP,d.DOCKER_SUMMARY,d.IS_ONLINE
+        FROM MONITOR_DOCKER_STATS s
+        LEFT JOIN MONITOR_DOCKER d ON s.SERVER_IP = d.SERVER_IP
+        <where>
+            <if test="params.serverIp!=null and params.serverIp!=''">
+                AND s.SERVER_IP LIKE CONCAT('%', #{params.serverIp}, '%')
+            </if>
+            <if test="params.containerName!=null and params.containerName!=''">
+                AND s.CONTAINER_NAME LIKE CONCAT('%', #{params.containerName}, '%')
+            </if>
+            <if test="params.monitorEnv!=null and params.monitorEnv!=''">
+                AND d.MONITOR_ENV = #{params.monitorEnv}
+            </if>
+            <if test="params.monitorGroup!=null and params.monitorGroup!=''">
+                AND d.MONITOR_GROUP = #{params.monitorGroup}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取docker资源统计信息 -->
+    <select id="getMonitorDockerStatsInfo"
+            resultType="com.gitee.pifeng.monitoring.ui.business.web.vo.MonitorDockerStatsVo">
+        SELECT s.*,d.MONITOR_ENV,d.MONITOR_GROUP,d.DOCKER_SUMMARY,d.IS_ONLINE
+        FROM MONITOR_DOCKER_STATS s
+        LEFT JOIN MONITOR_DOCKER d ON s.SERVER_IP = d.SERVER_IP
+        <where>
+            <if test="serverIp!=null and serverIp!=''">
+                AND s.SERVER_IP = #{serverIp}
+            </if>
+            <if test="containerName!=null and containerName!=''">
+                AND s.CONTAINER_NAME = #{containerName}
+            </if>
+        </where>
+    </select>
+
+</mapper>

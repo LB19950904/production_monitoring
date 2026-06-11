@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title th:text="#{page.addEnv}">添加监控环境</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" href="./style/myself.css" th:href="@{/style/myself.css}" media="all">
+    <!-- 引入国际化工具 -->
+    <script th:src="@{/js/i18n/i18n-config.js}"></script>
+    <script th:src="@{/js/i18n/i18n-utils.js}"></script>
+    <script th:src="@{/js/i18n/messages/zh_CN.js}"></script>
+    <script th:src="@{/js/i18n/messages/en_US.js}"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="../../static/js/html5.min.js" th:src="@{/js/html5.min.js}"></script>
+    <script src="../../static/js/respond.min.js" th:src="@{/js/respond.min.js}"></script>
+    <![endif]-->
+    <script type="text/javascript" charset="utf-8" th:inline="javascript">
+        var ctxPath = /*[[@{/}]]*/'';
+    </script>
+</head>
+<body>
+<div class="layui-form" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin"
+     style="padding: 20px 20px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label" th:text="#{env.name}">环境名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="envName" lay-verify="required" th:placeholder="#{env.placeholder.name}" autocomplete="off"
+                   class="layui-input" lay-verType="tips">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label" th:text="#{env.description}">环境描述</label>
+        <div class="layui-input-block">
+            <textarea name="envDesc" class="layui-textarea" th:placeholder="#{env.placeholder.description}" autocomplete="off"
+                      lay-verify="required" lay-verType="tips"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-env-front-submit" id="LAY-env-front-submit" th:value="#{form.confirm}" value="确认">
+    </div>
+</div>
+<script src="../../static/js/common.js" th:src="@{/js/common.js}" charset="utf-8"></script>
+<script src="../../static/js/md5.js" th:src="@{/js/md5.js}"></script>
+<script src="../../static/layui/layui.js" th:src="@{/layui/layui.js}"></script>
+<script charset="utf-8" th:inline="javascript">
+    // 初始化国际化配置
+    I18nConfig.init();
+
+    layui.config({
+        base: ctxPath //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form'], function () {
+        var form = layui.form;
+        //自定义验证规则
+        form.verify({
+            required: function(value) {
+                if(value.length == 0){
+                    return I18nUtils.t('validation.required');
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

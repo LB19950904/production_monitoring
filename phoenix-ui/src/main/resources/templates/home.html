@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title><span th:text="#{home.pageTitle}">首页</span></title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="./layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" href="./style/admin.css" th:href="@{/style/admin.css}" media="all">
+    <link rel="stylesheet" href="./style/myself.css" th:href="@{/style/myself.css}" media="all">
+    <!-- 引入国际化工具 -->
+    <script th:src="@{/js/i18n/i18n-config.js}"></script>
+    <script th:src="@{/js/i18n/i18n-utils.js}"></script>
+    <script th:src="@{/js/i18n/messages/zh_CN.js}"></script>
+    <script th:src="@{/js/i18n/messages/en_US.js}"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="./js/html5.min.js" th:src="@{/js/html5.min.js}"></script>
+    <script src="./js/respond.min.js" th:src="@{/js/respond.min.js}"></script>
+    <![endif]-->
+    <script type="text/javascript" charset="utf-8" th:inline="javascript">
+        var ctxPath = /*[[@{/}]]*/'';
+        var tokenValue = /*[[${_csrf.token}]]*/'';
+    </script>
+    <style>
+        /* 首页服务器卡片样式 */
+        #summary .layui-card {
+            width: 160px !important;
+            height: 180px !important;
+            padding: 10px 0 10px 5px !important;
+            background: linear-gradient(180deg, #F4F6FD 0%, #FFFFFF 100%) !important;
+            box-shadow: 0px 1px 8px 0px rgba(0,0,0,0.04) !important;
+            border-radius: 8px !important;
+            border: 1px solid !important;
+            border-image: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 1)) 1 1 !important;
+        }
+
+            /* 卡片标题样式 */
+        #summary .layui-card-header span[id*="home-"] {
+            font-weight: 500 !important;
+            font-size: 18px !important;
+            color: #333333 !important;
+            line-height: 20px !important;
+            text-align: left !important;
+            font-style: normal !important;
+        }
+
+        /* 卡片大数字样式 */
+        #summary .layuiadmin-big-font,
+        #summary .layuiadmin-big-font-my-2 {
+            font-weight: 600 !important;
+            font-size: 26px !important;
+            color: #333333 !important;
+            line-height: 26px !important;
+            text-align: left !important;
+            font-style: normal !important;
+        }
+
+        /* 卡片量词样式 */
+        #summary .unit-label {
+            font-weight: 400 !important;
+            font-size: 14px !important;
+            color: #6E7277 !important;
+            line-height: 20px !important;
+            text-align: left !important;
+            font-style: normal !important;
+            margin-left: 11px !important;
+            width: auto !important;
+        }
+        /* 服务器卡片组件数字和进度条这一行样式 */
+        #summary .card-title-tongji {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin: 5px 0 9px 0 !important;
+        }
+        #summary .layuiadmin-big-font-my {
+            display: flex;
+            align-items: flex-end;
+            padding: 0;
+        }
+        #summary .layuiadmin-card-list {
+            padding: 0;
+        }
+        #summary .layui-card-header {
+            width: auto;
+            height: 20px;
+            padding: 0;
+            font-weight: 500;
+            font-size: 18px;
+            color: #333333;
+            line-height: 20px;
+            text-align: left;
+            font-style: normal;
+        }
+        #summary .layui-card-body .new-card-num {
+            font-weight: 400;
+            font-size: 16px;
+            color: #333333;
+            line-height: 22px;
+            text-align: right;
+            font-style: normal;
+        }
+
+        #summary .layui-card-body .device-card-row-style {
+            margin-bottom: 8px;
+            font-weight: 400;
+            font-size: 16px;
+            color: #333333;
+            line-height: 22px;
+            text-align: left;
+            font-style: normal;
+        }
+        /* 在线绿点样式 */
+        #summary .layui-card-body .device-card-row-style .card-status-online-flag {
+            display: inline-block;
+            margin-right: 8px;
+            padding: 0;
+            width: 6px;
+            height: 6px;
+            line-height: 22px;
+            background: #13C91B;
+            border-radius: 6px;
+            text-align: center;
+            vertical-align: middle;
+            transform: translateY(-1px);
+        }
+
+        /* 故障红点样式 */
+        #summary .layui-card-body .device-card-row-style .card-status-offline-flag {
+            display: inline-block;
+            margin-right: 8px;
+            padding: 0;
+            width: 6px;
+            height: 6px;
+            line-height: 22px;
+            background: #FF3644;
+            border-radius: 6px;
+            vertical-align: middle;
+            transform: translateY(-1px);
+        }
+
+        /* 未知橙色点样式 */
+        #summary .layui-card-body .device-card-row-style .card-status-error-flag {
+            display: inline-block;
+            margin-right: 8px;
+            padding: 0;
+            width: 6px;
+            height: 6px;
+            line-height: 22px;
+            background: #FF871E;
+            border-radius: 6px;
+            vertical-align: middle;
+            transform: translateY(-1px);
+        }
+        /* 首页卡片中进度条样式 */
+        #summary .layui-card-body .card-progress-style {
+            display: flex;
+            flex-direction: column;
+            width: 78px;
+            height: 21px;
+            vertical-align: bottom;
+            transform: translateY(-5px);
+        }
+        /* 进度条上方的百分比数字样式 */
+        #summary .layui-card-body .card-progress-style > span {
+            width: 19px;
+            height: 16px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #13C91B;
+            line-height: 16px;
+            text-align: right;
+            font-style: normal;
+        }
+        /* 修改layui原生进度条样式 */
+        #summary .layui-card-body .card-progress-style > .layui-progress {
+            background-color: #bafdbe !important;
+            border-radius: 2px;
+        }
+        #summary .layui-card-body .card-progress-style > .layui-progress > .layui-progress-bar{
+            background-color: #13C91B;
+            border-radius: 2px;
+        }
+        .lastest-warning-header {
+            height: 32px !important;
+            padding: 16px !important;
+            border-bottom: 1px #EEEEEE solid;
+        }
+        .layuiadmin-card-status li {
+            border-bottom: none !important;
+        }
+        /* 最新告警下面item样式 */
+        #get-last-5-alarm-record .alarm-record-item-style {
+            width: 90%;
+            height: auto;
+            padding: 16px;
+            background: #F7F9FC;
+            border-radius: 6px;
+        }
+        #get-last-5-alarm-record .alarm-record-item-style .alarm-record-item-title {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        #get-last-5-alarm-record .alarm-record-item-style .alarm-record-item-content {
+            font-weight: 400;
+            font-size: 16px;
+            color: #6E7277;
+            line-height: 22px;
+            text-align: left;
+            font-style: normal;
+        }
+        #get-last-5-alarm-record .alarm-record-item-style .alarm-record-item-content .alarm-record-item-content-item {
+            display: flex;
+        }
+        #get-last-5-alarm-record .alarm-record-item-style .alarm-record-item-content .alarm-record-item-content-item:nth-child(even) {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        #get-last-5-alarm-record .alarm-record-item-style .alarm-record-item-content .alarm-record-item-label{
+            font-weight: 400;
+            font-size: 16px;
+            color: #000000;
+            line-height: 22px;
+            text-align: left;
+            font-style: normal;
+        }
+        #get-last-5-alarm-record .alarm-record-item-style .alarm-record-item-content .alarm-record-item-value{
+            font-weight: 400;
+            font-size: 16px;
+            color: #6E7277;
+            line-height: 22px;
+            text-align: left;
+            font-style: normal;
+        }
+        #get-last-5-alarm-record .alarm-record-item-style .alarm-record-item-title > div > span {
+            font-weight: 500;
+            font-size: 18px;
+            color: #000000;
+            line-height: 22px;
+            text-align: left;
+            font-style: normal;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-sm8">
+            <div id="summary" class="layui-row layui-carousel background-color-none-my"
+                 data-anim="fade">
+                <div carousel-item>
+                    <div id="carousel-item-1-div-1" class="layui-row layui-col-space10 background-color-none-my">
+                        <div class="layui-col-sm6 layui-col-md2">
+                            <div class="layui-card">
+                                <div class="layui-card-header">
+                                    <span id="home-server-title"><img style="margin-right: 8px" src="/images/new-ui/服务器.png" alt="服务器"/>服务器</span>
+                                </div>
+                                <div class="layui-card-body layuiadmin-card-list" id="server-card-list-1">
+                                    <p class="layuiadmin-big-font layuiadmin-big-font-my">
+                                        <span th:text="${homeServerVo.serverSum}"></span>
+                                        <span class="unit-label">台</span>
+                                    </p>
+                                    <p class="device-card-row-style">
+                                        <span id="home-windows"><i class="layui-inline layui-icon"><img
+                                                src="/images/new-ui/windows.png"></i>Windows</span>
+                                        <span class="layuiadmin-span-color new-card-num">
+                                    [[${homeServerVo.windowsSum}]]
+                                    </span>
+                                    </p>
+                                    <p class="device-card-row-style">
+                                        <span id="home-linux">Linux</span>
+                                        <span class="layuiadmin-span-color new-card-num">
+                                    [[${homeServerVo.linuxSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/linux-16.png}"></i></span>
+                                    </p>
+                                    <p class="device-card-row-style">
+                                        <span id="home-other">其他</span>
+                                        <span class="layuiadmin-span-color new-card-num">
+                                    [[${homeServerVo.otherSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/other-16.png}"></i></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6 layui-col-md2">
+                            <div class="layui-card">
+                                <div class="layui-card-header">
+                                    <span id="home-server-title-2"><img style="margin-right: 8px" src="/images/new-ui/服务器.png" alt="服务器"/>服务器</span>
+                                </div>
+                                <div class="layui-card-body layuiadmin-card-list" id="server-card-list-2">
+                                    <p class="layuiadmin-big-font layuiadmin-big-font-my">
+                                        <span>[[${homeServerVo.serverSum}]]</span>
+                                        <span class="unit-label">台</span>
+                                        <i class="home-i">[[${homeServerVo.serverOnLineRate}]]
+                                            <img th:src="@{/images/icon16/percentage-16.png}"></i>
+                                    </p>
+                                    <p>
+                                        <span id="home-online">在线</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeServerVo.serverOnLineSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/on-line-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-offline">离线</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeServerVo.serverOffLineSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/off-line-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-unknown">未知</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeServerVo.serverUnknownLineSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/unknown-line-16.png}"></i></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6 layui-col-md2">
+                            <div class="layui-card">
+                                <div class="layui-card-header">
+                                    <span id="home-network-device-title"><img style="margin-right: 8px" src="/images/new-ui/网络设备.png" alt="网络设备"/>网络设备</span>
+                                </div>
+                                <div class="layui-card-body layuiadmin-card-list" id="network-device-card-list">
+                                    <p class="layuiadmin-big-font layuiadmin-big-font-my">
+                                        <span>[[${homeNetworkDeviceVo.networkDeviceSum}]]</span>
+                                        <span class="unit-label">台</span>
+                                        <i class="home-i">[[${homeNetworkDeviceVo.networkDeviceOnLineRate}]]
+                                            <img th:src="@{/images/icon16/percentage-16.png}"></i>
+                                    </p>
+                                    <p>
+                                        <span id="home-online">在线</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeNetworkDeviceVo.networkDeviceOnLineSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/on-line-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-offline">离线</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeNetworkDeviceVo.networkDeviceOffLineSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/off-line-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-unknown">未知</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeNetworkDeviceVo.networkDeviceUnknownLineSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/unknown-line-16.png}"></i></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6 layui-col-md2">
+                            <div class="layui-card">
+                                <div class="layui-card-header">
+                                    <span id="home-docker-title"><img style="margin-right: 8px" src="/images/new-ui/docker.png" alt="DOCKER"/>DOCKER</span>
+                                </div>
+                                <div class="layui-card-body layuiadmin-card-list" id="docker-card-list">
+                                    <p class="layuiadmin-big-font layuiadmin-big-font-my">
+                                        <span>[[${homeDockerVo.dockerSum}]]</span>
+                                        <span class="unit-label">个</span>
+                                        <i class="home-i">[[${homeDockerVo.dockerOnLineRate}]]
+                                            <img th:src="@{/images/icon16/percentage-16.png}"></i>
+                                    </p>
+                                    <p>
+                                        <span id="home-online">在线</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeDockerVo.dockerOnLineSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/on-line-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-offline">离线</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeDockerVo.dockerOffLineSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/off-line-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-unknown">未知</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeDockerVo.dockerUnknownLineSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/unknown-line-16.png}"></i></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6 layui-col-md2">
+                            <div class="layui-card">
+                                <div class="layui-card-header">
+                                    <span id="home-application-title"><img style="margin-right: 8px" src="/images/new-ui/应用程序.png" alt="应用程序"/>应用程序</span>
+                                </div>
+                                <div class="layui-card-body layuiadmin-card-list" id="instance-card-list">
+                                    <p class="layuiadmin-big-font layuiadmin-big-font-my">
+                                        <span>[[${homeInstanceVo.instanceSum}]]</span>
+                                        <span class="unit-label">个</span>
+                                        <i class="home-i">[[${homeInstanceVo.instanceOnLineRate}]]
+                                            <img th:src="@{/images/icon16/percentage-16.png}"></i>
+                                    </p>
+                                    <p>
+                                        <span id="home-online">在线</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeInstanceVo.instanceOnLineSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/on-line-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-offline">离线</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeInstanceVo.instanceOffLineSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/off-line-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-unknown">未知</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeInstanceVo.instanceUnknownLineSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/unknown-line-16.png}"></i></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="carousel-item-1-div-2" class="layui-row layui-col-space10 background-color-none-my">
+                        <div class="layui-col-sm6 layui-col-md2">
+                            <div class="layui-card">
+                                <div class="layui-card-header">
+                                    <span id="home-database-title"><img style="margin-right: 8px" src="/images/new-ui/数据库.png" alt="数据库"/>数据库</span>
+                                </div>
+                                <div class="layui-card-body layuiadmin-card-list" id="db-card-list">
+                                    <p class="layuiadmin-big-font layuiadmin-big-font-my">
+                                        <span>[[${homeDbVo.dbSum}]]</span>
+                                        <span class="unit-label">个</span>
+                                        <i class="home-i">[[${homeDbVo.dbConnectRate}]]
+                                            <img th:src="@{/images/icon16/percentage-16.png}"></i>
+                                    </p>
+                                    <p>
+                                        <span id="home-normal">正常</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeDbVo.dbConnectSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/normal-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-abnormal">异常</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeDbVo.dbDisconnectSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/exception-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-unknown">未知</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeDbVo.dbUnsentSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/unknown-16.png}"></i></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6 layui-col-md2">
+                            <div class="layui-card">
+                                <div class="layui-card-header">
+                                    <span id="home-network-title"><img style="margin-right: 8px" src="/images/new-ui/网络.png" alt="网络"/>网络</span>
+                                </div>
+                                <div class="layui-card-body layuiadmin-card-list" id="ip-card-list">
+                                    <p class="layuiadmin-big-font layuiadmin-big-font-my">
+                                        <span>[[${homeNetVo.netSum}]]</span>
+                                        <span class="unit-label">个</span>
+                                        <i class="home-i">[[${homeNetVo.netConnectRate}]]
+                                            <img th:src="@{/images/icon16/percentage-16.png}"></i>
+                                    </p>
+                                    <p>
+                                        <span id="home-normal">正常</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeNetVo.netConnectSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/net-connect-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-abnormal">异常</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeNetVo.netDisconnectSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/net-disconnect-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-unknown">未知</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeNetVo.netUnsentSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/net-unkown-16.png}"></i></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6 layui-col-md2">
+                            <div class="layui-card">
+                                <div class="layui-card-header">
+                                    <span id="home-tcp-title"><img style="margin-right: 8px" src="/images/new-ui/TCP.png" alt="TCP"/>TCP</span>
+                                </div>
+                                <div class="layui-card-body layuiadmin-card-list" id="tcp-card-list">
+                                    <p class="layuiadmin-big-font layuiadmin-big-font-my">
+                                        <span>[[${homeTcpVo.tcpSum}]]</span>
+                                        <span class="unit-label">个</span>
+                                        <i class="home-i">[[${homeTcpVo.tcpConnectRate}]]
+                                            <img th:src="@{/images/icon16/percentage-16.png}"></i>
+                                    </p>
+                                    <p>
+                                        <span id="home-normal">正常</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeTcpVo.tcpConnectSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/tcp-connect-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-abnormal">异常</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeTcpVo.tcpDisconnectSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/tcp-disconnect-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-unknown">未知</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeTcpVo.tcpUnsentSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/tcp-unkown-16.png}"></i></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6 layui-col-md2">
+                            <div class="layui-card">
+                                <div class="layui-card-header">
+                                    <span id="home-http-title"><img style="margin-right: 8px" src="/images/new-ui/HTTP.png" alt="HTTP"/>HTTP</span>
+                                </div>
+                                <div class="layui-card-body layuiadmin-card-list" id="http-card-list">
+                                    <p class="layuiadmin-big-font layuiadmin-big-font-my">
+                                        <span>[[${homeHttpVo.httpSum}]]</span>
+                                        <span class="unit-label">个</span>
+                                        <i class="home-i">[[${homeHttpVo.httpConnectRate}]]
+                                            <img th:src="@{/images/icon16/percentage-16.png}"></i>
+                                    </p>
+                                    <p>
+                                        <span id="home-normal">正常</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeHttpVo.httpConnectSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/http-connect-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-abnormal">异常</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeHttpVo.httpDisconnectSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/http-disconnect-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-unknown">未知</span>
+                                        <span class="layuiadmin-span-color">
+                                    [[${homeHttpVo.httpUnsentSum}]]
+                                    <i class="layui-inline layui-icon"><img
+                                            th:src="@{/images/icon16/http-unkown-16.png}"></i></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm6 layui-col-md2">
+                            <div class="layui-card">
+                                <div class="layui-card-header">
+                                    <span id="home-alarm-notification-title"><img style="margin-right: 8px" src="/images/new-ui/告警通知.png" alt="告警通知"/>告警通知</span>
+                                </div>
+                                <div class="layui-card-body layuiadmin-card-list" id="alarm-card-list">
+                                    <p class="layuiadmin-big-font layuiadmin-big-font-my-2">
+                                        <span>[[${homeAlarmRecordVo.alarmRecordSum}]]</span>
+                                        <span class="unit-label">次</span>
+                                        <i class="home-i">[[${homeAlarmRecordVo.alarmSucRate}]]
+                                            <img th:src="@{/images/icon16/percentage-16.png}"></i>
+                                    </p>
+                                    <p>
+                                        <span id="home-success">成功</span>
+                                        <span class="layuiadmin-span-color">[[${homeAlarmRecordVo.alarmRecordSuccessSum}]]<i
+                                                class="layui-inline layui-icon"><img
+                                                th:src="@{/images/icon16/success-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-failure">失败</span>
+                                        <span class="layuiadmin-span-color">[[${homeAlarmRecordVo.alarmRecordFailSum}]]<i
+                                                class="layui-inline layui-icon"><img
+                                                th:src="@{/images/icon16/fail-16.png}"></i></span>
+                                    </p>
+                                    <p>
+                                        <span id="home-no-alert">不提醒</span>
+                                        <span class="layuiadmin-span-color">[[${homeAlarmRecordVo.alarmRecordUnsentSum}]]<i
+                                                class="layui-inline layui-icon"><img
+                                                th:src="@{/images/icon16/unsent-16.png}"></i></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <img src="/images/new-ui/告警统计.png" alt=""/>
+                    <span style="font-weight: 500;font-size: 18px;color: #333333;line-height: 20px;text-align: left;font-style: normal;" id="home-alarm-statistics">告警统计</span>
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-carousel layadmin-carousel layadmin-dataview-my-590px" data-anim="fade"
+                         lay-filter="LAY-index-dataview" id="layadmin-dataview-my">
+                        <div carousel-item>
+                            <!-- 通过ajax动态加载数据 -->
+                            <div class="layui-row" id="last-7-days-alarm-record-statistics"></div>
+                            <!-- 通过ajax动态加载数据 -->
+                            <div class="layui-row" id="alarm-record-result-statistics"></div>
+                            <!-- 通过ajax动态加载数据 -->
+                            <div class="layui-row" id="alarm-record-type-statistics">
+                                <style>
+                                    /* 确保进度条内外圆角一致 */
+                                    #alarm-record-type-statistics .layui-progress {
+                                        border-radius: 8px !important;
+                                        background: #ECEEF2;
+                                        opacity: 0.8;
+                                    }
+                                    #alarm-record-type-statistics .layui-progress-bar {
+                                        border-radius: 0px 4px 4px 0px !important;
+                                        background: linear-gradient(129deg, #055FE7 0%, #3586FF 100%);
+                                        box-shadow: 0px 3px 5px 2px rgba(0,24,59,0.06);
+                                    }
+                                </style>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm4">
+            <div class="layui-card">
+                <div class="layui-card-header lastest-warning-header">
+                    <img style="margin-right: 8px;vertical-align: middle;transform: translateY(-3px)" src="/images/new-ui/最新告警.png" alt="最新告警"/>
+                    <span style="display: inline-block;height: 20px;font-weight: 500;font-size: 18px;color: #333333;line-height: 20px;text-align: left;font-style: normal;"
+                          id="home-latest-alarms">最新告警</span>
+                </div>
+                <div class="layui-card-body last-alarm-layui-card-body">
+                    <!-- 通过ajax动态加载数据 -->
+                    <ul class="layuiadmin-card-status layuiadmin-home2-usernote" style="word-wrap:break-word;"
+                        id="get-last-5-alarm-record"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./js/echarts.min.js" th:src="@{/js/echarts.min.js}"></script>
+<script src="./lib/extend/echarts-gl.min.js" th:src="@{/lib/extend/echarts-gl.min.js}"></script>
+<script src="./js/echarts.theme.infographic.js" th:src="@{/js/echarts.theme.infographic.js}"></script>
+<script src="./layui/layui.js" th:src="@{/layui/layui.js}"></script>
+<script>
+    // 首页国际化初始化函数
+    function initHomePageI18n() {
+        // 初始化国际化配置
+        if (typeof I18nConfig !== 'undefined') {
+            I18nConfig.init();
+        }
+
+        // 定义首页翻译映射
+        const translations = {
+            // 统计卡片标题
+            'home-server-title': 'home.server',
+            'home-server-title-2': 'home.server',
+            'home-network-device-title': 'home.networkDevice',
+            'home-docker-title': 'home.docker',
+            'home-application-title': 'home.application',
+            'home-database-title': 'home.database',
+            'home-network-title': 'home.network',
+            'home-tcp-title': 'home.tcp',
+            'home-http-title': 'home.http',
+            'home-alarm-notification-title': 'home.alarmNotification',
+
+            // 状态描述
+            'home-online': 'home.online',
+            'home-offline': 'home.offline',
+            'home-unknown': 'home.unknown',
+            'home-normal': 'home.normal',
+            'home-abnormal': 'home.abnormal',
+            'home-success': 'home.success',
+            'home-failure': 'home.failure',
+            'home-no-alert': 'home.noAlert',
+
+            // 单位标识
+            'home-unit': 'home.unit',
+            'home-item': 'home.item',
+            'home-times': 'home.times',
+
+            // 操作系统类型
+            'home-windows': 'home.windows',
+            'home-linux': 'home.linux',
+            'home-other': 'home.other',
+
+            // 图表区域
+            'home-alarm-statistics': 'home.alarmStatistics',
+            'home-latest-alarms': 'home.latestAlarms'
+        };
+
+        // 翻译页面中的文本
+        Object.keys(translations).forEach(function(id) {
+            const element = document.getElementById(id);
+            if (element && typeof I18nUtils !== 'undefined') {
+                const translation = I18nUtils.t(translations[id]);
+                if (translation) {
+                    // 检查元素是否包含图片或其他HTML结构
+                    if (element.querySelector('img') || element.innerHTML.includes('<')) {
+                        // 如果包含HTML结构，保留原有结构，只替换文本节点
+                        // 获取所有文本节点
+                        const textNodes = [];
+                        const walker = document.createTreeWalker(
+                            element,
+                            NodeFilter.SHOW_TEXT,
+                            null,
+                            false
+                        );
+                        let node;
+                        while (node = walker.nextNode()) {
+                            if (node.nodeValue.trim()) {
+                                textNodes.push(node);
+                            }
+                        }
+                        // 替换第一个非空文本节点
+                        if (textNodes.length > 0) {
+                            textNodes[0].nodeValue = translation;
+                        }
+                    } else {
+                        // 如果不包含HTML结构，直接设置文本
+                        element.textContent = translation;
+                    }
+                }
+            }
+        });
+    }
+
+    layui.config({
+        base: ctxPath //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'element', 'home', 'util'], function () {
+        var util = layui.util;
+        // 右下脚回到顶部小图标
+        util.fixbar({
+            showHeight: 100
+        });
+
+        // 初始化首页国际化
+        initHomePageI18n();
+    });
+</script>
+</body>
+</html>

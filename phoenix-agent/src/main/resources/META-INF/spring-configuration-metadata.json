@@ -1,0 +1,78 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.property.client.MonitoringDockerInfoProperties",
+      "name": "phoenix.monitoring.docker-info",
+      "type": "com.gitee.pifeng.monitoring.common.property.client.MonitoringDockerInfoProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.property.client.MonitoringDockerInfoProperties",
+      "name": "phoenix.monitoring.docker-info.enable",
+      "description": "缺省[是否采集docker信息，默认false].",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.property.client.MonitoringDockerInfoProperties",
+      "name": "phoenix.monitoring.docker-info.rate",
+      "description": "缺省[与服务端或者代理端发送docker信息的频率（秒），默认60秒，最小不能小于30秒].",
+      "type": "java.lang.Long"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.property.client.MonitoringDockerInfoProperties",
+      "name": "phoenix.monitoring.docker-info.host",
+      "description": "缺省[被监控的docker主机，默认：tcp://localhost:2375].",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.property.client.MonitoringDockerInfoProperties",
+      "name": "phoenix.monitoring.docker-info.tls-verify",
+      "description": "缺省[启用/禁用TLS验证，默认false].",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.property.client.MonitoringDockerInfoProperties",
+      "name": "phoenix.monitoring.docker-info.cert-path",
+      "description": "缺省[验证所需证书的路径，默认：不填写].",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.property.client.MonitoringDockerInfoProperties",
+      "name": "phoenix.monitoring.docker-info.config",
+      "description": "缺省[其他docker配置文件的路径，默认：不填写].",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.property.client.MonitoringDockerInfoProperties",
+      "name": "phoenix.monitoring.docker-info.api-version",
+      "description": "缺省[API版本，默认：不填写].",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.property.client.MonitoringDockerInfoProperties",
+      "name": "phoenix.monitoring.docker-info.registry-url",
+      "description": "缺省[注册地址，默认：不填写].",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.property.client.MonitoringDockerInfoProperties",
+      "name": "phoenix.monitoring.docker-info.registry-username",
+      "description": "缺省[注册用户名，默认：不填写].",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.property.client.MonitoringDockerInfoProperties",
+      "name": "phoenix.monitoring.docker-info.registry-password",
+      "description": "缺省[注册密码，默认：不填写].",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.common.property.client.MonitoringDockerInfoProperties",
+      "name": "phoenix.monitoring.docker-info.registry-email",
+      "description": "缺省[注册电子邮箱，默认：不填写].",
+      "type": "java.lang.String"
+    }
+  ]
+}

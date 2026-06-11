@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitee.pifeng.monitoring.server.business.server.dao.IMonitorJavaThreadPoolDao">
+
+    <!-- 获取java线程池监控传输层对象列表 -->
+    <select id="getThreadPoolMonitorList"
+            resultType="com.gitee.pifeng.monitoring.server.business.server.dto.JavaThreadPoolMonitorDto">
+        SELECT i.id AS id,
+        i.INSTANCE_ID AS instanceId,
+        i.ENDPOINT AS endpoint,
+        i.INSTANCE_NAME AS instanceName,
+        i.INSTANCE_DESC AS instanceDesc,
+        i.INSTANCE_SUMMARY AS instanceSummary,
+        i.IP AS ip,
+        i.IS_ENABLE_MONITOR AS isEnableMonitor,
+        i.IS_ENABLE_ALARM AS isEnableAlarm,
+        i.MONITOR_ENV AS monitorEnv,
+        i.MONITOR_GROUP AS monitorGroup,
+        p.`NAME` AS name,
+        p.ACTIVE_COUNT AS activeCount,
+        p.COMPLETED_TASK_COUNT AS completedTaskCount,
+        p.TASK_COUNT AS taskCount,
+        p.LARGEST_POOL_SIZE AS largestPoolSize,
+        p.POOL_SIZE AS poolSize,
+        p.CORE_POOL_SIZE AS corePoolSize,
+        p.MAXIMUM_POOL_SIZE AS maximumPoolSize,
+        p.QUEUE_SIZE AS queueSize,
+        p.REJECTED_TASK_COUNT AS rejectedTaskCount,
+        p.REJECTED_EXECUTION_HANDLER_NAME AS rejectedExecutionHandlerName,
+        p.QUEUE_REMAINING_CAPACITY AS queueRemainingCapacity,
+        p.QUEUE_TYPE AS queueType,
+        p.QUEUE_CAPACITY AS queueCapacity,
+        p.ALLOW_CORE_THREAD_TIME_OUT AS allowCoreThreadTimeOut,
+        p.KEEP_ALIVE_TIME AS keepAliveTime,
+        p.UTILIZATION_RATE AS utilizationRate
+        FROM MONITOR_JAVA_THREAD_POOL p
+        LEFT JOIN MONITOR_INSTANCE i ON p.INSTANCE_ID = i.INSTANCE_ID
+        <if test="instanceId!=null and instanceId!=''">
+            WHERE p.INSTANCE_ID = #{instanceId}
+        </if>
+    </select>
+
+</mapper>

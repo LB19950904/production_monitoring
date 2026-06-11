@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitee.pifeng.monitoring.ui.business.web.dao.IMonitorJavaThreadPoolHistoryDao">
+
+    <!-- 获取应用实例详情页面java线程池图表信息 -->
+    <select id="getInstanceDetailPageJavaThreadPoolChartInfo"
+            resultType="com.gitee.pifeng.monitoring.ui.business.web.vo.InstanceDetailPageJavaThreadPoolChartVo">
+        SELECT ACTIVE_COUNT AS activeCount,
+        QUEUE_SIZE AS queueSize,
+        COMPLETED_TASK_COUNT AS completedTaskCount,
+        REJECTED_TASK_COUNT AS rejectedTaskCount,
+        INSERT_TIME AS insertTime
+        FROM MONITOR_JAVA_THREAD_POOL_HISTORY
+        WHERE INSTANCE_ID = #{params.instanceId}
+        <if test="params.threadPoolName!=null and params.threadPoolName!=''">
+            AND `NAME` = #{params.threadPoolName}
+        </if>
+        <if test="params.startTime!=null and params.endTime!=null">
+            AND INSERT_TIME BETWEEN #{params.startTime} AND #{params.endTime}
+        </if>
+    </select>
+
+</mapper>

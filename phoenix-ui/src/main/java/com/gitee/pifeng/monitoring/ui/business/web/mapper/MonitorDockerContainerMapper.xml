@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitee.pifeng.monitoring.ui.business.web.dao.IMonitorDockerContainerDao">
+
+    <!-- 获取docker容器列表 -->
+    <select id="getMonitorDockerContainerList"
+            resultType="com.gitee.pifeng.monitoring.ui.business.web.vo.MonitorDockerContainerVo">
+        SELECT c.*,d.MONITOR_ENV,d.MONITOR_GROUP,d.DOCKER_SUMMARY,d.IS_ONLINE,d.ID AS dockerId
+        FROM MONITOR_DOCKER_CONTAINER c
+        LEFT JOIN MONITOR_DOCKER d ON c.SERVER_IP = d.SERVER_IP
+        <where>
+            <if test="params.serverIp!=null and params.serverIp!=''">
+                AND c.SERVER_IP LIKE CONCAT('%', #{params.serverIp}, '%')
+            </if>
+            <if test="params.containerName!=null and params.containerName!=''">
+                AND c.CONTAINER_NAME LIKE CONCAT('%', #{params.containerName}, '%')
+            </if>
+            <if test="params.imageName!=null and params.imageName!=''">
+                AND c.IMAGE_NAME LIKE CONCAT('%', #{params.imageName}, '%')
+            </if>
+            <if test="params.status!=null and params.status=='run'">
+                AND c.STATUS LIKE 'Up%'
+            </if>
+            <if test="params.status!=null and params.status=='notRun'">
+                AND c.STATUS LIKE 'Exited%'
+            </if>
+            <if test="params.monitorEnv!=null and params.monitorEnv!=''">
+                AND d.MONITOR_ENV = #{params.monitorEnv}
+            </if>
+            <if test="params.monitorGroup!=null and params.monitorGroup!=''">
+                AND d.MONITOR_GROUP = #{params.monitorGroup}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取docker容器信息 -->
+    <select id="getMonitorDockerContainerInfo"
+            resultType="com.gitee.pifeng.monitoring.ui.business.web.vo.MonitorDockerContainerVo">
+        SELECT c.*,d.MONITOR_ENV,d.MONITOR_GROUP,d.DOCKER_SUMMARY,d.IS_ONLINE
+        FROM MONITOR_DOCKER_CONTAINER c
+        LEFT JOIN MONITOR_DOCKER d ON c.SERVER_IP = d.SERVER_IP
+        <where>
+            <if test="serverIp!=null and serverIp!=''">
+                AND c.SERVER_IP = #{serverIp}
+            </if>
+            <if test="containerName!=null and containerName!=''">
+                AND c.CONTAINER_NAME = #{containerName}
+            </if>
+        </where>
+    </select>
+
+</mapper>

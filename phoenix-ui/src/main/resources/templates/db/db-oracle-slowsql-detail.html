@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Oracle数据库慢SQL详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="./layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" href="./style/admin.css" th:href="@{/style/admin.css}" media="all">
+    <link rel="stylesheet" href="./style/myself.css" th:href="@{/style/myself.css}" media="all">
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="./js/html5.min.js" th:src="@{/js/html5.min.js}"></script>
+    <script src="./js/respond.min.js" th:src="@{/js/respond.min.js}"></script>
+    <![endif]-->
+    <script type="text/javascript" charset="utf-8" th:inline="javascript">
+        var ctxPath = /*[[@{/}]]*/'';
+    </script>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <!-- <div class="layui-card-header">折叠面板</div>-->
+        <div class="layui-card-body">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md6">
+                    <div class="layui-panel">
+                        <div style="padding: 10px;">
+                            <div class="layui-collapse" lay-filter="component-panel">
+                                <div class="layui-colla-item" th:unless="${#strings.isEmpty(slowSql4OracleVo.sqlText)}">
+                                    <h2 class="layui-colla-title">原始SQL</h2>
+                                    <div class="layui-colla-content layui-show">
+                                        <p style="white-space:pre-wrap;word-wrap:break-word;"
+                                           th:utext="${#strings.replace(#strings.replace(#strings.replace(slowSql4OracleVo.sqlText,'\r\n','<br>'),'\\n','<br>'),'\n','<br>')}"></p>
+                                    </div>
+                                </div>
+                                <div class="layui-colla-item"
+                                     th:unless="${#strings.isEmpty(slowSql4OracleVo.normalizeSqlText)}">
+                                    <h2 class="layui-colla-title">格式化SQL</h2>
+                                    <div class="layui-colla-content layui-show">
+                                        <p style="white-space:pre-wrap;word-wrap:break-word;"
+                                           th:utext="${#strings.replace(#strings.replace(#strings.replace(slowSql4OracleVo.normalizeSqlText,'\r\n','<br>'),'\\n','<br>'),'\n','<br>')}"></p>
+                                    </div>
+                                </div>
+                                <div class="layui-colla-item"
+                                     th:unless="${#strings.isEmpty(slowSql4OracleVo.parameterizeSqlText)}">
+                                    <h2 class="layui-colla-title">参数化SQL</h2>
+                                    <div class="layui-colla-content layui-show">
+                                        <p style="white-space:pre-wrap;word-wrap:break-word;"
+                                           th:utext="${#strings.replace(#strings.replace(#strings.replace(slowSql4OracleVo.parameterizeSqlText,'\r\n','<br>'),'\\n','<br>'),'\n','<br>')}"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-panel">
+                        <div style="padding: 10px;">
+                            <div class="layui-collapse" lay-filter="component-panel">
+                                <div class="layui-colla-item">
+                                    <h2 class="layui-colla-title">明细</h2>
+                                    <div class="layui-colla-content layui-show">
+                                        <div class="layui-row layui-col-space10" style="word-break: break-all;">
+                                            <div class="layui-col-md12"
+                                                 th:unless="${#strings.isEmpty(slowSql4OracleVo.schemaName)}">
+                                                <label class="label-font-weight">模式：</label>[[${slowSql4OracleVo.schemaName}]]
+                                            </div>
+                                            <div class="layui-col-md12"
+                                                 th:unless="${#strings.isEmpty(slowSql4OracleVo.sessionType)}">
+                                                <label class="label-font-weight">会话类型：</label>[[${slowSql4OracleVo.sessionType}]]
+                                            </div>
+                                            <div class="layui-col-md12"
+                                                 th:unless="${#strings.isEmpty(slowSql4OracleVo.machine)}">
+                                                <label class="label-font-weight">远程主机：</label>[[${slowSql4OracleVo.machine}]]
+                                            </div>
+                                            <div class="layui-col-md12"
+                                                 th:unless="${#strings.isEmpty(slowSql4OracleVo.program)}">
+                                                <label class="label-font-weight">远程程序：</label>[[${slowSql4OracleVo.program}]]
+                                            </div>
+                                            <div class="layui-col-md12"
+                                                 th:unless="${#strings.isEmpty(slowSql4OracleVo.state)}">
+                                                <label class="label-font-weight">状态：</label>[[${slowSql4OracleVo.state}]]
+                                            </div>
+                                            <div class="layui-col-md12"
+                                                 th:unless="${#strings.isEmpty(slowSql4OracleVo.event)}">
+                                                <label class="label-font-weight">事件：</label>[[${slowSql4OracleVo.event}]]
+                                            </div>
+                                            <div class="layui-col-md12"
+                                                 th:unless="${#strings.isEmpty(slowSql4OracleVo.waitTimeStr)}">
+                                                <label class="label-font-weight">等待时间：</label>[[${slowSql4OracleVo.waitTimeStr}]]
+                                            </div>
+                                            <div class="layui-col-md12"
+                                                 th:unless="${#strings.isEmpty(slowSql4OracleVo.lastCallEtStr)}">
+                                                <label class="label-font-weight">执行时间：</label>[[${slowSql4OracleVo.lastCallEtStr}]]
+                                            </div>
+                                            <div class="layui-col-md12"
+                                                 th:unless="${#strings.isEmpty(slowSql4OracleVo.thresholdTimeStr)}">
+                                                <label class="label-font-weight">慢SQL阈值：</label>[[${slowSql4OracleVo.thresholdTimeStr}]]
+                                            </div>
+                                            <div class="layui-col-md12"
+                                                 th:unless="${#strings.isEmpty(slowSql4OracleVo.logonTime)}">
+                                                <label class="label-font-weight">登录时间：</label>
+                                                [[${#dates.format(slowSql4OracleVo.logonTime,'yyyy-MM-dd HH:mm:ss')}]]
+                                            </div>
+                                            <div class="layui-col-md12"
+                                                 th:unless="${#strings.isEmpty(slowSql4OracleVo.detectTime)}">
+                                                <label class="label-font-weight">检测时间：</label>
+                                                [[${#dates.format(slowSql4OracleVo.detectTime,'yyyy-MM-dd HH:mm:ss')}]]
+                                            </div>
+                                            <div class="layui-col-md12"
+                                                 th:unless="${#strings.isEmpty(slowSql4OracleVo.insertTime)}">
+                                                <label class="label-font-weight">新增时间：</label>
+                                                [[${#dates.format(slowSql4OracleVo.insertTime,'yyyy-MM-dd HH:mm:ss')}]]
+                                            </div>
+                                            <div class="layui-col-md12"
+                                                 th:unless="${#strings.isEmpty(slowSql4OracleVo.updateTime)}">
+                                                <label class="label-font-weight">更新时间：</label>
+                                                [[${#dates.format(slowSql4OracleVo.updateTime,'yyyy-MM-dd HH:mm:ss')}]]
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./js/common.js" th:src="@{/js/common.js}" charset="utf-8"></script>
+<script src="./layui/layui.js" th:src="@{/layui/layui.js}"></script>
+<script charset="utf-8" th:inline="javascript">
+    layui.config({
+        base: ctxPath //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index']);
+</script>
+</body>
+</html>

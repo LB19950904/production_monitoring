@@ -1,0 +1,45 @@
+##############################################server配置#################################################
+server:
+  port: 16000
+
+
+############################################websocket配置################################################
+ws:
+  server:
+    enable: true
+    port: 16001
+
+
+###############################################数据源配置##################################################
+spring:
+  datasource:
+    druid:
+      #数据源配置
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/monitoring_system?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Ashgabat&useUnicode=true&characterEncoding=utf-8&failOverReadOnly=false&rewriteBatchedStatements=true
+      username: root
+      password: cSbeQtwANEpHQgsI4s27
+
+
+  #############################################电子邮件配置###############################################
+  mail:
+    host: smtp.qq.com
+    username: xxx@qq.com
+    password: xxx
+    protocol: smtp
+    default-encoding: UTF-8
+    port: 465
+    properties:
+      mail:
+        debug: false
+        smtp:
+          auth: true
+          ssl:
+            enabled: true
+          starttls:
+            enable: true
+            required: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: false

@@ -1,0 +1,1303 @@
+/* 自定义滚动条轨道样式 */
+::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+/* 自定义滚动条滑块样式 */
+::-webkit-scrollbar-thumb {
+    background-color: #c1c1c1;
+}
+
+/* 移动端滚动条样式 */
+@media (max-width: 768px) {
+    /* 自定义滚动条边框样式 */
+    ::-webkit-scrollbar {
+        width: 3px;
+        height: 3px;
+        background-color: #f1f1f1;
+    }
+}
+
+/* 在大屏幕上应用样式 */
+@media (min-width: 768px) {
+    /* 自定义滚动条边框样式 */
+    ::-webkit-scrollbar {
+        width: 3px;
+        height: 10px;
+        background-color: #f1f1f1;
+    }
+}
+
+.home-i {
+    font-size: 15px;
+    float: right;
+}
+
+
+
+.layui-icon-topology {
+    background-image: url("../images/icon16/topology-16.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 14px;
+}
+
+.layui-icon-log-my {
+    background-image: url("../images/icon16/log-16.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 14px;
+}
+
+.layui-icon-db {
+    background-image: url("../images/icon16/database-16.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 14px;
+}
+
+.layui-icon-tcp {
+    background-image: url("../images/icon16/tcp-16.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 14px;
+}
+
+.layui-icon-http {
+    background-image: url("../images/icon16/http-16.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 14px;
+}
+
+.layui-icon-docker {
+    background-image: url("../images/icon16/docker-16.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 14px;
+}
+
+.layui-icon-network-device {
+    background-image: url("../images/icon16/network-device-16.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 14px;
+}
+
+.layui-form-item-my {
+    margin-left: 40px;
+}
+
+.layui-tab-content-my {
+    padding: 0 !important;
+}
+
+.layui-table-page-my {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    height: 37px !important;
+    padding: 0 !important;
+    color: #666 !important;
+}
+
+.layuiadmin-big-font-my {
+    line-height: 12px !important;
+    font-size: 25px !important;
+}
+
+.layuiadmin-big-font-my-2 {
+    line-height: 12px !important;
+    font-size: 20px !important;
+}
+
+.layuiadmin-card-list-my {
+    padding: 10px;
+}
+
+.layadmin-dataview-my-330px {
+    height: 330px !important;
+}
+
+.layadmin-dataview-my-650px {
+    height: 650px !important;
+}
+
+.layadmin-dataview-my-660px {
+    height: 660px !important;
+}
+
+.layadmin-dataview-my-292px {
+    height: 292px !important;
+}
+
+.layadmin-dataview-my-270px {
+    height: 270px !important;
+}
+
+.layadmin-dataview-my-270px-text {
+    text-align: center !important;
+    line-height: 270px !important;
+    font-size: xx-large;;
+}
+
+.layadmin-dataview-my-550px {
+    height: 550px !important;
+}
+
+.layadmin-dataview-my-590px {
+    height: 578px !important;
+}
+
+.layadmin-dataview-my-170px {
+    height: 170px;
+}
+
+.layui-card-header-my {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+.label-font-weight {
+    font-weight: 600;
+}
+
+.div-font-weight {
+    font-weight: 600;
+}
+
+.layadmin-takerates-my {
+    padding-top: 5px;
+}
+
+.layadmin-takerates-my .layui-progress {
+    margin: 50px 0 60px;
+}
+
+.layadmin-takerates-my .layui-progress h3 {
+    position: absolute;
+    left: 0;
+    top: -35px;
+    color: #999;
+    font-size: 14px;
+}
+
+.layui-bg-skyblue {
+    background-color: #87CEEB;
+}
+
+.hr-padding {
+    padding: 0px;
+}
+
+.layui-bg-skyblue-my {
+    background-color: #87CEEB;
+    color: #fff !important;
+}
+
+.layui-bg-purple-my {
+    background-color: #C8A2C8;
+    color: #fff !important;
+}
+
+.layui-colla-title-my {
+    height: 30px !important;
+    line-height: 30px !important;
+    word-break: break-all !important;
+    background-color: #fefefe !important;
+}
+
+.layui-hr-my {
+    height: 0;
+    line-height: 0;
+    margin: 10px 0;
+    padding: 0;
+    border: none !important;
+    border-bottom: 1px solid #eee !important;
+    clear: both;
+    overflow: hidden;
+    background: 0 0;
+}
+
+.background-color-none-my {
+    background-color: transparent !important;
+}
+
+body .layui-layer-class-my .layui-layer-btn .layui-layer-btn1 {
+    background: #009688;
+    color: #fff;
+}
+
+.topology {
+    position: absolute !important;
+    overflow-y: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.config-strong {
+    width: 100%;
+    color: red;
+    display: table-cell;
+    position: relative;
+    padding: 9px 15px;
+    line-height: 20px;
+}
+
+.config-fixed-buttons {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: auto;
+    background: white;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.mib-oid-config-title {
+    padding: 5px 0;
+}
+
+.mib-oid-config-textarea {
+    width: 100%;
+    height: calc(100vh - 100px);
+    font-family: monospace;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    /* 禁止用户调整大小 */
+    resize: none;
+}
+
+.mib-oid-config-preview {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    overflow-x: auto;
+    /* 与输入框高度一致 */
+    height: calc(100vh - 100px);
+}
+
+.mib-oid-config-correct-message {
+    margin-top: 5px;
+}
+
+.mib-oid-config-error-message {
+    color: red;
+    margin-top: 5px;
+    display: none;
+}
+
+/* 线程池信息项容器 */
+.thread-pool-info-container {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 1px solid #e1e8ed;
+    border-radius: 6px;
+    padding: 6px;
+    margin-bottom: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.thread-pool-info-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+    border-color: #009688;
+}
+
+/* 线程池标签区域 - 左侧1/3 */
+.thread-pool-info-label {
+    flex: 1;
+    padding-right: 8px;
+    color: #333;
+    font-size: 13px;
+    line-height: 1.2;
+    vertical-align: middle;
+}
+
+/* 线程池数值区域 - 右侧2/3 */
+.thread-pool-info-value {
+    flex: 2;
+    color: #009688;
+    font-weight: 600;
+    font-size: 16px;
+    text-align: left;
+    word-break: break-all;
+}
+
+/* 侧边菜单样式 - 按照设计图修改 - 精确定位侧边菜单 */
+div.layui-side.layui-side-menu {
+    background-color: #202B3D !important;
+    width: 240px !important;
+}
+
+/* 侧边菜单滚动容器宽度 */
+div.layui-side.layui-side-menu .layui-side-scroll {
+    width: 240px !important;
+}
+
+/* 菜单导航宽度 */
+.layui-side-menu .layui-nav {
+    width: 240px !important;
+}
+
+/* 调整主体内容区域左边距以适应新菜单宽度 */
+.layui-layout-admin .layui-body,
+.layadmin-pagetabs,
+.layui-layout-admin .layui-footer,
+.layui-layout-admin .layui-layout-left {
+    left: 240px !important;
+}
+
+/* 调整logo区域宽度和位置 */
+.layui-layout-admin .layui-logo {
+    width: 240px !important;
+    z-index: 2005 !important;
+}
+
+/* 确保layui-side宽度正确 */
+.layui-layout-admin .layui-side {
+    width: 240px !important;
+}
+
+/* 响应式布局调整 */
+@media screen and (max-width: 992px) {
+    .layui-layout-admin .layui-side {
+        width: 240px !important;
+        transform: translate3d(-240px, 0, 0) !important;
+        -webkit-transform: translate3d(-240px, 0, 0) !important;
+    }
+}
+
+/* 去掉侧边菜单的悬浮指示条 */
+div.layui-side.layui-side-menu .layui-nav-bar {
+    display: none !important;
+}
+
+/* 去掉菜单项的after伪元素指示条 */
+div.layui-side.layui-side-menu .layui-nav-item:after {
+    display: none !important;
+}
+
+/* 去掉菜单项悬浮时的左侧指示条 */
+div.layui-side.layui-side-menu .layui-nav-item a:after {
+    display: none !important;
+}
+
+/* 侧边菜单容器 */
+div.layui-side.layui-side-menu > div.layui-side-scroll > ul.layui-nav.layui-nav-tree {
+    background-color: transparent !important;
+    margin-top: 50px;
+}
+
+/* 强制覆盖所有菜单项的背景色 - 只针对侧边菜单 */
+div.layui-side.layui-side-menu ul.layui-nav.layui-nav-tree > li.layui-nav-item > a {
+    background: transparent !important;
+    color: #FFFFFF !important;
+    opacity: 0.8;
+}
+
+/* 强制覆盖菜单项悬停背景 */
+div.layui-side.layui-side-menu ul.layui-nav.layui-nav-tree > li.layui-nav-item > a:hover {
+    background: transparent !important;
+    opacity: 1 !important;
+}
+
+/* 强制覆盖菜单项选中背景 - 只针对侧边菜单（仅选中状态） - 最高优先级 */
+div.layui-side.layui-side-menu > ul.layui-nav.layui-nav-tree > li.layui-nav-item.layui-this > a,
+div.layui-side.layui-side-menu > div.layui-side-scroll > ul.layui-nav.layui-nav-tree > li.layui-nav-item.layui-this > a {
+    background-color: #337EFF !important;
+    border-radius: 8px !important;
+    margin: 4px 8px !important;
+    opacity: 1 !important;
+    color: #FFFFFF !important;
+}
+
+/* 去掉展开状态的背景色（仅在选中时才显示蓝色） */
+div.layui-side.layui-side-menu ul.layui-nav.layui-nav-tree > li.layui-nav-item.layui-nav-itemed > a {
+    background: transparent !important;
+    color: #FFFFFF !important;
+    opacity: 0.9 !important;
+}
+
+/* 强制去掉青色背景 - 只针对侧边菜单（排除选中状态） */
+div.layui-side.layui-side-menu .layui-nav-tree .layui-nav-item:not(.layui-this) > a,
+div.layui-side.layui-side-menu .layui-nav-tree .layui-nav-item:not(.layui-this) > a:hover {
+    background: transparent !important;
+}
+
+/* 子菜单样式 */
+div.layui-side.layui-side-menu .layui-nav-tree .layui-nav-child {
+    background-color: transparent !important;
+    padding: 5px 0;
+    z-index: 2005;
+}
+
+/* 子菜单项样式 */
+div.layui-side.layui-side-menu .layui-nav-tree .layui-nav-child dd a {
+    opacity: 0.7;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    color: #FFFFFF !important;
+    line-height: 40px !important;
+    text-align: left !important;
+    font-style: normal !important;
+}
+
+/* 子菜单项悬停 */
+div.layui-side.layui-side-menu .layui-nav-tree .layui-nav-child dd a:hover {
+    background: transparent !important;
+    opacity: 1 !important;
+}
+
+/* 子菜单项选中 - 统一样式 - 最高优先级 */
+div.layui-side.layui-side-menu .layui-nav-tree .layui-nav-child dd.layui-this a,
+div.layui-side.layui-side-menu .layui-nav-tree .layui-nav-child dd.layui-this > a {
+    background-color: #337EFF !important;
+    border-radius: 8px !important;
+    margin: 4px 8px !important;
+    opacity: 1 !important;
+    color: #FFFFFF !important;
+}
+
+/* 子菜单容器选中状态 - 去掉背景色 */
+div.layui-side.layui-side-menu .layui-nav-tree .layui-nav-child dd.layui-this {
+    background-color: transparent !important;
+}
+
+/* 强制去掉子菜单的青色背景（排除选中状态） */
+div.layui-side.layui-side-menu .layui-nav-tree .layui-nav-child dd:not(.layui-this) > a,
+div.layui-side.layui-side-menu .layui-nav-tree .layui-nav-child dd:not(.layui-this) > a:hover {
+    background: transparent !important;
+}
+
+/* 强制覆盖所有青色样式为蓝色 - 主菜单选中状态 */
+div.layui-side.layui-side-menu .layui-nav-tree > li.layui-nav-item.layui-this > a,
+div.layui-side.layui-side-menu .layui-nav-tree > li.layui-nav-item.layui-this > a:hover {
+    background-color: #337EFF !important;
+    color: #FFFFFF !important;
+    border-radius: 8px;
+    margin: 4px 8px;
+    opacity: 1 !important;
+}
+
+/* 确保选中状态的容器也有正确的样式 */
+div.layui-side.layui-side-menu .layui-nav-tree > li.layui-this {
+    background-color: transparent !important;
+}
+
+/* 强制覆盖青色指示条和伪元素 */
+div.layui-side.layui-side-menu .layui-nav .layui-this:after,
+div.layui-side.layui-side-menu .layui-nav-bar,
+div.layui-side.layui-side-menu .layui-nav-tree .layui-nav-itemed:after,
+div.layui-side.layui-side-menu .layui-nav-child dd.layui-this:after {
+    background-color: #337EFF !important;
+    display: none !important;
+}
+
+/* 强制覆盖所有可能的青色背景和边框 */
+div.layui-side.layui-side-menu .layui-nav .layui-nav-child dd.layui-this a {
+    background-color: #337EFF !important;
+    color: #FFFFFF !important;
+    border-radius: 8px;
+    margin: 4px 8px;
+    opacity: 1 !important;
+}
+
+/* 去掉子菜单项容器的背景色 */
+div.layui-side.layui-side-menu .layui-nav .layui-nav-child dd.layui-this {
+    background-color: transparent !important;
+}
+
+/* 侧边菜单图标颜色 */
+div.layui-side.layui-side-menu .layui-nav-tree .layui-nav-item .layui-icon {
+    color: #FFFFFF !important;
+}
+
+/* 侧边菜单箭头颜色 */
+div.layui-side.layui-side-menu .layui-nav-tree .layui-nav-more {
+    border-top-color: #FFFFFF !important;
+}
+
+div.layui-side.layui-side-menu .layui-nav-tree .layui-nav-mored {
+    border-color: transparent transparent #FFFFFF !important;
+}
+
+/* 菜单项之间的间距调整 */
+div.layui-side.layui-side-menu .layui-nav .layui-nav-item {
+    margin: 2px 0;
+    line-height: normal;
+}
+
+/* 确保菜单项高度一致 */
+div.layui-side.layui-side-menu .layui-nav .layui-nav-item > a {
+    height: 40px;
+    line-height: 40px;
+}
+
+/* 子菜单项之间的间距 */
+div.layui-side.layui-side-menu .layui-nav .layui-nav-child dd {
+    margin: 2px 0;
+}
+
+/* 标签页内部容器 */
+.layadmin-pagetabs .layui-tab {
+    height: 50px !important;
+    line-height: 50px !important;
+    border: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    margin: 0 120px 0 25px !important;
+    padding-top: 2px !important;
+    max-width: calc(100% - 152px) !important;
+}
+
+/* 标签页容器 */
+.layadmin-pagetabs .layui-tab-title {
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+    height: 42px !important;
+    line-height: 42px !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+}
+
+/* 标签页控制按钮 - 保持原有功能和位置 */
+.layadmin-pagetabs .layadmin-tabs-control {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: absolute !important;
+    width: 32px !important;
+    height: 32px !important;
+    line-height: 32px !important;
+    color: #666 !important;
+    cursor: pointer !important;
+}
+
+/* 下拉菜单按钮位置 - 右侧，在右箭头左侧 */
+.layadmin-pagetabs div.layadmin-tabs-control.layui-icon-down {
+    position: absolute !important;
+    right: 0 !important;
+    left: auto !important;
+    width: 50px !important;
+    height: 50px !important;
+    line-height: 50px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    text-align: center !important;
+    color: #666 !important;
+    background: #FFFFFF !important;
+    border-bottom: 1px solid #DCDCDC !important;
+}
+
+.layui-icon-down:before {
+    content: none;
+}
+
+/* hover时扩展宽度以容纳下拉菜单 */
+.layadmin-pagetabs div.layadmin-tabs-control.layui-icon-down:hover {
+    width: 50px !important;
+    min-width: 50px !important;
+    justify-content: center !important;
+}
+
+/* 确保下拉箭头图标保持可见 */
+.layadmin-pagetabs div.layadmin-tabs-control.layui-icon-down:hover:before {
+    display: inline-block !important;
+}
+
+/* 备用选择器 - 使用类名组合 */
+.layadmin-pagetabs div.layadmin-tabs-control.layui-icon-prev {
+    width: 50px !important;
+    height: 50px !important;
+    line-height: 50px !important;
+    background: #FFFFFF !important;
+    border-right: 1px solid #DCDCDC !important;
+    border-bottom: 1px solid #DCDCDC !important;
+}
+.layui-icon-prev:before {
+    content: none;
+}
+
+.layadmin-pagetabs div.layadmin-tabs-control.layui-icon-next {
+    display: flex !important;
+    width: 50px !important;
+    height: 50px !important;
+    line-height: 50px !important;
+    background: #FFFFFF !important;
+    border-left: 1px solid #DCDCDC;
+    border-right: 1px solid #DCDCDC;
+    border-bottom: 1px solid #DCDCDC !important;
+    right: 50px;
+}
+
+.layui-icon-next:before {
+    content: none;
+}
+
+/* 向下箭头按钮内的下拉菜单容器 */
+.layadmin-pagetabs .layadmin-tabs-control.layui-icon-down .dropdown-menu,
+.layadmin-pagetabs .layui-icon.layadmin-tabs-control.layui-icon-down .dropdown-menu {
+    position: relative !important;
+}
+
+/* 向下箭头按钮的下拉菜单 - 完整版本，覆盖layui默认样式 */
+.layadmin-pagetabs .layadmin-tabs-control.layui-icon-down .dropdown-menu .layui-nav-child,
+.layadmin-pagetabs .layui-icon.layadmin-tabs-control.layui-icon-down .dropdown-menu .layui-nav-child {
+    display: none !important;
+    position: fixed !important;
+    top: 99px !important;
+    right: 4px !important;
+    background-color: #fff !important;
+    border: 1px solid #e6e6e6 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    z-index: 99999 !important;
+    min-width: 150px !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 8px 0 !important;
+    white-space: nowrap !important;
+    text-align: left !important;
+    left: auto !important;
+    bottom: auto !important;
+}
+
+/* 下拉菜单项 - 完全覆盖layui样式 */
+.layadmin-pagetabs .layadmin-tabs-control.layui-icon-down .dropdown-menu .layui-nav-child dd,
+.layadmin-pagetabs .layui-icon.layadmin-tabs-control.layui-icon-down .dropdown-menu .layui-nav-child dd {
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: normal !important;
+    background: transparent !important;
+}
+
+/* 下拉菜单链接 - 完全覆盖layui样式 */
+.layadmin-pagetabs .layadmin-tabs-control.layui-icon-down .dropdown-menu .layui-nav-child dd a,
+.layadmin-pagetabs .layui-icon.layadmin-tabs-control.layui-icon-down .dropdown-menu .layui-nav-child dd a {
+    display: block !important;
+    padding: 8px 20px !important;
+    color: #333 !important;
+    background: #fff !important;
+    line-height: normal !important;
+    font-size: 14px !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    position: static !important;
+}
+
+/* 下拉菜单链接hover */
+.layadmin-pagetabs .layadmin-tabs-control.layui-icon-down .dropdown-menu .layui-nav-child dd a:hover,
+.layadmin-pagetabs .layui-icon.layadmin-tabs-control.layui-icon-down .dropdown-menu .layui-nav-child dd a:hover {
+    background-color: #f5f5f5 !important;
+    color: #333 !important;
+}
+
+/* hover时显示下拉菜单 */
+.layadmin-pagetabs .layadmin-tabs-control.layui-icon-down:hover .dropdown-menu .layui-nav-child,
+.layadmin-pagetabs .layui-icon.layadmin-tabs-control.layui-icon-down:hover .dropdown-menu .layui-nav-child {
+    display: block !important;
+}
+
+/* 确保下拉菜单在鼠标悬停时保持可见 */
+.layadmin-pagetabs .layadmin-tabs-control.layui-icon-down .dropdown-menu .layui-nav-child:hover,
+.layadmin-pagetabs .layui-icon.layadmin-tabs-control.layui-icon-down .dropdown-menu .layui-nav-child:hover {
+    display: block !important;
+}
+
+
+/* 去掉所有可能的伪元素边框 */
+.layadmin-pagetabs::before,
+.layadmin-pagetabs::after,
+.layadmin-pagetabs .layui-tab::before,
+.layadmin-pagetabs .layui-tab::after,
+.layadmin-pagetabs .layui-tab-title::before,
+.layadmin-pagetabs .layui-tab-title::after {
+    display: none !important;
+    content: none !important;
+    border: none !important;
+}
+
+/* 去掉header底部边框和body顶部边框 */
+.layui-layout-admin .layui-header {
+    border-bottom: none !important;
+}
+
+.layui-layout-admin .layui-body {
+    border-top: none !important;
+}
+
+/* 去掉标签页的所有指示条和导航条 - 解决顶部黑边问题 */
+.layadmin-pagetabs .layui-nav-bar,
+.layadmin-pagetabs .layui-tab .layui-nav-bar,
+.layadmin-pagetabs .layui-tab-title .layui-nav-bar,
+.layadmin-pagetabs .layui-nav-child .layui-nav-bar,
+.layadmin-pagetabs .layui-tabs-select .layui-nav-bar {
+    display: none !important;
+    height: 0 !important;
+    width: 0 !important;
+    background: none !important;
+}
+
+/* 去掉标签页的所有伪元素指示条 - 但保留首页标签的文字 */
+.layadmin-pagetabs .layui-tab-title li:not(:first-child):after,
+.layadmin-pagetabs .layui-tab-title li:not(:first-child):before,
+.layadmin-pagetabs .layui-tab-title li.layui-this:not(:first-child):after,
+.layadmin-pagetabs .layui-tab-title li.layui-this:not(:first-child):before {
+    display: none !important;
+    content: none !important;
+    border: none !important;
+    height: 0 !important;
+    width: 0 !important;
+}
+
+/* 去掉首页标签的所有默认伪元素和指示条（除了我们添加的::after用于显示文字） */
+.layadmin-pagetabs .layui-tab-title li:first-child:before,
+.layadmin-pagetabs .layui-tab-title li:first-child:hover:before,
+.layadmin-pagetabs .layui-tab-title li:first-child:hover::before {
+    display: none !important;
+    content: none !important;
+    border: none !important;
+    height: 0 !important;
+    width: 0 !important;
+    background: none !important;
+}
+
+/* 去掉首页标签悬停时的所有边框和指示效果 */
+.layadmin-pagetabs .layui-tab-title li:first-child:hover {
+    border: 1px solid #DCDCDC !important;
+    box-shadow: none !important;
+    z-index: 10 !important;
+}
+
+/* 去掉所有标签页的边框样式 */
+.layadmin-pagetabs .layui-tab-title li,
+.layadmin-pagetabs .layui-tab-title li:hover,
+.layadmin-pagetabs .layui-tab-title li.layui-this,
+.layadmin-pagetabs .layui-tab-title li.layui-this:hover {
+    border: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+}
+
+/* 专门针对首页标签的悬停效果 - 最高优先级 */
+.layadmin-pagetabs .layui-tab-title li:first-child,
+.layadmin-pagetabs .layui-tab-title li:first-child:hover {
+    border: 1px solid #DCDCDC !important;
+    outline: none !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+    text-decoration-line: none !important;
+    text-decoration-style: solid !important;
+    text-decoration-color: transparent !important;
+    z-index: 10 !important;
+}
+
+.layadmin-pagetabs .layui-tab-title li.layui-this:first-child,
+.layadmin-pagetabs .layui-tab-title li.layui-this:first-child:hover {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+    text-decoration-line: none !important;
+    text-decoration-style: solid !important;
+    text-decoration-color: transparent !important;
+    z-index: 10 !important;
+}
+
+/* 去掉Layui默认的标签页伪元素和背景 - 针对所有可能的选择器 */
+.layadmin-pagetabs .layui-tab-title li::before,
+.layadmin-pagetabs .layui-tab-title li::after,
+.layadmin-pagetabs .layui-tab-title li:hover::before,
+.layadmin-pagetabs .layui-tab-title li:hover::after,
+.layadmin-pagetabs .layui-tab-title li.layui-this::before,
+.layadmin-pagetabs .layui-tab-title li.layui-this::after,
+.layadmin-pagetabs .layui-tab-title li.layui-this:hover::before,
+.layadmin-pagetabs .layui-tab-title li.layui-this:hover::after {
+    display: none !important;
+    content: none !important;
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    height: 0 !important;
+    width: 0 !important;
+    position: absolute !important;
+    top: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+}
+
+/* 专门针对首页标签的伪元素 - 除了我们用于显示"首页"文字的::after */
+.layadmin-pagetabs .layui-tab-title li:first-child::before,
+.layadmin-pagetabs .layui-tab-title li:first-child:hover::before,
+.layadmin-pagetabs .layui-tab-title li.layui-this:first-child::before,
+.layadmin-pagetabs .layui-tab-title li.layui-this:first-child:hover::before {
+    display: none !important;
+    content: none !important;
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    height: 0 !important;
+    width: 0 !important;
+    position: absolute !important;
+    top: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+}
+
+/* 去掉标签页选择菜单的指示条 */
+.layadmin-pagetabs .layadmin-tabs-select .layui-nav-bar {
+    display: none !important;
+}
+
+/* 去掉所有可能的焦点状态指示 */
+.layadmin-pagetabs *:focus,
+.layadmin-pagetabs .layui-tab *:focus,
+.layadmin-pagetabs .layui-tab-title *:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* 禁用标签页的过渡动画效果 */
+.layadmin-pagetabs .layui-tab-title li,
+.layadmin-pagetabs .layui-tab-title li *,
+.layadmin-pagetabs .layui-tab-title,
+.layadmin-pagetabs .layui-tab {
+    transition: none !important;
+    animation: none !important;
+}
+
+/* 默认标签页样式 - 白色背景，深灰色文字 */
+.layadmin-pagetabs .layui-tab-title li {
+    text-align: center;
+    background-color: #FFFFFF !important;
+    border: 1px solid #DCDCDC !important;
+    border-radius: 4px !important;
+    color: #333333 !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    font-family: "Microsoft YaHei", Arial, sans-serif !important;
+    height: 42px !important;
+    line-height: 42px !important;
+    padding: 0 30px 0 12px !important;
+    position: relative !important;
+    margin-right: 12px !important;
+}
+
+/* 选中的标签页 - 浅蓝色背景，深蓝色文字 */
+.layadmin-pagetabs .layui-tab-title li.layui-this {
+    background-color: #E6F0FF !important;
+    border: none !important;
+    color: #337EFF !important;
+    font-weight: 400 !important;
+    font-size: 16px !important;
+}
+
+/* 标签页悬停效果 - 去掉悬停效果保持一致 */
+.layadmin-pagetabs .layui-tab-title li:hover {
+    background-color: #FFFFFF !important;
+    color: #333333 !important;
+    border: 1px solid #DCDCDC !important;
+}
+
+/* 选中标签页的悬停效果也要保持选中状态 */
+.layadmin-pagetabs .layui-tab-title li.layui-this:hover {
+    background-color: #E6F0FF !important;
+    color: #337EFF !important;
+    border: none !important;
+}
+
+/* 去掉最后一个标签的右边距，避免不必要的空白 */
+.layadmin-pagetabs .layui-tab-title li:last-child {
+    margin-right: 0 !important;
+}
+
+/* 标签页关闭按钮 */
+.layadmin-pagetabs .layui-tab-title li .layui-tab-close {
+    background-image: url("../images/new-ui/close_btn.png") !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-size: 14px 14px !important;
+    background-color: transparent !important;
+    width: 14px !important;
+    height: 14px !important;
+    font-size: 0 !important;
+    line-height: normal !important;
+    position: absolute !important;
+    right: 8px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    margin: 0 !important;
+    opacity: 1 !important;
+    border: none !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+}
+
+/* 标签页关闭按钮悬停 - 去掉所有悬停效果 */
+.layadmin-pagetabs .layui-tab-title li .layui-tab-close:hover {
+    background-image: url("../images/new-ui/close_btn.png") !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-size: 14px 14px !important;
+    background-color: transparent !important;
+    opacity: 1 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* 首页标签页没有关闭图标 */
+.layadmin-pagetabs .layui-tab-title li:first-child .layui-tab-close {
+    display: none !important;
+}
+
+/* 首页标签页特殊处理 - 隐藏图标，显示文字"首页" */
+.layadmin-pagetabs .layui-tab-title li:first-child .layui-icon {
+    display: none !important;
+}
+
+/* 首页标签页特殊处理 - 如果是选中状态 */
+.layadmin-pagetabs .layui-tab-title li:first-child.layui-this {
+    min-width: 80px !important;
+    width: auto !important;
+    height: 42px !important;
+    line-height: 42px !important;
+    background-color: #E6F0FF !important;
+    font-weight: 400 !important;
+    font-size: 16px !important;
+    color: #337EFF !important;
+    text-align: center !important;
+    font-style: normal !important;
+    margin-right: 12px !important;
+    padding: 0 16px !important;
+    border: none !important;
+    z-index: 10 !important;
+    overflow: visible !important;
+}
+
+/* 首页标签页文字样式 */
+.layadmin-pagetabs .layui-tab-title li:first-child .tab-text {
+    display: inline-block !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    color: inherit !important;
+    vertical-align: middle !important;
+    margin-left: 4px !important;
+}
+
+/* 首页标签页添加"首页"文字 */
+.layadmin-pagetabs .layui-tab-title li:first-child::after {
+    display: inline-block !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    color: inherit !important;
+    border: none !important;
+    background: none !important;
+    text-decoration: none !important;
+    text-align: center !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    z-index: 11 !important;
+    width: auto !important;
+    white-space: nowrap !important;
+}
+
+/* 首页标签悬停状态下的::after伪元素 */
+.layadmin-pagetabs .layui-tab-title li:first-child:hover::after,
+.layadmin-pagetabs .layui-tab-title li.layui-this:first-child:hover::after {
+    display: inline-block !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    color: inherit !important;
+    border: none !important;
+    background: none !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    z-index: 11 !important;
+    width: auto !important;
+    white-space: nowrap !important;
+}
+
+/* 确保首页标签页的内容区域正确显示 - 保持和其他标签一致的宽度 */
+.layadmin-pagetabs .layui-tab-title li:first-child {
+    min-width: 80px !important;
+    width: auto !important;
+    position: relative !important;
+    padding: 0 16px !important;
+    margin-right: 12px !important;
+    border: 1px solid #DCDCDC !important;
+    text-decoration: none !important;
+    text-decoration-line: none !important;
+    text-decoration-style: none !important;
+    text-decoration-color: transparent !important;
+    text-shadow: none !important;
+    text-align: center;
+    z-index: 10 !important;
+    overflow: visible !important;
+}
+
+/* 专门针对首页标签悬停状态 */
+.layadmin-pagetabs .layui-tab-title li:first-child:hover,
+.layadmin-pagetabs .layui-tab-title li.layui-this:first-child:hover {
+    text-decoration: none !important;
+    text-decoration-line: none !important;
+    text-decoration-style: none !important;
+    text-decoration-color: transparent !important;
+    text-shadow: none !important;
+    border: 1px solid #DCDCDC !important;
+    box-shadow: none !important;
+    background-color: #FFFFFF !important;
+    color: #333333 !important;
+    z-index: 10 !important;
+}
+
+/* 选中状态的首页标签悬停 */
+.layadmin-pagetabs .layui-tab-title li.layui-this:first-child:hover {
+    background-color: #E6F0FF !important;
+    color: #337EFF !important;
+    text-align: center !important;
+    border: none !important;
+    z-index: 10 !important;
+}
+
+.layadmin-pagetabs .layadmin-tabs-control:hover {
+    color: #333 !important;
+}
+
+
+/* 菜单图标样式 */
+/* 主页菜单图标 */
+#LAY-system-side-menu .my-menu-font-size a cite {
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    color: #FFFFFF !important;
+    line-height: 22px !important;
+    text-align: left !important;
+    font-style: normal !important;
+}
+
+.layui-icon-home:before {
+    content: '';
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    background-image: url("../images/new-ui/主页.png");
+    background-size: cover;
+}
+
+.layui-icon-server:before {
+    content: '';
+    background-image: url("../images/new-ui/菜单_服务器.png");
+    background-size: cover;
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.layui-icon-app:before {
+    content: '';
+    background-image: url("../images/new-ui/菜单_应用程序.png");
+    background-size: cover;
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.layui-icon-db:before {
+    content: '';
+    background-image: url("../images/new-ui/菜单_数据库.png");
+    background-size: cover;
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+}
+.layui-icon-website:before {
+    content: '';
+    background-image: url("../images/new-ui/菜单_网络.png");
+    background-size: cover;
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+}
+.layui-icon-tcp:before {
+    content: '';
+    background-image: url("../images/new-ui/菜单端口.png");
+    background-size: cover;
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+}
+.layui-icon-http:before {
+    content: '';
+    background-image: url("../images/new-ui/菜单接口.png");
+    background-size: cover;
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+}
+.layui-icon-docker:before {
+    content: '';
+    background-image: url("../images/new-ui/菜单docker.png");
+    background-size: cover;
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+}
+.layui-icon-network-device:before {
+    content: '';
+    background-image: url("../images/new-ui/菜单网络设备.png");
+    background-size: cover;
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+}
+.layui-icon-topology:before {
+    content: '';
+    background-image: url("../images/new-ui/菜单拓扑图.png");
+    background-size: cover;
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+}
+.layui-icon-notice:before {
+    content: '';
+    background-image: url("../images/new-ui/菜单告警.png");
+    background-size: cover;
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+}
+.layui-icon-set:before {
+    content: '';
+    background-image: url("../images/new-ui/菜单配置管理.png");
+    background-size: cover;
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+}
+.layui-icon-user:before {
+    content: '';
+    background-image: url("../images/new-ui/菜单用户管理.png");
+    background-size: cover;
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+}
+.layui-icon-log-my:before {
+    content: '';
+    background-image: url("../images/new-ui/菜单日志.png");
+    background-size: cover;
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+}
+.layui-icon-snowflake:before {
+    content: '';
+    background-image: url("../images/new-ui/菜单Druid.png");
+    background-size: cover;
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+}
+.layui-icon-component:before {
+    content: '';
+    background-image: url("../images/new-ui/菜单Knife4j.png");
+    background-size: cover;
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+}
+.layui-icon-username:before {
+    content: '';
+    background-image: url("../images/new-ui/菜单我的.png");
+    background-size: cover;
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+}
+
+/* 告警统计右边三个点激活态样式 */
+.layadmin-carousel .layui-carousel-ind li.layui-this {
+    background-color: #337EFF;
+}
+
+/* 在大屏幕上应用样式 */
+@media (min-width: 768px) {
+    .last-alarm-layui-card-body {
+        height: 89vh;
+        overflow-y: auto;
+    }
+}

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitee.pifeng.monitoring.ui.business.web.dao.IMonitorDockerEventDao">
+
+    <!-- 获取docker事件列表 -->
+    <select id="getMonitorDockerEventList"
+            resultType="com.gitee.pifeng.monitoring.ui.business.web.vo.MonitorDockerEventVo">
+        SELECT e.*,d.MONITOR_ENV,d.MONITOR_GROUP,d.DOCKER_SUMMARY,d.IS_ONLINE
+        FROM MONITOR_DOCKER_EVENT e
+        LEFT JOIN MONITOR_DOCKER d ON e.SERVER_IP = d.SERVER_IP
+        <where>
+            <if test="params.eventId!=null and params.eventId!=''">
+                AND e.EVENT_ID = #{params.eventId}
+            </if>
+            <if test="params.serverIp!=null and params.serverIp!=''">
+                AND e.SERVER_IP LIKE CONCAT('%', #{params.serverIp}, '%')
+            </if>
+            <if test="params.eventStatus!=null and params.eventStatus!=''">
+                AND e.EVENT_STATUS LIKE CONCAT('%', #{params.eventStatus}, '%')
+            </if>
+            <if test="params.eventFrom!=null and params.eventFrom!=''">
+                AND e.EVENT_FROM LIKE CONCAT('%', #{params.eventFrom}, '%')
+            </if>
+            <if test="params.eventType!=null and params.eventType!=''">
+                AND e.EVENT_TYPE LIKE CONCAT('%', #{params.eventType}, '%')
+            </if>
+            <if test="params.eventAction!=null and params.eventAction!=''">
+                AND e.EVENT_ACTION LIKE CONCAT('%', #{params.eventAction}, '%')
+            </if>
+            <if test="params.happenTime!=null and params.happenTime!=''">
+                AND DATE_FORMAT(e.HAPPEN_TIME, '%Y-%m-%d') = #{params.happenTime}
+            </if>
+            <if test="params.monitorEnv!=null and params.monitorEnv!=''">
+                AND d.MONITOR_ENV = #{params.monitorEnv}
+            </if>
+            <if test="params.monitorGroup!=null and params.monitorGroup!=''">
+                AND d.MONITOR_GROUP = #{params.monitorGroup}
+            </if>
+        </where>
+        ORDER BY e.HAPPEN_TIME DESC,e.ID DESC
+    </select>
+
+    <!-- 访问docker事件详情页面 -->
+    <select id="getMonitorDockerEventInfo"
+            resultType="com.gitee.pifeng.monitoring.ui.business.web.vo.MonitorDockerEventVo">
+        SELECT e.*,d.MONITOR_ENV,d.MONITOR_GROUP,d.DOCKER_SUMMARY,d.IS_ONLINE
+        FROM MONITOR_DOCKER_EVENT e
+        LEFT JOIN MONITOR_DOCKER d ON e.SERVER_IP = d.SERVER_IP
+        <where>
+            <if test="serverIp!=null and serverIp!=''">
+                AND e.SERVER_IP = #{serverIp}
+            </if>
+            <if test="id!=null">
+                AND e.ID = #{id}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitee.pifeng.monitoring.ui.business.web.dao.IMonitorDockerImageDao">
+
+    <!-- 获取docker镜像列表 -->
+    <select id="getMonitorDockerImageList"
+            resultType="com.gitee.pifeng.monitoring.ui.business.web.vo.MonitorDockerImageVo">
+        SELECT i.*,d.MONITOR_ENV,d.MONITOR_GROUP,d.DOCKER_SUMMARY,d.IS_ONLINE,d.ID AS dockerId
+        FROM MONITOR_DOCKER_IMAGE i
+        LEFT JOIN MONITOR_DOCKER d ON i.SERVER_IP = d.SERVER_IP
+        <where>
+            <if test="params.serverIp!=null and params.serverIp!=''">
+                AND i.SERVER_IP LIKE CONCAT('%', #{params.serverIp}, '%')
+            </if>
+            <if test="params.imageRepository!=null and params.imageRepository!=''">
+                AND i.IMAGE_REPOSITORY LIKE CONCAT('%', #{params.imageRepository}, '%')
+            </if>
+            <if test="params.monitorEnv!=null and params.monitorEnv!=''">
+                AND d.MONITOR_ENV = #{params.monitorEnv}
+            </if>
+            <if test="params.monitorGroup!=null and params.monitorGroup!=''">
+                AND d.MONITOR_GROUP = #{params.monitorGroup}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取docker镜像信息 -->
+    <select id="getMonitorDockerImageInfo"
+            resultType="com.gitee.pifeng.monitoring.ui.business.web.vo.MonitorDockerImageVo">
+        SELECT i.*,d.MONITOR_ENV,d.MONITOR_GROUP,d.DOCKER_SUMMARY,d.IS_ONLINE
+        FROM MONITOR_DOCKER_IMAGE i
+        LEFT JOIN MONITOR_DOCKER d ON i.SERVER_IP = d.SERVER_IP
+        <where>
+            <if test="serverIp!=null and serverIp!=''">
+                AND i.SERVER_IP = #{serverIp}
+            </if>
+            <if test="imageId!=null and imageId!=''">
+                AND i.IMAGE_ID = #{imageId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

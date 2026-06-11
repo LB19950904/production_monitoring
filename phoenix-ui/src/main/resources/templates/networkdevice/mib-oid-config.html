@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>MIB OID配置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="./layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" href="./style/myself.css" th:href="@{/style/myself.css}" media="all">
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script th:src="@{/js/html5.min.js}"></script>
+    <script th:src="@{/js/respond.min.js}"></script>
+    <![endif]-->
+    <script type="text/javascript" charset="utf-8" th:inline="javascript">
+        var ctxPath = /*[[@{/}]]*/'';
+        // oid
+        var oid = [[${oid}]];
+    </script>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-form layui-col-md6">
+            <h4 class="mib-oid-config-title"><label for="mibOidTextarea">YAML输入</label></h4>
+            <textarea id="mibOidTextarea" name="mibOidTextarea" class="mib-oid-config-textarea"
+                      th:text="${oid}" placeholder="在这里输入 MIB OID 内容..."></textarea>
+            <!-- value='1'，表示YAML格式正确，value='0'，表示YAML格式错误 -->
+            <input type="hidden" id="mibOidValid" name="mibOidValid" value="1">
+            <div id="correctMessage" class="mib-oid-config-correct-message">YAML格式正确</div>
+            <div id="errorMessage" class="mib-oid-config-error-message"></div>
+            <div class="layui-form-item layui-hide">
+                <input type="button" lay-submit lay-filter="LAY-front-submit" id="LAY-front-submit" value="确认">
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <h4 class="mib-oid-config-title"><label for="mibOidPreview">JSON预览</label></h4>
+            <div id="mibOidPreview" class="mib-oid-config-preview"></div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/common.js}" charset="utf-8"></script>
+<script th:src="@{/js/js-yaml.min.js}" charset="utf-8"></script>
+<script th:src="@{/layui/layui.js}"></script>
+<script charset="utf-8" th:inline="javascript">
+    layui.config({
+        base: ctxPath //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form'], function () {
+        // form模块必须要，因为外部页面调用了此页面的form模块，来获取表单元素值
+        var $ = layui.$;
+        // 获取 DOM 元素
+        var mibOidTextarea = $('#mibOidTextarea');
+        var correctMessage = $('#correctMessage');
+        var errorMessage = $('#errorMessage');
+        var mibOidValid = $('#mibOidValid');
+        var jsonPreview = $('#mibOidPreview');
+        // 处理YAML格式正确
+        var dealYamlCorrect = function (data) {
+            jsonPreview.text(data);
+            // 清除错误信息
+            errorMessage.text('');
+            // 设置提示
+            correctMessage.show();
+            errorMessage.hide();
+            mibOidValid.val(1);
+        };
+        // 处理YAML格式错误
+        var dealYamlError = function (error) {
+            jsonPreview.text('');
+            errorMessage.text(error);
+            // 设置提示
+            correctMessage.hide();
+            errorMessage.show();
+            mibOidValid.val(0);
+        };
+        // 打开页面后首次渲染JSON显示
+        if (isNotEmpty(oid)) {
+            try {
+                dealYamlCorrect(JSON.stringify(jsyaml.load(oid), null, 2));
+            } catch (e) {
+                // 捕获解析错误
+                dealYamlError('YAML格式错误: ' + e.message);
+            }
+        }
+        // 监听用户输入
+        mibOidTextarea.on('input', function () {
+            // 获取输入框的值
+            var yamlContent = mibOidTextarea.val();
+            try {
+                // 尝试解析 YAML
+                var jsonData = jsyaml.load(yamlContent);
+                // 判断是否为 JSON对象
+                var isJsonStr = isJson(jsonData);
+                // 不是json对象
+                if (!isJsonStr) {
+                    dealYamlError('YAML格式错误');
+                    return;
+                }
+                // 显示 JSON 预览
+                var jsonDataStr = JSON.stringify(jsonData, null, 2);
+                dealYamlCorrect(jsonDataStr);
+            } catch (e) {
+                // 捕获解析错误
+                dealYamlError('YAML格式错误: ' + e.message);
+            }
+        });
+    });
+</script>
+</body>
+</html>

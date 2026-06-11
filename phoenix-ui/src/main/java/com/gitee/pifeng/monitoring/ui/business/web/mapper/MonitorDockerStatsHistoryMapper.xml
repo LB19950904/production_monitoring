@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitee.pifeng.monitoring.ui.business.web.dao.IMonitorDockerStatsHistoryDao">
+
+    <!-- 获取docker CPU使用率图表数据 -->
+    <select id="getDockerCpuUtilizationRateChartInfo" parameterType="java.util.HashMap"
+            resultType="com.gitee.pifeng.monitoring.ui.business.web.vo.DockerStatsDetailPageDockerCpuUtilizationRateChartVo">
+        SELECT CPU_UTILIZATION_RATE AS cpuUtilizationRate,
+        INSERT_TIME AS insertTime
+        from MONITOR_DOCKER_STATS_HISTORY
+        WHERE SERVER_IP = #{params.serverIp}
+        AND CONTAINER_NAME=#{params.containerName}
+        <if test="params.startTime!=null and params.endTime!=null">
+            AND INSERT_TIME BETWEEN #{params.startTime} AND #{params.endTime}
+        </if>
+    </select>
+
+    <!-- 获取docker内存使用率图表数据 -->
+    <select id="getDockerMenUtilizationRateChartInfo" parameterType="java.util.HashMap"
+            resultType="com.gitee.pifeng.monitoring.ui.business.web.vo.DockerStatsDetailPageDockerMenUtilizationRateChartVo">
+        SELECT MEN_UTILIZATION_RATE AS menUtilizationRate,
+        INSERT_TIME AS insertTime
+        from MONITOR_DOCKER_STATS_HISTORY
+        WHERE SERVER_IP = #{params.serverIp}
+        AND CONTAINER_NAME=#{params.containerName}
+        <if test="params.startTime!=null and params.endTime!=null">
+            AND INSERT_TIME BETWEEN #{params.startTime} AND #{params.endTime}
+        </if>
+    </select>
+
+    <!-- 获取docker当前使用的内存和最大可以使用的内存图表数据 -->
+    <select id="getDockerMenUsageLimitChartInfo" parameterType="java.util.HashMap"
+            resultType="com.gitee.pifeng.monitoring.ui.business.web.vo.DockerStatsDetailPageDockerMenUsageLimitChartVo">
+        SELECT MEN_USAGE AS menUsage,
+        MEN_LIMIT AS menLimit,
+        INSERT_TIME AS insertTime
+        from MONITOR_DOCKER_STATS_HISTORY
+        WHERE SERVER_IP = #{params.serverIp}
+        AND CONTAINER_NAME=#{params.containerName}
+        <if test="params.startTime!=null and params.endTime!=null">
+            AND INSERT_TIME BETWEEN #{params.startTime} AND #{params.endTime}
+        </if>
+    </select>
+
+    <!-- 获取docker网络图表数据 -->
+    <select id="getDockerNetChartInfo" parameterType="java.util.HashMap"
+            resultType="com.gitee.pifeng.monitoring.ui.business.web.vo.DockerStatsDetailPageDockerNetChartVo">
+        SELECT NET_IN AS netIn,
+        NET_OUT AS netOut,
+        NET_IN_SPEED AS netInSpeed,
+        NET_OUT_SPEED AS netOutSpeed,
+        INSERT_TIME AS insertTime
+        from MONITOR_DOCKER_STATS_HISTORY
+        WHERE SERVER_IP = #{params.serverIp}
+        AND CONTAINER_NAME=#{params.containerName}
+        <if test="params.startTime!=null and params.endTime!=null">
+            AND INSERT_TIME BETWEEN #{params.startTime} AND #{params.endTime}
+        </if>
+    </select>
+
+    <!-- 获取docker磁盘图表数据 -->
+    <select id="getDockerBlockChartInfo" parameterType="java.util.HashMap"
+            resultType="com.gitee.pifeng.monitoring.ui.business.web.vo.DockerStatsDetailPageDockerBlockChartVo">
+        SELECT BLOCK_IN AS blockIn,
+        BLOCK_OUT AS blockOut,
+        BLOCK_IN_SPEED AS blockInSpeed,
+        BLOCK_OUT_SPEED AS blockOutSpeed,
+        INSERT_TIME AS insertTime
+        from MONITOR_DOCKER_STATS_HISTORY
+        WHERE SERVER_IP = #{params.serverIp}
+        AND CONTAINER_NAME=#{params.containerName}
+        <if test="params.startTime!=null and params.endTime!=null">
+            AND INSERT_TIME BETWEEN #{params.startTime} AND #{params.endTime}
+        </if>
+    </select>
+
+</mapper>

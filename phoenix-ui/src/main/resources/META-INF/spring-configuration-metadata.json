@@ -1,0 +1,66 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.ui.property.PhoenixProperties",
+      "name": "phoenix",
+      "type": "com.gitee.pifeng.monitoring.ui.property.PhoenixProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.ui.property.auth.AuthProperties",
+      "name": "phoenix.auth.type",
+      "description": "认证类型",
+      "type": "com.gitee.pifeng.monitoring.ui.property.auth.AuthTypeEnums"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.ui.property.auth.selfauth.LoginCaptchaProperties",
+      "name": "phoenix.auth.self-auth.login-captcha.enable",
+      "description": "是否启用验证码",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.ui.property.auth.thirdauth.ThirdAuthProperties",
+      "name": "phoenix.auth.third-auth.type",
+      "description": "第三方认证类型",
+      "type": "com.gitee.pifeng.monitoring.ui.property.auth.thirdauth.ThirdAuthTypeEnums"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.ui.property.auth.thirdauth.cas.CasConfigurationProperties",
+      "name": "phoenix.auth.third-auth.cas.key",
+      "description": "秘钥",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.ui.property.auth.thirdauth.cas.CasConfigurationProperties",
+      "name": "phoenix.auth.third-auth.cas.server-url-prefix",
+      "description": "cas服务端地址",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.ui.property.auth.thirdauth.cas.CasConfigurationProperties",
+      "name": "phoenix.auth.third-auth.cas.server-login-url",
+      "description": "cas登录地址",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.ui.property.auth.thirdauth.cas.CasConfigurationProperties",
+      "name": "phoenix.auth.third-auth.cas.server-logout-url",
+      "description": "cas登出地址",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.ui.property.auth.thirdauth.cas.CasConfigurationProperties",
+      "name": "phoenix.auth.third-auth.cas.client-host-url",
+      "description": "cas客户端地址",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.gitee.pifeng.monitoring.ui.property.auth.thirdauth.cas.CasConfigurationProperties",
+      "name": "phoenix.auth.third-auth.cas.validation-type",
+      "description": "CAS协议验证类型",
+      "type": "com.gitee.pifeng.monitoring.ui.property.auth.thirdauth.cas.ValidationTypeEnums"
+    }
+  ]
+}

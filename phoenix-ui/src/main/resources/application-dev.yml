@@ -1,0 +1,49 @@
+##############################################server配置#################################################
+server:
+  port: 80
+  ssl:
+    enabled: false
+    #你生成的证书名字
+    #key-store: classpath:monitoring.p12
+    #密钥库密码
+    #key-store-password: 19920720
+    #key-store-type: PKCS12
+    #别名
+    #key-alias: selfsigned_localhost_sslserver
+
+
+###############################################数据源配置##################################################
+spring:
+  datasource:
+    druid:
+      #数据源配置
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/phoenix?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Ashgabat&useUnicode=true&characterEncoding=utf-8&failOverReadOnly=false&rewriteBatchedStatements=true
+      username: root
+      password: OxLDlhP903OXXoMkOV1A
+
+
+  ############################################thymeleaf配置###############################################
+  thymeleaf:
+    cache: true
+
+
+##############################################phoenix配置#################################################
+phoenix:
+  auth:
+    type: self
+    #登录认证配置
+    self-auth:
+      login-captcha:
+        #是否启用验证码
+        enable: true
+    #第三方认证配置
+    third-auth:
+      type: cas
+      cas:
+        key: phoenix
+        server-url-prefix: https://highway.dev.com:8444/cas #https://cas.example.org:8443/cas
+        server-login-url: ${phoenix.auth.third-auth.cas.server-url-prefix}/login
+        server-logout-url: ${phoenix.auth.third-auth.cas.server-url-prefix}/logout?service=${phoenix.auth.third-auth.cas.client-host-url}/index
+        client-host-url: http://127.0.0.1:${server.port}${server.servlet.context-path}
+        validation-type: cas3

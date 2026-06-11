@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>docker容器详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="./layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" href="./style/admin.css" th:href="@{/style/admin.css}" media="all">
+    <link rel="stylesheet" href="./style/myself.css" th:href="@{/style/myself.css}" media="all">
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script th:src="@{/js/html5.min.js}"></script>
+    <script th:src="@{/js/respond.min.js}"></script>
+    <![endif]-->
+    <script type="text/javascript" charset="utf-8" th:inline="javascript">
+        var ctxPath = /*[[@{/}]]*/'';
+        var tokenValue = /*[[${_csrf.token}]]*/'';
+        // docker容器的主键
+        var serverIp = [[${serverIp}]];
+        var containerName = [[${containerName}]];
+    </script>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-collapse">
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">容器</h2>
+                <div class="layui-colla-content layui-show">
+                    <div class="layui-row layui-col-space10" style="word-break: break-all;">
+                        <div class="layui-col-md12">
+                            <label class="label-font-weight">服务器IP：</label>[[${monitorDockerContainerVo.serverIp}]]
+                        </div>
+                        <div class="layui-col-md12">
+                            <label class="label-font-weight">容器ID：</label>[[${monitorDockerContainerVo.containerId}]]
+                        </div>
+                        <div class="layui-col-md12">
+                            <label class="label-font-weight">容器名：</label>[[${monitorDockerContainerVo.containerName}]]
+                        </div>
+                        <div class="layui-col-md12">
+                            <label class="label-font-weight">容器端口：</label>[[${monitorDockerContainerVo.containerPorts}]]
+                        </div>
+                        <div class="layui-col-md12">
+                            <label class="label-font-weight">容器标识：</label>[[${monitorDockerContainerVo.containerLabels}]]
+                        </div>
+                        <div class="layui-col-md12">
+                            <label class="label-font-weight">镜像ID：</label>[[${monitorDockerContainerVo.imageId}]]
+                        </div>
+                        <div class="layui-col-md12">
+                            <label class="label-font-weight">镜像名：</label>[[${monitorDockerContainerVo.imageName}]]
+                        </div>
+                        <div class="layui-col-md12">
+                            <label class="label-font-weight">命令：</label>[[${monitorDockerContainerVo.command}]]
+                        </div>
+                        <div class="layui-col-md12">
+                            <label class="label-font-weight">容器状态：</label>[[${monitorDockerContainerVo.status}]]
+                        </div>
+                        <div class="layui-col-md12">
+                            <label class="label-font-weight">创建时间：</label>
+                            [[${#dates.format(monitorDockerContainerVo.created,'yyyy-MM-dd HH:mm:ss')}]]
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">管理信息</h2>
+                <div class="layui-colla-content layui-show">
+                    <div class="layui-row layui-col-space10" style="word-wrap:break-word;">
+                        <div class="layui-col-md12">
+                            <label class="label-font-weight">新增时间：</label>
+                            [[${#dates.format(monitorDockerContainerVo.insertTime,'yyyy-MM-dd HH:mm:ss')}]]
+                        </div>
+                        <div class="layui-col-md12">
+                            <label class="label-font-weight">更新时间：</label>
+                            [[${#dates.format(monitorDockerContainerVo.updateTime,'yyyy-MM-dd HH:mm:ss')}]]
+                        </div>
+                        <div class="layui-col-md12">
+                            <label class="label-font-weight">docker服务状态：</label>
+                            [[${monitorDockerContainerVo.isOnline=='0'?'离线':'在线'}]]
+                        </div>
+                        <div class="layui-col-md12">
+                            <label class="label-font-weight">监控环境：</label>[[${monitorDockerContainerVo.monitorEnv}]]
+                        </div>
+                        <div class="layui-col-md12">
+                            <label class="label-font-weight">监控分组：</label>[[${monitorDockerContainerVo.monitorGroup}]]
+                        </div>
+                        <div class="layui-col-md12">
+                            <label class="label-font-weight">摘要：</label>[[${monitorDockerContainerVo.dockerSummary}]]
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/common.js}" charset="utf-8"></script>
+<script th:src="@{/layui/layui.js}"></script>
+<script>
+    layui.config({
+        base: ctxPath //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'element']);
+</script>
+</body>
+</html>

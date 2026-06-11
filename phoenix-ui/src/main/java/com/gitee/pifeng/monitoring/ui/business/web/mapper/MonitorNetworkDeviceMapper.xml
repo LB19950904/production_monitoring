@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitee.pifeng.monitoring.ui.business.web.dao.IMonitorNetworkDeviceDao">
+
+    <!-- 获取网络设备列表 -->
+    <select id="getMonitorNetworkDeviceList"
+            resultType="com.gitee.pifeng.monitoring.ui.business.web.vo.MonitorNetworkDeviceVo">
+        SELECT * FROM MONITOR_NETWORK_DEVICE D
+        <where>
+            <if test="criteria.ip!=null and criteria.ip!=''">
+                AND D.IP_TARGET LIKE concat('%',#{criteria.ip},'%')
+            </if>
+            <if test="criteria.isOnline!=null and criteria.isOnline!=''">
+                <choose>
+                    <when test="criteria.isOnline=='-1'">
+                        AND D.IS_ONLINE IS NULL
+                    </when>
+                    <otherwise>
+                        AND D.IS_ONLINE=#{criteria.isOnline}
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="criteria.insertType!=null and criteria.insertType!=''">
+                <choose>
+                    <when test="criteria.insertType=='-1'">
+                        AND D.INSERT_TYPE IS NULL
+                    </when>
+                    <otherwise>
+                        AND D.INSERT_TYPE=#{criteria.insertType}
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="criteria.monitorEnv!=null and criteria.monitorEnv!=''">
+                AND D.MONITOR_ENV = #{criteria.monitorEnv}
+            </if>
+            <if test="criteria.monitorGroup!=null and criteria.monitorGroup!=''">
+                AND D.MONITOR_GROUP = #{criteria.monitorGroup}
+            </if>
+            <if test="criteria.networkDeviceType!=null and criteria.networkDeviceType!=''">
+                AND D.NETWORK_DEVICE_TYPE LIKE concat('%',#{criteria.networkDeviceType},'%')
+            </if>
+            <if test="criteria.networkDeviceSummary!=null and criteria.networkDeviceSummary!=''">
+                AND D.NETWORK_DEVICE_SUMMARY LIKE concat('%',#{criteria.networkDeviceSummary},'%')
+            </if>
+            <if test="criteria.isEnableMonitor!=null and criteria.isEnableMonitor!=''">
+                AND D.IS_ENABLE_MONITOR=#{criteria.isEnableMonitor}
+            </if>
+            <if test="criteria.isEnableAlarm!=null and criteria.isEnableAlarm!=''">
+                AND D.IS_ENABLE_ALARM=#{criteria.isEnableAlarm}
+            </if>
+        </where>
+        ORDER BY D.ID
+    </select>
+
+    <!-- 网络设备在线率统计 -->
+    <select id="getNetworkDeviceOnlineRateStatistics" resultType="java.util.Map" databaseId="mysql">
+        SELECT tmp.networkDeviceSum            AS networkDeviceSum,
+               tmp.networkDeviceOnLineSum      AS networkDeviceOnLineSum,
+               tmp.networkDeviceOffLineSum     AS networkDeviceOffLineSum,
+               tmp.networkDeviceUnknownLineSum AS networkDeviceUnknownLineSum,
+               IFNULL(ROUND(tmp.networkDeviceOnLineSum * 100 / tmp.networkDeviceSum, 2), '100.00')
+                                               AS networkDeviceOnLineRate
+        FROM (SELECT COUNT(1)                                                      AS networkDeviceSum,
+                     IFNULL(SUM(CASE WHEN mnd.IS_ONLINE = 1 THEN 1 ELSE 0 END), 0) AS networkDeviceOnLineSum,
+                     IFNULL(SUM(CASE WHEN mnd.IS_ONLINE = 0 THEN 1 ELSE 0 END), 0) AS networkDeviceOffLineSum,
+                     IFNULL(SUM(CASE WHEN mnd.IS_ONLINE IS NULL OR mnd.IS_ONLINE = '' THEN 1 ELSE 0 END),
+                            0)                                                     AS networkDeviceUnknownLineSum
+              FROM MONITOR_NETWORK_DEVICE mnd) tmp
+    </select>
+
+</mapper>

@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.gitee.pifeng.monitoring.common.netty.config.property.WebSocketProperties,\
+  com.gitee.pifeng.monitoring.common.netty.config.WebSocketServerConfiguration,\
+  com.gitee.pifeng.monitoring.common.netty.config.WebSocketClusterStoreConfiguration

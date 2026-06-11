@@ -1,0 +1,332 @@
+package com.gitee.pifeng.monitoring.plug;
+
+import com.alibaba.fastjson.JSON;
+import com.gitee.pifeng.monitoring.common.constant.EndpointTypeEnums;
+import com.gitee.pifeng.monitoring.common.constant.ThreadTypeEnums;
+import com.gitee.pifeng.monitoring.common.domain.Alarm;
+import com.gitee.pifeng.monitoring.common.domain.ExceptionInfo;
+import com.gitee.pifeng.monitoring.common.domain.Result;
+import com.gitee.pifeng.monitoring.common.dto.AlarmPackage;
+import com.gitee.pifeng.monitoring.common.dto.BaseResponsePackage;
+import com.gitee.pifeng.monitoring.common.dto.ExceptionPackage;
+import com.gitee.pifeng.monitoring.common.dto.WebSocketPackage;
+import com.gitee.pifeng.monitoring.common.exception.*;
+import com.gitee.pifeng.monitoring.common.init.InitBanner;
+import com.gitee.pifeng.monitoring.common.init.InitSecure;
+import com.gitee.pifeng.monitoring.common.property.client.MonitoringProperties;
+import com.gitee.pifeng.monitoring.common.threadpool.MonitoredScheduledThreadPoolExecutor;
+import com.gitee.pifeng.monitoring.plug.constant.UrlConstants;
+import com.gitee.pifeng.monitoring.plug.core.*;
+import com.gitee.pifeng.monitoring.plug.scheduler.*;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * <p>
+ * 监控客户端入口类
+ * </p>
+ *
+ * @author 皮锋
+ * @custom.date 2020年3月5日 下午3:00:25
+ */
+@Slf4j
+public class Monitor {
+
+    /**
+     * 客户端包构造器
+     */
+    private static final ClientPackageConstructor CLIENT_PACKAGE_CONSTRUCTOR = ClientPackageConstructor.getInstance();
+
+    /**
+     * <p>
+     * 私有化构造方法
+     * </p>
+     *
+     * @author 皮锋
+     * @custom.date 2020/9/16 14:17
+     */
+    private Monitor() {
+    }
+
+    /**
+     * <p>
+     * 开启监控
+     * </p>
+     *
+     * @return {@link MonitoringProperties}
+     * @author 皮锋
+     * @custom.date 2020年3月5日 下午3:01:38
+     */
+    @SneakyThrows
+    public static MonitoringProperties start() {
+        return run(null, null, null);
+    }
+
+    /**
+     * <p>
+     * 开启监控，自定义配置文件路径和名字
+     * </p>
+     *
+     * @param configPath 配置文件路径
+     * @param configName 配置文件名字
+     * @return {@link MonitoringProperties}
+     * @author 皮锋
+     * @custom.date 2020年3月5日 下午4:06:31
+     */
+    @SneakyThrows
+    public static MonitoringProperties start(final String configPath, final String configName) {
+        return run(configPath, configName, null);
+    }
+
+    /**
+     * <p>
+     * 开启监控
+     * </p>
+     *
+     * @param monitoringProperties 监控属性
+     * @return {@link MonitoringProperties}
+     * @author 皮锋
+     * @custom.date 2024/4/7 10:43
+     */
+    @SneakyThrows
+    public static MonitoringProperties start(MonitoringProperties monitoringProperties) {
+        run(null, null, monitoringProperties);
+        return monitoringProperties;
+    }
+
+    /**
+     * <p>
+     * 运行监控
+     * </p>
+     *
+     * @param configPath           配置文件路径
+     * @param configName           配置文件名字
+     * @param monitoringProperties 监控属性
+     * @return {@link MonitoringProperties}
+     * @throws NotFoundConfigFileException  找不到配置文件异常
+     * @throws ErrorConfigParamException    错误的配置参数异常
+     * @throws NotFoundConfigParamException 找不到配置参数异常
+     * @author 皮锋
+     * @custom.date 2020年3月5日 下午4:07:10
+     */
+    private static MonitoringProperties run(final String configPath, final String configName, MonitoringProperties monitoringProperties)
+            throws NotFoundConfigFileException, ErrorConfigParamException, NotFoundConfigParamException {
+        // 1.打印banner信息
+        InitBanner.declare();
+        // 2.加载配置信息
+        if (monitoringProperties == null) {
+            monitoringProperties = ConfigLoader.load(configPath, configName);
+        } else {
+            monitoringProperties = ConfigLoader.verify(monitoringProperties);
+        }
+        // 3.验证许可证信息
+        String endpoint = monitoringProperties.getInstance().getEndpoint();
+        String clientNameEn = EndpointTypeEnums.CLIENT.getNameEn();
+        if (!StringUtils.equalsIgnoreCase(endpoint, clientNameEn)) {
+            boolean isVerifyPassed = LicenseChecker.verify();
+            if (!isVerifyPassed) {
+                // 立即终止JVM，状态码为1
+                Runtime.getRuntime().halt(1);
+            }
+        }
+        // 4.初始化加解密配置
+        InitSecure.declare();
+        // 5.运行双向数据交换器
+        DataExchanger.run();
+        // 6.开始定时发送心跳包
+        HeartbeatTaskScheduler.run();
+        // 7.开始定时发送服务器信息包
+        ServerTaskScheduler.run();
+        // 8.开始定时发送Java虚拟机信息包
+        JvmTaskScheduler.run();
+        // 9.开始定时发送Java线程池信息包
+        JavaThreadPoolTaskScheduler.run();
+        // 10.开始定时发送网络设备信息包
+        NetworkDeviceTaskScheduler.run();
+        // 11.开启arthas
+        ArthasAgent.attach();
+        // 最后：添加关闭钩子，在jvm退出前做一些操作
+        ShutdownHook.addShutdownHook();
+        // 返回监控属性
+        return monitoringProperties;
+    }
+
+    /**
+     * <p>
+     * 发送告警
+     * </p>
+     *
+     * @param alarm 告警信息
+     * @return {@link Result}
+     * @author 皮锋
+     * @custom.date 2020年3月6日 上午10:17:44
+     */
+    public static Result sendAlarm(Alarm alarm) {
+        try {
+            // 构造告警数据包
+            AlarmPackage alarmPackage = CLIENT_PACKAGE_CONSTRUCTOR.structureAlarmPackage(alarm);
+            String result = Sender.send(UrlConstants.ALARM_URL, alarmPackage.toJsonString());
+            BaseResponsePackage baseResponsePackage = JSON.parseObject(result, BaseResponsePackage.class);
+            return baseResponsePackage.getResult();
+        } catch (IOException | NetException e) {
+            log.error("监控程序发送告警信息异常！", e);
+            return Result.builder().isSuccess(false).msg(e.getMessage()).build();
+        }
+    }
+
+    /**
+     * <p>
+     * 异步发送告警
+     * </p>
+     *
+     * @param alarm 告警信息
+     * @author 皮锋
+     * @custom.date 2026年3月8日 下午13:03:06
+     */
+    public static void asyncSendAlarm(Alarm alarm) {
+        if (!DataExchanger.isReady()) {
+            throw new MonitoringUniversalException("数据交换器未准备好，请稍后再试！");
+        }
+        try {
+            // 构造告警数据包
+            AlarmPackage alarmPackage = CLIENT_PACKAGE_CONSTRUCTOR.structureAlarmPackage(alarm);
+            // 发送请求
+            WebSocketPackage requestPackage = new WebSocketPackage();
+            requestPackage.setClassName(AlarmPackage.class.getName());
+            requestPackage.setPayload(alarmPackage);
+            DataExchanger.sendMessage(requestPackage);
+        } catch (NetException e) {
+            log.error("监控程序异步发送告警信息异常！", e);
+        }
+    }
+
+    /**
+     * <p>
+     * 发送异常
+     * </p>
+     *
+     * @param exceptionInfo 异常信息
+     * @param alarmEnable   是否开启异常信息告警
+     * @return {@link ExceptionInfo}
+     * @author 皮锋
+     * @custom.date 2024/2/28 8:48
+     */
+    public static Result sendException(ExceptionInfo exceptionInfo, boolean alarmEnable) {
+        try {
+            // 构造异常数据包
+            ExceptionPackage exceptionPackage = CLIENT_PACKAGE_CONSTRUCTOR.structureExceptionPackage(exceptionInfo, alarmEnable);
+            String result = Sender.send(UrlConstants.EXCEPTION_URL, exceptionPackage.toJsonString());
+            BaseResponsePackage baseResponsePackage = JSON.parseObject(result, BaseResponsePackage.class);
+            return baseResponsePackage.getResult();
+        } catch (IOException | NetException e) {
+            log.error("监控程序发送异常信息异常！", e);
+            return Result.builder().isSuccess(false).msg(e.getMessage()).build();
+        }
+    }
+
+    /**
+     * <p>
+     * 异步发送异常
+     * </p>
+     *
+     * @param exceptionInfo 异常信息
+     * @param alarmEnable   是否开启异常信息告警
+     * @author 皮锋
+     * @custom.date 2026/3/8 13:45
+     */
+    public static void asyncSendException(ExceptionInfo exceptionInfo, boolean alarmEnable) {
+        if (!DataExchanger.isReady()) {
+            throw new MonitoringUniversalException("数据交换器未准备好，请稍后再试！");
+        }
+        try {
+            // 构造异常数据包
+            ExceptionPackage exceptionPackage = CLIENT_PACKAGE_CONSTRUCTOR.structureExceptionPackage(exceptionInfo, alarmEnable);
+            // 发送请求
+            WebSocketPackage requestPackage = new WebSocketPackage();
+            requestPackage.setClassName(ExceptionPackage.class.getName());
+            requestPackage.setPayload(exceptionPackage);
+            DataExchanger.sendMessage(requestPackage);
+        } catch (NetException e) {
+            log.error("监控程序异步发送异常信息异常！", e);
+        }
+    }
+
+    /**
+     * <p>
+     * 采集异常
+     * </p>
+     *
+     * @param exceptionInfo 异常信息
+     * @param alarmEnable   是否开启异常信息告警
+     * @return {@link ExceptionInfo}
+     * @author 皮锋
+     * @custom.date 2024/3/6 20:48
+     */
+    public static Result collectException(ExceptionInfo exceptionInfo, boolean alarmEnable) {
+        return sendException(exceptionInfo, alarmEnable);
+    }
+
+    /**
+     * <p>
+     * 异步采集异常
+     * </p>
+     *
+     * @param exceptionInfo 异常信息
+     * @param alarmEnable   是否开启异常信息告警
+     * @author 皮锋
+     * @custom.date 2026/3/8 13:58
+     */
+    public static void asyncCollectException(ExceptionInfo exceptionInfo, boolean alarmEnable) {
+        asyncSendException(exceptionInfo, alarmEnable);
+    }
+
+    /**
+     * <p>
+     * 采集异常，并且不进行异常信息告警
+     * </p>
+     *
+     * @param exceptionInfo 异常信息
+     * @return {@link ExceptionInfo}
+     * @author 皮锋
+     * @custom.date 2024/3/11 11:29
+     */
+    public static Result collectException(ExceptionInfo exceptionInfo) {
+        return collectException(exceptionInfo, false);
+    }
+
+    /**
+     * <p>
+     * 异步采集异常，并且不进行异常信息告警
+     * </p>
+     *
+     * @param exceptionInfo 异常信息
+     * @author 皮锋
+     * @custom.date 2026/3/8 14:29
+     */
+    public static void asyncCollectException(ExceptionInfo exceptionInfo) {
+        asyncCollectException(exceptionInfo, false);
+    }
+
+    /**
+     * <p>
+     * 业务埋点监控：定时监控业务运行情况
+     * </p>
+     *
+     * @param command        要执行的任务
+     * @param initialDelay   初次埋点监控延迟的时间
+     * @param period         两次埋点监控任务之间的时间间隔
+     * @param unit           时间单位
+     * @param threadTypeEnum 线程类型：CPU密集型、IO密集型
+     * @return {@link MonitoredScheduledThreadPoolExecutor}
+     * @author 皮锋
+     * @custom.date 2020/8/24 20:33
+     */
+    public static MonitoredScheduledThreadPoolExecutor buryingPoint(Runnable command, long initialDelay, long period, TimeUnit unit, ThreadTypeEnums threadTypeEnum) {
+        return BusinessBuryingPointTaskScheduler.run(command, initialDelay, period, unit, threadTypeEnum);
+    }
+
+}
