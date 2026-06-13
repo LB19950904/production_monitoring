@@ -1,7 +1,8 @@
 /**
  * 英文语言包
  */
-const EnMessages = {
+if (typeof EnMessages === 'undefined') {
+    const EnMessages = {
     // 通用模块
     common: {
         language: 'Language',
@@ -54,7 +55,7 @@ const EnMessages = {
         config: 'Configuration',
         user: 'User Management',
         log: 'Log',
-
+        my: 'My',
         // Docker子菜单
         dockerService: 'Service',
         dockerContainer: 'Container',
@@ -670,3 +671,4 @@ const EnMessages = {
 
 // 导出到全局
 window.EnMessages = EnMessages;
+}

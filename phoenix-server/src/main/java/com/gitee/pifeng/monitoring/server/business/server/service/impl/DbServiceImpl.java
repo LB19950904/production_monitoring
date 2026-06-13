@@ -10,6 +10,7 @@ import com.gitee.pifeng.monitoring.common.constant.DbEnums;
 import com.gitee.pifeng.monitoring.common.constant.ZeroOrOneConstants;
 import com.gitee.pifeng.monitoring.common.constant.sql.MySql;
 import com.gitee.pifeng.monitoring.common.constant.sql.Oracle;
+import com.gitee.pifeng.monitoring.common.constant.sql.PostgreSql;
 import com.gitee.pifeng.monitoring.server.business.server.dao.IMonitorDbDao;
 import com.gitee.pifeng.monitoring.server.business.server.entity.MonitorDb;
 import com.gitee.pifeng.monitoring.server.business.server.service.IDbService;
@@ -54,7 +55,8 @@ public class DbServiceImpl extends ServiceImpl<IMonitorDbDao, MonitorDb> impleme
         boolean isConnected = false;
         // 关系型数据库
         if (StringUtils.equalsIgnoreCase(DbEnums.MySQL.name(), dbType)
-                || StringUtils.equalsIgnoreCase(DbEnums.Oracle.name(), dbType)) {
+                || StringUtils.equalsIgnoreCase(DbEnums.Oracle.name(), dbType)
+                || StringUtils.equalsIgnoreCase(DbEnums.PostgreSQL.name(), dbType)) {
             Connection connection = null;
             try {
                 connection = DbUtils.getConnection(url, username, password);
@@ -67,6 +69,10 @@ public class DbServiceImpl extends ServiceImpl<IMonitorDbDao, MonitorDb> impleme
                     // oracle
                     if (StringUtils.equalsIgnoreCase(dbType, DbType.ORACLE.getDb())) {
                         SqlExecutor.query(connection, Oracle.CHECK_CONN, new NumberHandler());
+                    }
+                    // postgresql
+                    if (StringUtils.equalsIgnoreCase(dbType, DbType.POSTGRE_SQL.getDb())) {
+                        SqlExecutor.query(connection, PostgreSql.CHECK_CONN, new NumberHandler());
                     }
                     isConnected = true;
                 }

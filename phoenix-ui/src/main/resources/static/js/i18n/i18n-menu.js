@@ -7,70 +7,165 @@ const I18nMenu = {
      * 菜单翻译映射表
      */
     menuTranslations: {
-        // 主菜单项
+        // 主菜单项（完整的英文菜单文本）
+        'Home': 'menu.home',
         'home': 'menu.home',
+        '主页': 'menu.home',
+
+        'Server': 'menu.server',
+        'Server Management': 'menu.server',
         'server': 'menu.server',
+        '服务器': 'menu.server',
+
+        'Application': 'menu.instance',
+        'Instance Management': 'menu.instance',
         'instance': 'menu.instance',
+        '应用程序': 'menu.instance',
+
+        'Database': 'menu.database',
         'database': 'menu.database',
+        '数据库': 'menu.database',
+
+        'Network(PING)': 'menu.network',
+        'Network': 'menu.network',
         'network': 'menu.network',
+        '网络': 'menu.network',
+
+        'Port(TCP)': 'menu.tcp',
+        'TCP': 'menu.tcp',
         'tcp': 'menu.tcp',
+        '端口': 'menu.tcp',
+
+        'Interface(HTTP)': 'menu.http',
+        'HTTP Monitoring': 'menu.http',
+        'HTTP': 'menu.http',
         'http': 'menu.http',
+        '接口': 'menu.http',
+
+        'Docker': 'menu.docker',
+        'Docker Management': 'menu.docker',
         'docker': 'menu.docker',
+        '容器管理': 'menu.docker',
+
+        'Network Device': 'menu.networkDevice',
+        'Network Devices': 'menu.networkDevice',
         'networkDevice': 'menu.networkDevice',
+        '网络设备': 'menu.networkDevice',
+
+        'Topology': 'menu.topology',
+        'Topological Graph': 'menu.topology',
         'topology': 'menu.topology',
+        '拓扑图': 'menu.topology',
+
+        'Alarm': 'menu.alarm',
+        'Alarm Management': 'menu.alarm',
         'alarm': 'menu.alarm',
+        '告警': 'menu.alarm',
+
+        'Configuration': 'menu.config',
+        'Config Management': 'menu.config',
         'set': 'menu.config',
+        '配置管理': 'menu.config',
+
+        'User Management': 'menu.user',
         'user': 'menu.user',
+        '用户管理': 'menu.user',
+
+        'Log': 'menu.log',
         'log': 'menu.log',
-        'myself': 'menu.user',
+        '日志': 'menu.log',
+
+        'My': 'menu.my',
+        'myself': 'menu.my',
+        '我的': 'menu.my',
+
+        'User Profile': 'user.profile',
+        '基本资料': 'user.profile',
+
+        'Change Password': 'user.modify.password',
+        '修改密码': 'user.modify.password',
+
+        'Logout': 'menu.logout',
+        '退出': 'menu.logout',
+
         'druid': 'Druid',
         'Knife4j': 'Knife4j',
 
         // 子菜单项 - Docker
+        'Services': 'docker.services',
         '服务': 'docker.services',
+
+        'Containers': 'docker.containers',
         '容器': 'docker.containers',
+
+        'Images': 'docker.images',
         '镜像': 'docker.images',
+
+        'Events': 'docker.events',
         '事件': 'docker.events',
+
+        'Resources': 'docker.resources',
         '资源': 'docker.resources',
 
         // 子菜单项 - 拓扑图
+        'Server topology': 'topology.server',
         '服务器拓扑图': 'topology.server',
+
+        'Application topology': 'topology.instance',
         '应用程序拓扑图': 'topology.instance',
+
+        'Network topology': 'topology.network',
         '网络拓扑图': 'topology.network',
+
+        'Port topology': 'topology.tcp',
         '端口拓扑图': 'topology.tcp',
+
+        'Interface topology': 'topology.http',
         '接口拓扑图': 'topology.http',
 
         // 子菜单项 - 配置管理
         '环境管理': 'config.envManagement',
+        'Environment Management': 'config.envManagement',
+
         '分组管理': 'config.groupManagement',
+        'Group Management': 'config.groupManagement',
+
         '监控配置': 'config.monitorConfig',
+        'Monitor Configuration': 'config.monitorConfig',
+
         '告警定义': 'config.alarmDefinition',
+        'Alarm Definition': 'config.alarmDefinition',
 
         // 子菜单项 - 用户管理
+        'Users': 'menu.userList',
         '用户': 'menu.userList',
+
+        'Roles': 'menu.roleList',
         '角色': 'menu.roleList',
 
         // 子菜单项 - 日志
+        'Operation Logs': 'menu.operationLog',
         '操作日志': 'menu.operationLog',
-        '异常日志': 'menu.exceptionLog',
 
-        // 子菜单项 - 我的
-        '基本资料': 'user.profile',
-        '修改密码': 'user.modify.password',
+        'Exception Logs': 'menu.exceptionLog',
+        '异常日志': 'menu.exceptionLog',
 
         // 标签页操作
         '关闭当前标签页': 'tabs.close.current',
         '关闭其它标签页': 'tabs.close.others',
         '关闭全部标签页': 'tabs.close.all',
+        'Close Current Tab': 'tabs.close.current',
+        'Close Other Tabs': 'tabs.close.others',
+        'Close All Tabs': 'tabs.close.all',
 
         // 主页标签
         '主页': 'menu.home',
         '服务器': 'menu.server',
         '应用程序': 'menu.instance',
         '数据库': 'menu.database',
-        '网络(PING)': 'menu.network',
-        '端口(TCP)': 'menu.tcp',
-        '接口(HTTP)': 'menu.http',
+        '网络': 'menu.network',
+        '端口': 'menu.tcp',
+        '接口': 'menu.http',
         '网络设备': 'menu.networkDevice',
         '拓扑图': 'menu.topology',
         '告警': 'menu.alarm',
@@ -92,7 +187,10 @@ const I18nMenu = {
                 this.translateMenu();
             });
         } else {
-            this.translateMenu();
+            // DOM已经加载，但可能菜单还未完全渲染，添加延迟
+            setTimeout(() => {
+                this.translateMenu();
+            }, 200);
         }
 
         // 监听语言切换事件
@@ -125,11 +223,13 @@ const I18nMenu = {
      */
     translateMainMenuItems() {
         const menuItems = document.querySelectorAll('#LAY-system-side-menu > .layui-nav-item > a');
-        menuItems.forEach(item => {
+        console.log('Found main menu items:', menuItems.length);
+        menuItems.forEach((item, index) => {
             const cite = item.querySelector('cite');
             if (cite && cite.textContent.trim()) {
                 const originalText = cite.textContent.trim();
                 const translated = this.getMenuTranslation(originalText);
+                console.log(`Main menu ${index}: "${originalText}" -> "${translated}"`);
                 if (translated && translated !== originalText) {
                     cite.textContent = translated;
                 }
@@ -193,18 +293,25 @@ const I18nMenu = {
     getMenuTranslation(text) {
         if (!text) return text;
 
+        console.log('Translating menu item:', text);
+        console.log('Current locale:', typeof I18nConfig !== 'undefined' ? I18nConfig.getCurrentLocale() : 'undefined');
+
         // 首先查找直接映射
         if (this.menuTranslations[text]) {
             const key = this.menuTranslations[text];
-            return I18nUtils.t(key) || text;
+            const translated = I18nUtils.t(key) || text;
+            console.log('Direct mapping found:', text, '->', key, '->', translated);
+            return translated;
         }
 
         // 如果没有直接映射，尝试作为国际化key使用
         const translated = I18nUtils.t(text);
+        console.log('I18nUtils.t result:', text, '->', translated);
         if (translated && translated !== text) {
             return translated;
         }
 
+        console.log('No translation found for:', text, ', returning original');
         return text;
     },
 

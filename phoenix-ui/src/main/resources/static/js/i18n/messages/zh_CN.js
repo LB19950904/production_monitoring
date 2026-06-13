@@ -1,7 +1,8 @@
 /**
  * 中文语言包
  */
-const ZhMessages = {
+if (typeof ZhMessages === 'undefined') {
+    const ZhMessages = {
     // 通用模块
     common: {
         language: '语言',
@@ -669,3 +670,4 @@ const ZhMessages = {
 
 // 导出到全局
 window.ZhMessages = ZhMessages;
+}

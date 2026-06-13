@@ -23,10 +23,11 @@ import com.gitee.pifeng.monitoring.server.business.server.core.ServerPackageCons
 import com.gitee.pifeng.monitoring.server.business.server.entity.MonitorDb;
 import com.gitee.pifeng.monitoring.server.business.server.entity.MonitorDbSlowSqlMysql;
 import com.gitee.pifeng.monitoring.server.business.server.entity.MonitorDbSlowSqlOracle;
+import com.gitee.pifeng.monitoring.server.business.server.entity.MonitorDbSlowSqlPostgreSql;
+import com.gitee.pifeng.monitoring.server.business.server.monitor.enums.MonitorEventTitleEnum;
 import com.gitee.pifeng.monitoring.server.business.server.service.*;
 import com.gitee.pifeng.monitoring.server.constant.ComponentOrderConstants;
 import com.gitee.pifeng.monitoring.server.util.db.DbUtils;
-import com.gitee.pifeng.monitoring.server.business.server.monitor.enums.MonitorEventTitleEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -109,6 +110,18 @@ public class DbSlowSqlMonitorJob extends QuartzJobBean {
     private IDbSlowSqlOracleService dbSlowSqlOracleService;
 
     /**
+     * PostgreSQL数据库会话服务接口
+     */
+    @Autowired
+    private IDbSession4PostgreSqlService dbSession4PostgreSqlService;
+
+    /**
+     * PostgreSQL数据库慢SQL服务接口
+     */
+    @Autowired
+    private IDbSlowSqlPostgreSqlService dbSlowSqlPostgreSqlService;
+
+    /**
      * 线程池
      */
     @Autowired
@@ -142,8 +155,8 @@ public class DbSlowSqlMonitorJob extends QuartzJobBean {
                 LambdaQueryWrapper<MonitorDb> monitorDbLambdaQueryWrapper = Wrappers.lambdaQuery();
                 // 在线
                 monitorDbLambdaQueryWrapper.eq(MonitorDb::getIsOnline, ZeroOrOneConstants.ONE);
-                // 只查询 MySQL、Oracle
-                monitorDbLambdaQueryWrapper.in(MonitorDb::getDbType, DbEnums.MySQL, DbEnums.Oracle);
+                // 只查询 MySQL、Oracle、PostgreSQL
+                monitorDbLambdaQueryWrapper.in(MonitorDb::getDbType, DbEnums.MySQL, DbEnums.Oracle, DbEnums.PostgreSQL);
                 List<MonitorDb> monitorDbs = this.dbService.list(monitorDbLambdaQueryWrapper);
                 // 打乱
                 Collections.shuffle(monitorDbs);
@@ -194,6 +207,10 @@ public class DbSlowSqlMonitorJob extends QuartzJobBean {
         // MySQL
         else if (StringUtils.equalsIgnoreCase(dbType, DbType.mysql.name())) {
             this.dealWithMysql(monitorDb);
+        }
+        // PostgreSQL
+        else if (StringUtils.equalsIgnoreCase(dbType, DbType.postgresql.name())) {
+            this.dealWithPostgreSql(monitorDb);
         }
     }
 
@@ -358,6 +375,85 @@ public class DbSlowSqlMonitorJob extends QuartzJobBean {
                 monitorDbSlowSqlMysql.setDetectTime(new Date());
                 // 新增或者更新MySQL数据库慢SQL信息到数据库表
                 this.dbSlowSqlMysqlService.insertOrUpdate2Db(monitorDbSlowSqlMysql);
+                // 发送告警
+                String msg = "，<br>会话ID/Session ID：" + sessionId +
+                        "，<br>用户/User：" + user +
+                        "，<br>主机/Host：" + host +
+                        "，<br>数据库/Database：" + db +
+                        "，<br>命令/Command：" + command +
+                        "，<br>执行时间/Exec time：" + DateUtil.formatBetween(time * 1000L, BetweenFormatter.Level.SECOND) +
+                        "，<br>判断阈值/Judgment threshold：" + DateUtil.formatBetween(judgeExecTime * 1000L, BetweenFormatter.Level.SECOND) +
+                        "，<br>状态/State：" + state +
+                        "，<br>SQL：" + DbUtils.safeTruncateSql(storedInfo, 500);
+                this.sendAlarmInfo(sqlMd5Hex, msg, monitorDb);
+            }
+        }
+    }
+
+    /**
+     * <p>
+     * 处理 PostgreSQL 数据库
+     * </p>
+     *
+     * @param monitorDb 数据库信息
+     * @throws SQLException SQL异常
+     * @author 皮锋
+     * @custom.date 2025/6/13 15:00
+     */
+    private void dealWithPostgreSql(MonitorDb monitorDb) throws SQLException {
+        // 判定为慢SQL的SQL执行时间（秒）
+        long judgeExecTime = this.monitoringConfigPropertiesLoader.getMonitoringProperties().getDbProperties().getDbSlowSqlProperties().getJudgeExecTime();
+        // 主键ID
+        Long dbId = monitorDb.getId();
+        // 数据库URL
+        String url = monitorDb.getUrl();
+        // 用户名
+        String username = monitorDb.getUsername();
+        // 密码
+        String password = monitorDb.getPassword();
+        List<Entity> entityList = this.dbSession4PostgreSqlService.getSessionList(url, username, password);
+        for (Entity entity : entityList) {
+            Long sessionId = entity.getLong("Id");
+            String user = entity.getStr("User", StandardCharsets.UTF_8);
+            String host = entity.getStr("Host", StandardCharsets.UTF_8);
+            String db = entity.getStr("db", StandardCharsets.UTF_8);
+            String command = entity.getStr("Command", StandardCharsets.UTF_8);
+            Long time = entity.getLong("Time");
+            String state = entity.getStr("State", StandardCharsets.UTF_8);
+            String info = entity.getStr("Info", StandardCharsets.UTF_8);
+            if (StringUtils.isBlank(info)) {
+                continue;
+            }
+            // PostgreSQL 慢SQL判断：排除空闲状态，执行时间超过阈值，且是受监控的SQL类型
+            if (!StringUtils.equalsIgnoreCase(command, "idle") && time >= judgeExecTime && DbUtils.isMonitoredSqlType(info, DbType.postgresql)) {
+                // 将 SQL 字符串按照 PostgreSQL 语法规则进行格式标准化
+                String normalizeSql = DbUtils.normalizeSql(info, DbType.postgresql);
+                // 对 SQL 进行参数化处理（即把具体的值替换成 ?）
+                String parameterizeSql = DbUtils.parameterizeSql(normalizeSql, DbType.postgresql);
+                // 截断 SQL 字符串
+                String storedInfo = DbUtils.safeTruncateSql(info, 5000);
+                String storedNormalizeSql = DbUtils.safeTruncateSql(normalizeSql, 5000);
+
+                // 生成哈希
+                String sqlMd5Hex = DigestUtils.md5Hex(dbId + db + parameterizeSql);
+
+                MonitorDbSlowSqlPostgreSql monitorDbSlowSqlPostgreSql = new MonitorDbSlowSqlPostgreSql();
+                monitorDbSlowSqlPostgreSql.setDbId(dbId);
+                monitorDbSlowSqlPostgreSql.setSessionId(sessionId);
+                monitorDbSlowSqlPostgreSql.setUserName(user);
+                monitorDbSlowSqlPostgreSql.setHost(host);
+                monitorDbSlowSqlPostgreSql.setDbName(db);
+                monitorDbSlowSqlPostgreSql.setCommand(command);
+                monitorDbSlowSqlPostgreSql.setExecutionTime(time);
+                monitorDbSlowSqlPostgreSql.setState(state);
+                monitorDbSlowSqlPostgreSql.setSqlText(storedInfo);
+                monitorDbSlowSqlPostgreSql.setNormalizeSqlText(storedNormalizeSql);
+                monitorDbSlowSqlPostgreSql.setParameterizeSqlText(parameterizeSql);
+                monitorDbSlowSqlPostgreSql.setSqlMd5Hex(sqlMd5Hex);
+                monitorDbSlowSqlPostgreSql.setThresholdTime(judgeExecTime);
+                monitorDbSlowSqlPostgreSql.setDetectTime(new Date());
+                // 新增或者更新PostgreSQL数据库慢SQL信息到数据库表
+                this.dbSlowSqlPostgreSqlService.insertOrUpdate2Db(monitorDbSlowSqlPostgreSql);
                 // 发送告警
                 String msg = "，<br>会话ID/Session ID：" + sessionId +
                         "，<br>用户/User：" + user +

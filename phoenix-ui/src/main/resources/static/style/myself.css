@@ -366,11 +366,53 @@ div.layui-side.layui-side-menu .layui-side-scroll {
 .layui-layout-admin .layui-logo {
     width: 240px !important;
     z-index: 2005 !important;
+    background-color: #202B3D !important;
+}
+.layui-layout-admin .layui-logo .system-logo {
+    display: none;
 }
 
 /* 确保layui-side宽度正确 */
 .layui-layout-admin .layui-side {
     width: 240px !important;
+}
+
+/* 侧边栏收缩状态：覆盖上方240px的!important声明 */
+.layadmin-side-shrink div.layui-side.layui-side-menu {
+    width: 60px !important;
+}
+.layadmin-side-shrink .layui-side-menu .layui-side-scroll {
+    width: 60px !important;
+}
+.layadmin-side-shrink .layui-side-menu .layui-nav {
+    width: 60px !important;
+}
+.layadmin-side-shrink .layui-layout-admin .layui-side {
+    width: 60px !important;
+}
+.layadmin-side-shrink .layui-layout-admin .layui-logo {
+    width: 60px !important;
+    background-image: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+.layadmin-side-shrink .layui-layout-admin .layui-logo span {
+    display: none !important;
+}
+.layadmin-side-shrink .layui-layout-admin .layui-logo .system-logo {
+    display: block !important;
+    width: 36px !important;
+    height: 36px !important;
+    margin: 0 auto !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}
+.layadmin-side-shrink .layui-layout-admin .layui-body,
+.layadmin-side-shrink .layadmin-pagetabs,
+.layadmin-side-shrink .layui-layout-admin .layui-footer,
+.layadmin-side-shrink .layui-layout-admin .layui-layout-left {
+    left: 60px !important;
 }
 
 /* 响应式布局调整 */

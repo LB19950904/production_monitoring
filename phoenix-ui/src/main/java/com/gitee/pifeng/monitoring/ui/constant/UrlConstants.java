@@ -74,6 +74,16 @@ public class UrlConstants {
     public static final String ORACLE_GET_TABLESPACE_LIST_ALL_URL = ROOT_URI + "/db-tablespace4oracle/get-tablespace-list-all";
 
     /**
+     * PostgreSQL数据库：获取会话列表
+     */
+    public static final String POSTGRESQL_GET_SESSION_LIST_URL = ROOT_URI + "/db-session4postgresql/get-session-list";
+
+    /**
+     * PostgreSQL数据库：结束会话
+     */
+    public static final String POSTGRESQL_DESTROY_SESSION_URL = ROOT_URI + "/db-session4postgresql/destroy-session";
+
+    /**
      * Redis数据库：获取Redis信息
      */
     public static final String REDIS_GET_REDIS_INFO_URL = ROOT_URI + "/db-info4redis/get-redis-info";

@@ -12,6 +12,7 @@ import com.gitee.pifeng.monitoring.common.constant.monitortype.MonitorSubTypeEnu
 import com.gitee.pifeng.monitoring.common.constant.monitortype.MonitorTypeEnums;
 import com.gitee.pifeng.monitoring.common.constant.sql.MySql;
 import com.gitee.pifeng.monitoring.common.constant.sql.Oracle;
+import com.gitee.pifeng.monitoring.common.constant.sql.PostgreSql;
 import com.gitee.pifeng.monitoring.common.domain.Alarm;
 import com.gitee.pifeng.monitoring.common.dto.AlarmPackage;
 import com.gitee.pifeng.monitoring.common.exception.NetException;
@@ -22,13 +23,13 @@ import com.gitee.pifeng.monitoring.common.util.Md5Utils;
 import com.gitee.pifeng.monitoring.server.business.server.core.MonitoringConfigPropertiesLoader;
 import com.gitee.pifeng.monitoring.server.business.server.core.ServerPackageConstructor;
 import com.gitee.pifeng.monitoring.server.business.server.entity.MonitorDb;
+import com.gitee.pifeng.monitoring.server.business.server.monitor.enums.MonitorEventTitleEnum;
 import com.gitee.pifeng.monitoring.server.business.server.service.IAlarmService;
 import com.gitee.pifeng.monitoring.server.business.server.service.IDbService;
 import com.gitee.pifeng.monitoring.server.constant.ComponentOrderConstants;
 import com.gitee.pifeng.monitoring.server.util.db.DbUtils;
 import com.gitee.pifeng.monitoring.server.util.db.MongoUtils;
 import com.gitee.pifeng.monitoring.server.util.db.RedisUtils;
-import com.gitee.pifeng.monitoring.server.business.server.monitor.enums.MonitorEventTitleEnum;
 import com.mongodb.MongoClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -133,7 +134,8 @@ public class DbMonitorJob extends QuartzJobBean {
                             String dbType = monitorDb.getDbType();
                             // 关系型数据库
                             if (StringUtils.equalsIgnoreCase(DbEnums.MySQL.name(), dbType)
-                                    || StringUtils.equalsIgnoreCase(DbEnums.Oracle.name(), dbType)) {
+                                    || StringUtils.equalsIgnoreCase(DbEnums.Oracle.name(), dbType)
+                                    || StringUtils.equalsIgnoreCase(DbEnums.PostgreSQL.name(), dbType)) {
                                 // 处理关系型数据库
                                 this.dealRelationalDb(monitorDb);
                             }
@@ -377,6 +379,10 @@ public class DbMonitorJob extends QuartzJobBean {
             // oracle
             if (StringUtils.equalsIgnoreCase(dbType, DbType.ORACLE.getDb())) {
                 SqlExecutor.query(connection, Oracle.CHECK_CONN, new NumberHandler());
+            }
+            // postgresql
+            if (StringUtils.equalsIgnoreCase(dbType, DbType.POSTGRE_SQL.getDb())) {
+                SqlExecutor.query(connection, PostgreSql.CHECK_CONN, new NumberHandler());
             }
             return true;
         } catch (Exception e) {

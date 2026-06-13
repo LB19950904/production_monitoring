@@ -215,6 +215,7 @@
         }
         #get-last-5-alarm-record .alarm-record-item-style .alarm-record-item-content .alarm-record-item-content-item {
             display: flex;
+            align-items: baseline;
         }
         #get-last-5-alarm-record .alarm-record-item-style .alarm-record-item-content .alarm-record-item-content-item:nth-child(even) {
             margin-top: 10px;
@@ -227,6 +228,8 @@
             line-height: 22px;
             text-align: left;
             font-style: normal;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
         #get-last-5-alarm-record .alarm-record-item-style .alarm-record-item-content .alarm-record-item-value{
             font-weight: 400;
@@ -235,6 +238,10 @@
             line-height: 22px;
             text-align: left;
             font-style: normal;
+            flex: 1;
+            min-width: 0;
+            word-break: break-word;
+            white-space: normal;
         }
         #get-last-5-alarm-record .alarm-record-item-style .alarm-record-item-title > div > span {
             font-weight: 500;
@@ -243,6 +250,28 @@
             line-height: 22px;
             text-align: left;
             font-style: normal;
+        }
+        /* 首页卡片行：使用flex布局让5个卡片左右两端对齐且等距分布 */
+        /* 仅在轮播项可见时（带有 layui-this / layui-carousel-prev / layui-carousel-next 类）才使用flex，避免覆盖轮播的 display:none 隐藏逻辑 */
+        #carousel-item-1-div-1.layui-this,
+        #carousel-item-1-div-1.layui-carousel-prev,
+        #carousel-item-1-div-1.layui-carousel-next,
+        #carousel-item-1-div-2.layui-this,
+        #carousel-item-1-div-2.layui-carousel-prev,
+        #carousel-item-1-div-2.layui-carousel-next {
+            display: flex !important;
+            justify-content: space-between !important;
+            flex-wrap: wrap !important;
+            margin: 0 !important;
+        }
+        #carousel-item-1-div-1 > div,
+        #carousel-item-1-div-2 > div {
+            width: auto !important;
+            padding: 0 !important;
+        }
+
+        .layui-row:after, .layui-row:before {
+            content: none !important;
         }
     </style>
 </head>

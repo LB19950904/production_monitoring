@@ -46,7 +46,7 @@
             <ul class="layui-nav layui-layout-left">
                 <li class="layui-nav-item layadmin-flexible" lay-unselect>
                     <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
-                        <img src="/images/new-ui/pack-up.png" alt="侧边伸缩"/>
+                        <img id="LAY_app_flexible" src="/images/new-ui/pack-up.png" alt="侧边伸缩"/>
                     </a>
                 </li>
                 <li class="layui-nav-item" lay-unselect>
@@ -110,11 +110,12 @@
             <div class="layui-side-scroll">
                 <div class="layui-logo" th:attr="lay-href=@{/home}">
                     <span th:text="#{common.projectName}">生产通讯保障系统</span>
+                    <img th:src="@{/images/new-ui/system-logo.png}" alt="logo" class="system-logo" />
                 </div>
 
                 <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu"
                     lay-filter="layadmin-system-side-menu">
-                    <li data-name="home" class="layui-nav-item layui-nav-itemed my-menu-font-size">
+                    <li data-name="home" class="layui-nav-item layui-this my-menu-font-size">
                         <a href="javascript:;" lay-tips="" lay-direction="2"
                            th:attr="lay-href=@{/home}">
                             <i class="layui-icon layui-icon-home"></i>
@@ -369,18 +370,37 @@
             });
         });
 
-        // 初始化菜单国际化
+        // 确保主页标签页始终可见，不会被滚动到可视区域之外
+        layui.admin.on('tabsPage()', function () {
+            var $header = $('#LAY_app_tabsheader');
+            var headerLeft = parseFloat($header.css('left')) || 0;
+            // rollPage("auto") 会将标签页向左滚动以显示新标签，这会把主页标签页移出可视区域
+            // 重置滚动位置，确保主页标签页始终可见
+            if (headerLeft < 0) {
+                $header.css('left', 0);
+            }
+        });
+
+        // 初始化菜单国际化，增加延迟确保DOM完全加载
         if (typeof I18nMenu !== 'undefined') {
-            I18nMenu.init();
+            setTimeout(() => {
+                I18nMenu.init();
+            }, 300);
         }
     });
 
     // 定义语言切换函数
     window.changeLanguage = function(lang) {
-        // 设置Cookie
-        document.cookie = "language=" + lang + "; path=/; max-age=2592000";
-        // 刷新页面
-        location.reload();
+        // 调用前端国际化配置的切换方法，确保前后端同步
+        if (typeof I18nConfig !== 'undefined' && I18nConfig.changeLanguage) {
+            I18nConfig.changeLanguage(lang);
+        } else {
+            // 如果I18nConfig未定义，使用传统的Cookie方式（确保格式一致）
+            const expires = new Date();
+            expires.setTime(expires.getTime() + 30 * 24 * 60 * 60 * 1000);
+            document.cookie = "language=" + lang + ";expires=" + expires.toUTCString() + ";path=/;SameSite=Lax";
+            location.reload();
+        }
     };
 </script>
 </body>

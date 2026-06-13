@@ -65,9 +65,34 @@ public class DbUtils {
     public static Connection getConnection(String url, String username, String password) throws SQLException {
         try {
             String pwd = new String(Base64.getDecoder().decode(password), StandardCharsets.UTF_8);
+            // 处理p6spy代理URL，将其转换为标准JDBC URL
+            // 例如：jdbc:p6spy:mysql://... 转换为 jdbc:mysql://...
+            String actualUrl = url;
+            if (StringUtils.isNotBlank(url) && url.startsWith("jdbc:p6spy:")) {
+                actualUrl = url.replace("jdbc:p6spy:", "jdbc:");
+                log.debug("检测到p6spy代理URL，已转换为标准JDBC URL：{}", actualUrl);
+            }
+            // 根据URL判断数据库类型并指定驱动类名
+            String driverClassName = null;
+            if (actualUrl.contains("jdbc:mysql:") || actualUrl.contains("jdbc:p6spy:mysql:")) {
+                driverClassName = "com.mysql.cj.jdbc.Driver";
+            } else if (actualUrl.contains("jdbc:oracle:") || actualUrl.contains("jdbc:p6spy:oracle:")) {
+                driverClassName = "oracle.jdbc.OracleDriver";
+            } else if (actualUrl.contains("jdbc:postgresql:") || actualUrl.contains("jdbc:p6spy:postgresql:")) {
+                driverClassName = "org.postgresql.Driver";
+            }
+            // 显式加载驱动类，确保JDBC驱动被注册到DriverManager
+            if (StringUtils.isNotBlank(driverClassName)) {
+                try {
+                    Class.forName(driverClassName);
+                    log.debug("显式加载JDBC驱动类：{}", driverClassName);
+                } catch (ClassNotFoundException e) {
+                    log.warn("无法加载JDBC驱动类：{}，将尝试让Hutool自动加载", driverClassName);
+                }
+            }
             // 数据源
             @Cleanup
-            SimpleDataSource ds = new SimpleDataSource(url, username, pwd);
+            SimpleDataSource ds = new SimpleDataSource(actualUrl, username, pwd);
             return ds.getConnection();
         } catch (SQLException e) {
             log.error("与数据库建立连接异常！", e);

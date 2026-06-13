@@ -21,11 +21,6 @@
     <link rel="dns-prefetch" th:href="@{/favicon32.png}" type="image/png" sizes="32x32">
     <link rel="stylesheet" href="./layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
     <link rel="stylesheet" href="./style/login.css" th:href="@{/style/login.css}" media="all">
-    <!-- 引入国际化工具 -->
-    <script th:src="@{/js/i18n/i18n-config.js}"></script>
-    <script th:src="@{/js/i18n/i18n-utils.js}"></script>
-    <script th:src="@{/js/i18n/messages/zh_CN.js}"></script>
-    <script th:src="@{/js/i18n/messages/en_US.js}"></script>
     <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
     <!--[if lt IE 9]>
     <script th:src="@{/js/html5.min.js}"></script>
@@ -201,24 +196,25 @@
 
         // 添加语言切换按钮
         addLanguageSwitcher();
-    });
 
-    // 添加语言切换器
-    function addLanguageSwitcher() {
-        if ($('.language-switcher').length === 0) {
-            var switcherHtml = `
-                <div class="language-switcher" style="text-align: center; margin-top: 15px;">
-                    <button type="button" class="layui-btn layui-btn-xs layui-btn-primary" onclick="I18nUtils.switchToChinese()">
-                        中文
-                    </button>
-                    <button type="button" class="layui-btn layui-btn-xs layui-btn-primary" onclick="I18nUtils.switchToEnglish()">
-                        English
-                    </button>
-                </div>
-            `;
-            $('.layadmin-user-login-footer').before(switcherHtml);
+        // 添加语言切换器函数（移到layui.use内部）
+        function addLanguageSwitcher() {
+            if ($('.language-switcher').length === 0) {
+                var switcherHtml = `
+                    <div class="language-switcher" style="text-align: center; margin-top: 15px;">
+                        <button type="button" class="layui-btn layui-btn-xs layui-btn-primary" onclick="I18nUtils.switchToChinese()">
+                            中文
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-xs layui-btn-primary" onclick="I18nUtils.switchToEnglish()">
+                            English
+                        </button>
+                    </div>
+                `;
+                // 将语言切换器添加到表单后面
+                $('.layadmin-user-login-body').last().after(switcherHtml);
+            }
         }
-    }
+    });
 </script>
 </body>
 </html>

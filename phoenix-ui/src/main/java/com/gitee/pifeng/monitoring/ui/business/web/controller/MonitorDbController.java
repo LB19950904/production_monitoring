@@ -1,7 +1,6 @@
 package com.gitee.pifeng.monitoring.ui.business.web.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gitee.pifeng.monitoring.ui.controller.BaseController;
 import com.gitee.pifeng.monitoring.common.constant.DbEnums;
 import com.gitee.pifeng.monitoring.common.constant.monitortype.MonitorTypeEnums;
 import com.gitee.pifeng.monitoring.ui.business.web.annotation.OperateLog;
@@ -15,6 +14,7 @@ import com.gitee.pifeng.monitoring.ui.business.web.vo.LayUiAdminResultVo;
 import com.gitee.pifeng.monitoring.ui.business.web.vo.MonitorDbVo;
 import com.gitee.pifeng.monitoring.ui.constant.OperateTypeConstants;
 import com.gitee.pifeng.monitoring.ui.constant.UiModuleConstants;
+import com.gitee.pifeng.monitoring.ui.controller.BaseController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -347,6 +347,9 @@ public class MonitorDbController extends BaseController {
                 break;
             case Redis:
                 mv.setViewName("db/db-redis-detail");
+                break;
+            case PostgreSQL:
+                mv.setViewName("db/db-postgresql-detail");
                 break;
             default:
                 break;

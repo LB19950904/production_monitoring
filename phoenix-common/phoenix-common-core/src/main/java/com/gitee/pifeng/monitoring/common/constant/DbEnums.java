@@ -31,7 +31,12 @@ public enum DbEnums {
     /**
      * Mongo
      */
-    Mongo;
+    Mongo,
+
+    /**
+     * PostgreSQL
+     */
+    PostgreSQL;
 
     /**
      * <p>
@@ -59,6 +64,10 @@ public enum DbEnums {
         // Mongo 协议
         if (StringUtils.equalsIgnoreCase(DbEnums.Mongo.name(), dbTypeStr)) {
             return DbEnums.Mongo;
+        }
+        // PostgreSQL 协议
+        if (StringUtils.equalsIgnoreCase(DbEnums.PostgreSQL.name(), dbTypeStr)) {
+            return DbEnums.PostgreSQL;
         }
         throw new MonitoringUniversalException("未知的数据库类型！");
     }

@@ -2,7 +2,8 @@
  * 国际化工具函数库
  * 提供各种国际化相关的工具方法
  */
-const I18nUtils = {
+if (typeof I18nUtils === 'undefined') {
+    const I18nUtils = {
     /**
      * 获取国际化文本
      * @param {string} key - 消息key，支持点号分隔的嵌套key
@@ -234,3 +235,4 @@ const I18nUtils = {
 
 // 导出到全局
 window.I18nUtils = I18nUtils;
+}

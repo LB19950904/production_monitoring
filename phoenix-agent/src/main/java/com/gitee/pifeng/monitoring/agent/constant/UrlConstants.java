@@ -121,6 +121,16 @@ public final class UrlConstants {
     public static final String MYSQL_DESTROY_SESSION_URL = ROOT_URI + "/db-session4mysql/destroy-session";
 
     /**
+     * PostgreSQL数据库：获取会话列表
+     */
+    public static final String POSTGRESQL_GET_SESSION_LIST_URL = ROOT_URI + "/db-session4postgresql/get-session-list";
+
+    /**
+     * PostgreSQL数据库：结束会话
+     */
+    public static final String POSTGRESQL_DESTROY_SESSION_URL = ROOT_URI + "/db-session4postgresql/destroy-session";
+
+    /**
      * Oracle数据库：获取会话列表
      */
     public static final String ORACLE_GET_SESSION_LIST_URL = ROOT_URI + "/db-session4oracle/get-session-list";

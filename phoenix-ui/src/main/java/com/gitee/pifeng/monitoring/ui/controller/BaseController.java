@@ -1,5 +1,6 @@
 package com.gitee.pifeng.monitoring.ui.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
@@ -10,6 +11,7 @@ import java.util.Locale;
 /**
  * 基础控制器类 - 提供国际化功能
  */
+@Slf4j
 public class BaseController {
 
     @Autowired

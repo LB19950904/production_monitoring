@@ -35,6 +35,7 @@
                             <option value="Oracle">Oracle</option>
                             <option value="Redis">Redis</option>
                             <option value="Mongo">Mongo</option>
+                            <option value="PostgreSQL">PostgreSQL</option>
                         </select>
                     </div>
                 </div>
@@ -301,6 +302,9 @@
                     }
                     if (jq(this).text().toLowerCase() === 'Mongo'.toLowerCase()) {
                         jq(this).html('<span><img src="' + ctxPath + 'images/db/mongo-small.png" alt="Mongo" title="Mongo"></span>');
+                    }
+                    if (jq(this).text().toLowerCase() === 'PostgreSQL'.toLowerCase()) {
+                        jq(this).html('<span><img src="' + ctxPath + 'images/db/postgresql-small.png" alt="PostgreSQL" title="PostgreSQL"></span>');
                     }
                 });
             },

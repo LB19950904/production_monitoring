@@ -3,12 +3,13 @@
  * 用于管理中英文语言切换
  * 支持浏览器语言自动检测和切换
  */
-const I18nConfig = {
-    // 默认语言（当浏览器语言不是中文或英文时使用）
-    defaultLocale: 'en_US',
+if (typeof I18nConfig === 'undefined') {
+    const I18nConfig = {
+    // 默认语言（当浏览器语言不是中文或英文时使用，默认为中文）
+    defaultLocale: 'zh_CN',
 
     // 当前语言
-    currentLocale: 'en_US',
+    currentLocale: 'zh_CN',
 
     // 支持的语言列表
     supportedLocales: ['zh_CN', 'en_US'],
@@ -50,8 +51,8 @@ const I18nConfig = {
             return 'en_US';
         }
 
-        // 如果不是中文也不是英文，使用默认的英文
-        console.log('Detected unsupported locale, using default en_US');
+        // 如果不是中文也不是英文，使用默认的中文
+        console.log('Detected unsupported locale, using default zh_CN');
         return this.defaultLocale;
     },
 
@@ -86,24 +87,28 @@ const I18nConfig = {
      */
     init() {
         if (this.initialized) {
+            console.log('I18n already initialized, current locale:', this.currentLocale);
             return;
         }
 
+        console.log('Starting I18n initialization...');
+        console.log('Document cookie:', document.cookie);
+
         // 从Cookie获取语言设置
         const savedLang = this.getCookie(this.cookieName);
+        console.log('Retrieved language from cookie:', savedLang);
+
         if (savedLang && this.supportedLocales.includes(savedLang)) {
             // 如果Cookie中有有效的语言设置，使用Cookie中的设置
             this.currentLocale = savedLang;
             console.log('Using saved language from cookie:', savedLang);
         } else {
-            // 否则检测浏览器语言
-            this.currentLocale = this.detectBrowserLanguage();
-
-            // 如果检测到了有效的语言，保存到Cookie中
-            if (this.currentLocale) {
-                this.setCookie(this.cookieName, this.currentLocale, 30);
-                console.log('Detected and saved browser language:', this.currentLocale);
-            }
+            // 如果没有Cookie或Cookie无效，直接使用默认中文
+            this.currentLocale = this.defaultLocale;
+            // 保存默认语言到Cookie中
+            this.setCookie(this.cookieName, this.currentLocale, 30);
+            console.log('No valid cookie found, using default language:', this.currentLocale);
+            console.log('Cookie after setting default:', document.cookie);
         }
 
         // 设置HTML语言属性
@@ -115,6 +120,7 @@ const I18nConfig = {
         this.initialized = true;
 
         console.log('I18n initialized with locale:', this.currentLocale);
+        console.log('Messages loaded:', Object.keys(this.messages).length, 'keys');
     },
 
     /**
@@ -123,16 +129,23 @@ const I18nConfig = {
      * @returns {string|null} Cookie值
      */
     getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) {
-            return parts.pop().split(';').shift();
+        try {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) {
+                // 处理可能包含其他属性的Cookie值
+                let cookieValue = parts.pop().split(';').shift();
+                // 移除可能的空格
+                return cookieValue ? cookieValue.trim() : null;
+            }
+        } catch (error) {
+            console.error('Error getting cookie:', error);
         }
         return null;
     },
 
     /**
-     * 设置Cookie
+     * 设置Cookie（与Spring的CookieLocaleResolver兼容）
      * @param {string} name - Cookie名称
      * @param {string} value - Cookie值
      * @param {number} days - 有效天数
@@ -140,7 +153,29 @@ const I18nConfig = {
     setCookie(name, value, days) {
         const expires = new Date();
         expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-        document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+
+        // 确保使用与Spring的CookieLocaleResolver兼容的格式
+        // Spring的CookieLocaleResolver使用Locale.toString()存储值
+        // 但会进行标准化处理，确保我们的格式与Spring一致
+        let normalizedValue = value;
+        if (value === 'zh_CN') {
+            // 确保中文语言代码格式正确
+            normalizedValue = 'zh_CN';
+        } else if (value === 'en_US') {
+            // 确保英文语言代码格式正确
+            normalizedValue = 'en_US';
+        }
+
+        // 设置Cookie，格式与Spring的CookieLocaleResolver兼容
+        // 使用与Spring相同的属性设置
+        const cookieValue = `${name}=${normalizedValue}` +
+            `;expires=${expires.toUTCString()}` +
+            `;path=/` +
+            `;Max-Age=${days * 24 * 60 * 60}` +
+            `;SameSite=Lax`;
+
+        document.cookie = cookieValue;
+        console.log('Cookie set:', cookieValue.substring(0, 100) + '...');
     },
 
     /**
@@ -329,3 +364,4 @@ window.toggleLanguage = function() {
 window.changeLanguage = function(locale) {
     I18nConfig.changeLanguage(locale);
 };
+}
