@@ -275,11 +275,20 @@ const I18nMenu = {
     translateLayTips() {
         const tipsElements = document.querySelectorAll('#LAY-system-side-menu a[lay-tips]');
         tipsElements.forEach(item => {
-            const tips = item.getAttribute('lay-tips');
+            let tips = item.getAttribute('lay-tips');
+            // 如果lay-tips为空，从cite元素获取文本作为提示内容
+            if (!tips) {
+                const cite = item.querySelector('cite');
+                if (cite && cite.textContent.trim()) {
+                    tips = cite.textContent.trim();
+                }
+            }
             if (tips) {
                 const translated = this.getMenuTranslation(tips);
                 if (translated && translated !== tips) {
                     item.setAttribute('lay-tips', translated);
+                } else {
+                    item.setAttribute('lay-tips', tips);
                 }
             }
         });

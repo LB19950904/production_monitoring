@@ -203,7 +203,21 @@
         #get-last-5-alarm-record .alarm-record-item-style .alarm-record-item-title {
             display: flex;
             justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: 12px;
+        }
+        #get-last-5-alarm-record .alarm-record-item-style .alarm-record-item-title > div:first-child {
+            flex: 1;
+            min-width: 0;
+            margin-right: 8px;
+        }
+        #get-last-5-alarm-record .alarm-record-item-style .alarm-record-item-title > div:first-child > span {
+            word-break: break-word;
+            white-space: normal;
+        }
+        #get-last-5-alarm-record .alarm-record-item-style .alarm-record-item-title > span:last-child {
+            flex-shrink: 0;
+            white-space: nowrap;
         }
         #get-last-5-alarm-record .alarm-record-item-style .alarm-record-item-content {
             font-weight: 400;
@@ -272,6 +286,58 @@
 
         .layui-row:after, .layui-row:before {
             content: none !important;
+        }
+
+        /* 首页主行：左右两栏等高对齐 */
+        html, body { margin: 0 !important; padding: 0 !important; }
+        .layui-fluid {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .layui-fluid > .layui-row.layui-col-space15 {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            align-items: stretch;
+        }
+        .layui-fluid > .layui-row.layui-col-space15 > .layui-col-sm8,
+        .layui-fluid > .layui-row.layui-col-space15 > .layui-col-sm4 {
+            display: flex;
+            flex-direction: column;
+        }
+        /* 告警统计卡片填满左栏剩余空间 */
+        .layui-fluid > .layui-row.layui-col-space15 > .layui-col-sm8 > .layui-card:last-child {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            margin-top: 15px;
+        }
+        .layui-fluid > .layui-row.layui-col-space15 > .layui-col-sm8 > .layui-card:last-child > .layui-card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: visible;
+        }
+        /* 图表轮播由JS动态控制高度 */
+        .layui-fluid > .layui-row.layui-col-space15 > .layui-col-sm8 > .layui-card:last-child > .layui-card-body > #layadmin-dataview-my {
+            flex: 1;
+            min-height: 0;
+        }
+        /* 最新告警卡片填满右栏 */
+        .layui-fluid > .layui-row.layui-col-space15 > .layui-col-sm4 > .layui-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        .layui-fluid > .layui-row.layui-col-space15 > .layui-col-sm4 > .layui-card > .layui-card-body {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
         }
     </style>
 </head>
@@ -643,7 +709,6 @@
                     </div>
                 </div>
             </div>
-            <br/>
             <div class="layui-card">
                 <div class="layui-card-header">
                     <img src="/images/new-ui/告警统计.png" alt=""/>

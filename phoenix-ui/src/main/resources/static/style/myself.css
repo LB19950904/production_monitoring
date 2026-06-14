@@ -415,6 +415,12 @@ div.layui-side.layui-side-menu .layui-side-scroll {
     left: 60px !important;
 }
 
+/* 收起状态：选中菜单项图标水平居中（选中项有margin导致a变窄，需要调整图标位置） */
+.layadmin-side-shrink div.layui-side.layui-side-menu .layui-nav-tree > li.layui-nav-item.layui-this > a > .layui-icon {
+    left: 50% !important;
+    margin-left: -8px !important;
+}
+
 /* 响应式布局调整 */
 @media screen and (max-width: 992px) {
     .layui-layout-admin .layui-side {
@@ -1339,7 +1345,6 @@ div.layui-side.layui-side-menu .layui-nav .layui-nav-child dd {
 /* 在大屏幕上应用样式 */
 @media (min-width: 768px) {
     .last-alarm-layui-card-body {
-        height: 89vh;
         overflow-y: auto;
     }
 }

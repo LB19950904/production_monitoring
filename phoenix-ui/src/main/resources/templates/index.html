@@ -23,6 +23,13 @@
     <link rel="stylesheet" href="./layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
     <link rel="stylesheet" href="./style/admin.css" th:href="@{/style/admin.css}" media="all">
     <link rel="stylesheet" href="./style/myself.css" th:href="@{/style/myself.css}" media="all">
+    <style>
+    /* 收起状态：选中菜单项图标水平居中（最高优先级CSS备份） */
+    #LAY_app.layadmin-side-shrink div.layui-side.layui-side-menu .layui-nav-tree > li.layui-nav-item.layui-this > a > .layui-icon {
+        left: 50% !important;
+        margin-left: -8px !important;
+    }
+    </style>
     <!-- 引入国际化工具 -->
     <script th:src="@{/js/i18n/i18n-config.js}"></script>
     <script th:src="@{/js/i18n/i18n-utils.js}"></script>
@@ -402,6 +409,51 @@
             location.reload();
         }
     };
+
+    // === 收起菜单时，选中项图标居中修复（JS强制方案，绕过CSS缓存） ===
+    (function() {
+        function fixSelectedIcon() {
+            var app = document.getElementById('LAY_app');
+            if (!app) return;
+            var isCollapsed = app.classList.contains('layadmin-side-shrink');
+            var selectedIcons = document.querySelectorAll(
+                '#LAY-system-side-menu > li.layui-nav-item.layui-this > a > .layui-icon'
+            );
+            selectedIcons.forEach(function(icon) {
+                if (isCollapsed) {
+                    icon.style.left = '50%';
+                    icon.style.marginLeft = '-8px';
+                } else {
+                    icon.style.left = '';
+                    icon.style.marginLeft = '';
+                }
+            });
+        }
+
+        // 监听 #LAY_app 的 class 变化（菜单展开/收起时触发）
+        var app = document.getElementById('LAY_app');
+        if (app && typeof MutationObserver !== 'undefined') {
+            var observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(m) {
+                    if (m.attributeName === 'class') {
+                        setTimeout(fixSelectedIcon, 50);
+                    }
+                });
+            });
+            observer.observe(app, { attributes: true, attributeFilter: ['class'] });
+        }
+
+        // 页面加载后执行一次
+        setTimeout(fixSelectedIcon, 500);
+
+        // 监听菜单点击（选中项可能变化）
+        var menu = document.getElementById('LAY-system-side-menu');
+        if (menu) {
+            menu.addEventListener('click', function() {
+                setTimeout(fixSelectedIcon, 100);
+            });
+        }
+    })();
 </script>
 </body>
 </html>

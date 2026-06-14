@@ -80,15 +80,55 @@
         // 基于准备好的dom，初始化echarts实例
         var myLast7DaysAlarmRecordStatisticsChart = echarts.init(document.getElementById('last-7-days-alarm-record-statistics'), 'infographic');
         var myAlarmRecordResultStatisticsChart = echarts.init(document.getElementById('alarm-record-result-statistics'), 'infographic');
+        // 卡片体元素（flex布局决定其高度）
+        var $chartCardBody = $LayadminDataViewMy.parent();
+        // 重新计算并设置图表高度
+        var resizeTimer;
+        var lastChartH = 0;
+        function resizeCharts() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function () {
+                // 从卡片体读取内容区高度（clientHeight含padding，需减去）
+                var body = $chartCardBody[0];
+                var cs = window.getComputedStyle(body);
+                var padTop = parseInt(cs.paddingTop) || 0;
+                var padBot = parseInt(cs.paddingBottom) || 0;
+                var h = body.clientHeight - padTop - padBot;
+                if (h > 0 && h !== lastChartH) {
+                    lastChartH = h;
+                    // 显式设置轮播高度（覆盖carousel.render的280px默认值）
+                    $LayadminDataViewMy.css('height', h + 'px');
+                    var w = $LayadminDataViewMy.width();
+                    $Last7DaysAlarmRecordStatistics.width(w).height(h);
+                    $AlarmRecordResultStatistics.width(w).height(h);
+                    myLast7DaysAlarmRecordStatisticsChart.resize();
+                    myAlarmRecordResultStatisticsChart.resize();
+                }
+            }, 100);
+        }
         // 浏览器窗口大小发生改变时
-        window.addEventListener("resize", function () {
-            $Last7DaysAlarmRecordStatistics.width($LayadminDataViewMy.width());
-            $Last7DaysAlarmRecordStatistics.height($LayadminDataViewMy.height());
-            $AlarmRecordResultStatistics.width($LayadminDataViewMy.width());
-            $AlarmRecordResultStatistics.height($LayadminDataViewMy.height());
-            myLast7DaysAlarmRecordStatisticsChart.resize();
-            myAlarmRecordResultStatisticsChart.resize();
-        });
+        window.addEventListener("resize", resizeCharts);
+        // flex布局渲染后重新计算图表高度
+        setTimeout(resizeCharts, 300);
+
+        // 使用ResizeObserver监听卡片体尺寸变化（全屏、侧边栏收起等场景都能自动响应）
+        if (typeof ResizeObserver !== 'undefined') {
+            new ResizeObserver(function () {
+                lastChartH = 0;
+                resizeCharts();
+            }).observe($chartCardBody[0]);
+        }
+
+        // 全屏切换时强制重绘（监听父页面全屏事件）
+        function onFullscreenChange() {
+            // 全屏切换时布局需要时间稳定，多次延迟触发
+            lastChartH = 0;
+            setTimeout(resizeCharts, 300);
+            setTimeout(function () { lastChartH = 0; resizeCharts(); }, 600);
+        }
+        try { window.top.document.addEventListener('fullscreenchange', onFullscreenChange); } catch (e) {}
+        try { window.top.document.addEventListener('webkitfullscreenchange', onFullscreenChange); } catch (e) {}
+        document.addEventListener('fullscreenchange', onFullscreenChange);
 
         // 发送ajax请求，获取最近7天告警统计数据
         function getLast7DaysAlarmRecordStatistics() {
@@ -162,7 +202,7 @@
                         grid: {
                             left: '3%',
                             right: '4%',
-                            bottom: '5%',
+                            bottom: 50,
                             top: '15%',
                             containLabel: true
                         },
