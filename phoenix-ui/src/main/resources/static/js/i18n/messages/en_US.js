@@ -342,7 +342,8 @@ if (typeof EnMessages === 'undefined') {
         placeholder: {
             account: 'Please enter your account',
             password: 'Please enter your password',
-            captcha: 'Please enter the captcha'
+            captcha: 'Please enter the captcha',
+            language: 'Please select your language'
         },
         remember: 'Remember Me',
         submit: 'Sign In',

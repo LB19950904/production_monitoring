@@ -342,7 +342,8 @@ if (typeof ZhMessages === 'undefined') {
         placeholder: {
             account: '请输入账号',
             password: '请输入密码',
-            captcha: '请输入图形验证码'
+            captcha: '请输入图形验证码',
+            language: '请选择语言'
         },
         remember: '记住我',
         submit: '登入',

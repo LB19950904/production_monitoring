@@ -1,5 +1,6 @@
 package com.gitee.pifeng.monitoring.plug.core;
 
+import cn.hutool.core.util.StrUtil;
 import com.gitee.pifeng.monitoring.common.constant.EndpointTypeEnums;
 import com.gitee.pifeng.monitoring.common.constant.LanguageTypeConstants;
 import com.gitee.pifeng.monitoring.common.constant.SecurerEnums;
@@ -662,7 +663,7 @@ public class ConfigLoader {
             throw new ErrorConfigParamException("获取服务器信息频率最小不能小于30秒！");
         }
         // 是否为合法IP地址（为空的情况不考虑）
-        if ((null != serverInfoIp) && (!IpAddressUtils.isIpAddress(serverInfoIp))) {
+        if ((StrUtil.isNotBlank(serverInfoIp)) && (!IpAddressUtils.isIpAddress(serverInfoIp))) {
             throw new ErrorConfigParamException("服务器本机IP不是合法的IPv4地址！");
         }
         MonitoringServerInfoProperties monitoringServerInfoProperties = new MonitoringServerInfoProperties();

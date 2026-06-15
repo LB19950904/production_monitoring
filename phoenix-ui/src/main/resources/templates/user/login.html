@@ -26,24 +26,127 @@
     <script th:src="@{/js/html5.min.js}"></script>
     <script th:src="@{/js/respond.min.js}"></script>
     <![endif]-->
+    <style>
+        .layadmin-user-login {
+            width: 100%;
+            background-image: url("/images/new-ui/登录页背景图.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            padding: 0;
+            margin: 0;
+        }
+        .layadmin-user-login-main {
+            width: 540px;
+            height: 642px;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            top: 270px;
+            right: 210px;
+        }
+        .layui-input, .layui-select, .layui-textarea {
+            background: #FFFFFF;
+            border-radius: 8px;
+            border: 1px solid #D7D7D7;
+            height: 58px;
+        }
+        .myself-user-id-icon {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            position: absolute;
+            left: 8px;
+            top: 14px;
+            background-image: url("/images/new-ui/登录ID.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .myself-user-password-icon {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            position: absolute;
+            left: 8px;
+            top: 14px;
+            background-image: url("/images/new-ui/password.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .myself-user-captcha-icon {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            position: absolute;
+            left: 8px;
+            top: 14px;
+            background-image: url("/images/new-ui/v_password.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .myself-user-language-icon {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            position: absolute;
+            left: 8px;
+            top: 14px;
+            background-image: url("/images/new-ui/语言.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .layadmin-user-login-codeimg {
+            max-height: 58px;
+        }
+        .layui-form-select {
+            position: static;
+        }
+        .my-layui-btn {
+            height: 60px;
+            font-size: 20px;
+            background-color: #337EFF;
+        }
+        .layadmin-user-login-body .layui-form-checkbox.layui-form-checked i{
+            border-color: #337EFF !important;
+            background-color: #337EFF !important;
+        }
+        .system-login-name {
+            width: 312px;
+            height: 48px;
+            margin: 0 auto;
+            font-weight: bold;
+            font-size: 36px;
+            color: #333333;
+            line-height: 40px;
+            letter-spacing: 3px;
+            text-align: center;
+            font-style: normal;
+        }
+    </style>
 </head>
 <body>
-<div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: none;">
+<div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login">
     <div class="layadmin-user-login-main">
-        <div class="layadmin-user-login-box layadmin-user-login-header">
-            <h2 th:text="#{common.projectShortName}">保障系统</h2>
-            <p th:text="#{login.subtitle}">生产通讯保障系统</p>
-        </div>
         <form class="layadmin-user-login-box layadmin-user-login-body layui-form" th:action="@{/doLogin}" method="post">
             <div class="layui-form-item">
-                <label class="layadmin-user-login-icon layui-icon layui-icon-username"
-                       for="LAY-user-login-username"></label>
+                <div class="system-login-name" th:text="#{common.projectName}"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="myself-user-language-icon"
+                       for="LAY-user-login-language"></label>
+                <select name="language" id="LAY-user-login-language" lay-filter="LAY-user-login-language" placeholder="语言"
+                        lay-verify="language" th:placeholder="#{login.placeholder.language}">
+                    <option value="简体中文">简体中文</option>
+                    <option value="English">English</option>
+                </select>
+            </div>
+            <div class="layui-form-item">
+                <label class="myself-user-id-icon" for="LAY-user-login-username"></label>
                 <input type="text" name="account" id="LAY-user-login-username" lay-verify="account"
                        th:placeholder="#{login.placeholder.account}" placeholder="账号"
                        class="layui-input" autocomplete="on" lay-verType="tips">
             </div>
             <div class="layui-form-item">
-                <label class="layadmin-user-login-icon layui-icon layui-icon-password"
+                <label class="myself-user-password-icon"
                        for="LAY-user-login-password"></label>
                 <input type="password" name="password" id="LAY-user-login-password" lay-verify="password"
                        th:placeholder="#{login.placeholder.password}" placeholder="密码" class="layui-input" lay-verType="tips">
@@ -51,13 +154,13 @@
             <div class="layui-form-item" th:if="${enableLoginCaptcha}">
                 <div class="layui-row">
                     <div class="layui-col-xs7">
-                        <label class="layadmin-user-login-icon layui-icon layui-icon-vercode"
+                        <label class="myself-user-captcha-icon"
                                for="LAY-user-login-vercode"></label>
                         <input type="text" name="captcha" id="LAY-user-login-vercode" lay-verify="captcha"
                                th:placeholder="#{login.placeholder.captcha}" placeholder="图形验证码" class="layui-input" lay-verType="tips">
                     </div>
                     <div class="layui-col-xs5">
-                        <div style="margin-left: 10px;">
+                        <div style="margin-left: 10px;height: 58px;">
                             <img th:src="@{/captcha.png}" class="layadmin-user-login-codeimg"
                                  id="LAY-user-get-vercode" th:alt="#{login.captcha}" alt="">
                         </div>
@@ -100,12 +203,10 @@
                 </label>
             </div>
             <div class="layui-form-item" style="margin-bottom: 20px;">
-                <input type="checkbox" name="remember-me" lay-skin="primary" th:title="#{login.remember}" title="记住我">
-                <!--<a href="javascript:;" class="layadmin-user-jump-change layadmin-link"
-                   style="margin-top: 7px;">忘记密码？</a>-->
+                <input class="myself-checkbox-checked" type="checkbox" name="remember-me" lay-skin="primary" th:title="#{login.remember}" title="记住我">
             </div>
             <div class="layui-form-item">
-                <button type="submit" class="layui-btn layui-btn-fluid" lay-submit th:text="#{login.submit}">登 入</button>
+                <button type="submit" class="layui-btn layui-btn-fluid my-layui-btn" lay-submit th:text="#{login.submit}">登 录</button>
             </div>
         </form>
     </div>
@@ -194,26 +295,24 @@
             }, 1000 * 60);
         }
 
-        // 添加语言切换按钮
-        addLanguageSwitcher();
-
-        // 添加语言切换器函数（移到layui.use内部）
-        function addLanguageSwitcher() {
-            if ($('.language-switcher').length === 0) {
-                var switcherHtml = `
-                    <div class="language-switcher" style="text-align: center; margin-top: 15px;">
-                        <button type="button" class="layui-btn layui-btn-xs layui-btn-primary" onclick="I18nUtils.switchToChinese()">
-                            中文
-                        </button>
-                        <button type="button" class="layui-btn layui-btn-xs layui-btn-primary" onclick="I18nUtils.switchToEnglish()">
-                            English
-                        </button>
-                    </div>
-                `;
-                // 将语言切换器添加到表单后面
-                $('.layadmin-user-login-body').last().after(switcherHtml);
-            }
+        // 语言下拉框切换
+        var currentLocale = I18nConfig.getCurrentLocale();
+        var langSelect = $('#LAY-user-login-language');
+        // 设置默认选中项
+        if (currentLocale === 'en_US') {
+            langSelect.val('English');
+        } else {
+            langSelect.val('简体中文');
         }
+        form.render('select');
+        // 监听语言切换
+        form.on('select(LAY-user-login-language)', function (data) {
+            if (data.value === 'English') {
+                I18nUtils.switchToEnglish();
+            } else {
+                I18nUtils.switchToChinese();
+            }
+        });
     });
 </script>
 </body>
