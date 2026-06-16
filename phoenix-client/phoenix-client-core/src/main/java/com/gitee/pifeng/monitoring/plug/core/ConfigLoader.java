@@ -638,12 +638,15 @@ public class ConfigLoader {
         String serverInfoIp;
         // 缺省[是否使用sigar采集服务器信息，默认：false]
         boolean serverInfoUserSigarEnable;
+        // 缺省[服务器名称，默认：自动获取计算机名]
+        String serverInfoServerName;
         if (hasMonitoringProperties) {
             MonitoringServerInfoProperties serverInfo = monitoringProperties.getServerInfo() == null ? new MonitoringServerInfoProperties() : monitoringProperties.getServerInfo();
             serverInfoEnable = serverInfo.getEnable() != null && serverInfo.getEnable();
             serverInfoRate = serverInfo.getRate() == null ? 60L : serverInfo.getRate();
             serverInfoIp = serverInfo.getIp();
             serverInfoUserSigarEnable = serverInfo.getUserSigarEnable() != null && serverInfo.getUserSigarEnable();
+            serverInfoServerName = serverInfo.getServerName();
         } else {
             // 缺省[是否采集服务器信息，默认false]
             String serverInfoEnableStr = StringUtils.trimToNull(properties.getProperty("monitoring.server-info.enable"));
@@ -656,6 +659,8 @@ public class ConfigLoader {
             // 缺省[是否使用sigar采集服务器信息，默认：false]
             String serverInfoUserSigarEnableStr = StringUtils.trimToNull(properties.getProperty("monitoring.server-info.user-sigar-enable"));
             serverInfoUserSigarEnable = StringUtils.isNotBlank(serverInfoUserSigarEnableStr) && Boolean.parseBoolean(serverInfoUserSigarEnableStr);
+            // 缺省[服务器名称，默认：自动获取计算机名]
+            serverInfoServerName = StringUtils.trimToNull(properties.getProperty("monitoring.server-info.server-name"));
         }
         // 频率配置不正确
         long minimum = 30L;
@@ -671,6 +676,7 @@ public class ConfigLoader {
         monitoringServerInfoProperties.setUserSigarEnable(serverInfoUserSigarEnable);
         monitoringServerInfoProperties.setRate(serverInfoRate);
         monitoringServerInfoProperties.setIp(serverInfoIp);
+        monitoringServerInfoProperties.setServerName(serverInfoServerName);
         MONITORING_PROPERTIES.setServerInfo(monitoringServerInfoProperties);
     }
 

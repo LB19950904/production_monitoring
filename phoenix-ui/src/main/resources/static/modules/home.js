@@ -56,7 +56,7 @@
                 height: '170px',
                 arrow: 'hover',
                 interval: 5000,
-                autoplay: false,
+                autoplay: true,
                 indicator: 'none',
                 trigger: device.ios || device.android ? 'click' : 'hover',
                 anim: $Summary.data('anim')
@@ -68,7 +68,7 @@
             width: '100%',
             arrow: 'hover',
             interval: 5000,
-            autoplay: false,
+            autoplay: true,
             trigger: device.ios || device.android ? 'click' : 'hover',
             anim: $LayadminDataViewMy.data('anim')
         });
@@ -941,19 +941,19 @@
         getLast5AlarmRecord();
         // 发送ajax请求，获取home页的摘要信息（页面加载时也要发送ajax）
         getSummaryInfo();
-        // todo 每30秒刷新一次
-        // window.setInterval(function () {
-        //     // 发送ajax请求，获取最近7天告警统计数据
-        //     getLast7DaysAlarmRecordStatistics();
-        //     // 发送ajax请求，获取告警类型统计信息
-        //     getAlarmRecordTypeStatistics();
-        //     // 发送ajax，获取告警结果统计信息
-        //     getAlarmRecordResultStatistics();
-        //     // 发送ajax请求，获取最新的5条告警记录
-        //     getLast5AlarmRecord();
-        //     // 发送ajax请求，获取home页的摘要信息
-        //     getSummaryInfo();
-        // }, 1000 * 30);
+        // 每30秒刷新一次
+        window.setInterval(function () {
+            // 发送ajax请求，获取最近7天告警统计数据
+            getLast7DaysAlarmRecordStatistics();
+            // 发送ajax请求，获取告警类型统计信息
+            getAlarmRecordTypeStatistics();
+            // 发送ajax，获取告警结果统计信息
+            getAlarmRecordResultStatistics();
+            // 发送ajax请求，获取最新的5条告警记录
+            getLast5AlarmRecord();
+            // 发送ajax请求，获取home页的摘要信息
+            getSummaryInfo();
+        }, 1000 * 30);
     });
     e('home', {});
 });

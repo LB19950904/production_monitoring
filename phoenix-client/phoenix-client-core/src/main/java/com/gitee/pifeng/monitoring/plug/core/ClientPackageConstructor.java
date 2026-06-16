@@ -15,6 +15,7 @@ import com.gitee.pifeng.monitoring.common.util.server.OsUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -133,7 +134,8 @@ public class ClientPackageConstructor extends AbstractPackageConstructor {
         String ip = ConfigLoader.getMonitoringProperties().getServerInfo().getIp() == null ? NetUtils.getLocalIp() : ConfigLoader.getMonitoringProperties().getServerInfo().getIp();
         pkg.setIp(ip);
         // 计算机名
-        pkg.setComputerName(OsUtils.getComputerName());
+        String configServerName = ConfigLoader.getMonitoringProperties().getServerInfo().getServerName();
+        pkg.setComputerName(StringUtils.isNotBlank(configServerName) ? configServerName : OsUtils.getComputerName());
         // 链路信息
         pkg.setChain(this.getChain(pkg));
     }

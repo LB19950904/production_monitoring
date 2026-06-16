@@ -39,4 +39,9 @@ public class MonitoringServerInfoProperties {
      */
     private String ip;
 
+    /**
+     * 服务器名称（为空则自动获取计算机名）
+     */
+    private String serverName;
+
 }
