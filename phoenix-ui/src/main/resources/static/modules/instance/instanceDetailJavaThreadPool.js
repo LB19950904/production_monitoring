@@ -62,12 +62,12 @@
         var javaThreadPoolName = $('#javaThreadPoolNameChart option:selected').val();
         var javaThreadPoolSetupLayerIndex = layer.open({
             type: 2,
-            title: 'Java线程池配置(' + javaThreadPoolName + ')',
+            title: I18nUtils.t('instanceDetail.configDialog.title', {name: javaThreadPoolName}),
             content: ctxPath + 'monitor-instance/set-instance-java-thread-pool-form?endpoint=' + endpoint + '&instanceId=' + instanceId + '&javaThreadPoolName=' + javaThreadPoolName,
             maxmin: true,
             moveOut: true,
             area: [width, height],
-            btn: ['确定', '取消'],
+            btn: [I18nUtils.t('common.confirm'), I18nUtils.t('common.cancel')],
             yes: function (index, layero) {
                 var iframeWindow = window['layui-layer-iframe' + index],
                     submitID = 'LAY-front-submit',
@@ -91,16 +91,16 @@
                             var data = result.data;
                             if (data === webConst.SUCCESS) {
                                 layer.close(index); //关闭弹层
-                                layer.msg('配置成功！', {icon: 6});
+                                layer.msg(I18nUtils.t('instanceDetail.configDialog.configSuccess'), {icon: 6});
                                 // 重新发送ajax请求，获取线程池摘要信息
                                 getJavaThreadPoolAbstractInfo();
                             } else {
-                                layer.msg('配置失败！', {icon: 5, shift: 6});
+                                layer.msg(I18nUtils.t('instanceDetail.configDialog.configFailed'), {icon: 5, shift: 6});
                             }
                             layer.close(loading);
                         },
                         error: function () {
-                            layer.msg('系统错误！', {icon: 5, shift: 6});
+                            layer.msg(I18nUtils.t('instanceDetail.configDialog.systemError'), {icon: 5, shift: 6});
                             layer.close(loading);
                         },
                         complete: function () {
@@ -147,31 +147,31 @@
                 var queueRemainingCapacity = isEmpty(data.queueRemainingCapacity) ? '' : data.queueRemainingCapacity;
                 var queueType = isEmpty(data.queueType) ? '' : data.queueType;
                 var queueCapacity = isEmpty(data.queueCapacity) ? '' : data.queueCapacity;
-                var allowCoreThreadTimeOut = isEmpty(data.allowCoreThreadTimeOut) ? '' : (data.allowCoreThreadTimeOut === true ? '回收' : '不回收');
-                var keepAliveTime = isEmpty(data.keepAliveTime) ? '' : data.keepAliveTime + ' 秒';
+                var allowCoreThreadTimeOut = isEmpty(data.allowCoreThreadTimeOut) ? '' : (data.allowCoreThreadTimeOut === true ? I18nUtils.t('instanceDetail.threadPool.recycle') : I18nUtils.t('instanceDetail.threadPool.notRecycle'));
+                var keepAliveTime = isEmpty(data.keepAliveTime) ? '' : data.keepAliveTime + ' ' + I18nUtils.t('instanceDetail.threadPool.seconds');
                 var html = '<!-- 第一行：基础信息 -->' +
                     '<div class="layui-row layui-col-space10">' +
                     '    <div class="layui-col-md3">' +
                     '        <div class="thread-pool-info-container">' +
-                    '            <div class="thread-pool-info-label">线程池名字<br>(name)</div>' +
+                    '            <div class="thread-pool-info-label">' + I18nUtils.t('instanceDetail.threadPool.name') + '</div>' +
                     '            <div class="thread-pool-info-value">' + name + '</div>' +
                     '        </div>' +
                     '    </div>' +
                     '    <div class="layui-col-md3">' +
                     '        <div class="thread-pool-info-container">' +
-                    '            <div class="thread-pool-info-label">核心线程数<br>(corePoolSize)</div>' +
+                    '            <div class="thread-pool-info-label">' + I18nUtils.t('instanceDetail.threadPool.corePoolSize') + '</div>' +
                     '            <div class="thread-pool-info-value">' + corePoolSize + '</div>' +
                     '        </div>' +
                     '    </div>' +
                     '    <div class="layui-col-md3">' +
                     '        <div class="thread-pool-info-container">' +
-                    '            <div class="thread-pool-info-label">最大线程数<br>(maximumPoolSize)</div>' +
+                    '            <div class="thread-pool-info-label">' + I18nUtils.t('instanceDetail.threadPool.maximumPoolSize') + '</div>' +
                     '            <div class="thread-pool-info-value">' + maximumPoolSize + '</div>' +
                     '        </div>' +
                     '    </div>' +
                     '    <div class="layui-col-md3">' +
                     '        <div class="thread-pool-info-container">' +
-                    '            <div class="thread-pool-info-label">历史最大线程数<br>(largestPoolSize)</div>' +
+                    '            <div class="thread-pool-info-label">' + I18nUtils.t('instanceDetail.threadPool.largestPoolSize') + '</div>' +
                     '            <div class="thread-pool-info-value">' + largestPoolSize + '</div>' +
                     '        </div>' +
                     '    </div>' +
@@ -180,25 +180,25 @@
                     '<div class="layui-row layui-col-space10">' +
                     '    <div class="layui-col-md3">' +
                     '        <div class="thread-pool-info-container">' +
-                    '            <div class="thread-pool-info-label">当前线程数<br>(poolSize)</div>' +
+                    '            <div class="thread-pool-info-label">' + I18nUtils.t('instanceDetail.threadPool.poolSize') + '</div>' +
                     '            <div class="thread-pool-info-value">' + poolSize + '</div>' +
                     '        </div>' +
                     '    </div>' +
                     '    <div class="layui-col-md3">' +
                     '        <div class="thread-pool-info-container">' +
-                    '            <div class="thread-pool-info-label">活跃线程数<br>(activeCount)</div>' +
+                    '            <div class="thread-pool-info-label">' + I18nUtils.t('instanceDetail.threadPool.activeCount') + '</div>' +
                     '            <div class="thread-pool-info-value">' + activeCount + '</div>' +
                     '        </div>' +
                     '    </div>' +
                     '    <div class="layui-col-md3">' +
                     '        <div class="thread-pool-info-container">' +
-                    '            <div class="thread-pool-info-label">总任务数<br>(taskCount)</div>' +
+                    '            <div class="thread-pool-info-label">' + I18nUtils.t('instanceDetail.threadPool.taskCount') + '</div>' +
                     '            <div class="thread-pool-info-value">' + taskCount + '</div>' +
                     '        </div>' +
                     '    </div>' +
                     '    <div class="layui-col-md3">' +
                     '        <div class="thread-pool-info-container">' +
-                    '            <div class="thread-pool-info-label">已完成任务数<br>(completedTaskCount)</div>' +
+                    '            <div class="thread-pool-info-label">' + I18nUtils.t('instanceDetail.threadPool.completedTaskCount') + '</div>' +
                     '            <div class="thread-pool-info-value">' + completedTaskCount + '</div>' +
                     '        </div>' +
                     '    </div>' +
@@ -207,25 +207,25 @@
                     '<div class="layui-row layui-col-space10">' +
                     '    <div class="layui-col-md3">' +
                     '        <div class="thread-pool-info-container">' +
-                    '            <div class="thread-pool-info-label">队列类型<br>(queueType)</div>' +
+                    '            <div class="thread-pool-info-label">' + I18nUtils.t('instanceDetail.threadPool.queueType') + '</div>' +
                     '            <div class="thread-pool-info-value">' + queueType + '</div>' +
                     '        </div>' +
                     '    </div>' +
                     '    <div class="layui-col-md3">' +
                     '        <div class="thread-pool-info-container">' +
-                    '            <div class="thread-pool-info-label">队列容量<br>(queueCapacity)</div>' +
+                    '            <div class="thread-pool-info-label">' + I18nUtils.t('instanceDetail.threadPool.queueCapacity') + '</div>' +
                     '            <div class="thread-pool-info-value">' + queueCapacity + '</div>' +
                     '        </div>' +
                     '    </div>' +
                     '    <div class="layui-col-md3">' +
                     '        <div class="thread-pool-info-container">' +
-                    '            <div class="thread-pool-info-label">队列剩余容量<br>(queueRemainingCapacity)</div>' +
+                    '            <div class="thread-pool-info-label">' + I18nUtils.t('instanceDetail.threadPool.queueRemainingCapacity') + '</div>' +
                     '            <div class="thread-pool-info-value">' + queueRemainingCapacity + '</div>' +
                     '        </div>' +
                     '    </div>' +
                     '    <div class="layui-col-md3">' +
                     '        <div class="thread-pool-info-container">' +
-                    '            <div class="thread-pool-info-label">当前队列大小<br>(queueSize)</div>' +
+                    '            <div class="thread-pool-info-label">' + I18nUtils.t('instanceDetail.threadPool.queueSize') + '</div>' +
                     '            <div class="thread-pool-info-value">' + queueSize + '</div>' +
                     '        </div>' +
                     '    </div>' +
@@ -234,25 +234,25 @@
                     '<div class="layui-row layui-col-space10">' +
                     '    <div class="layui-col-md3">' +
                     '        <div class="thread-pool-info-container">' +
-                    '            <div class="thread-pool-info-label">拒绝任务数<br>(rejectedTaskCount)</div>' +
+                    '            <div class="thread-pool-info-label">' + I18nUtils.t('instanceDetail.threadPool.rejectedTaskCount') + '</div>' +
                     '            <div class="thread-pool-info-value">' + rejectedTaskCount + '</div>' +
                     '        </div>' +
                     '    </div>' +
                     '    <div class="layui-col-md3">' +
                     '        <div class="thread-pool-info-container">' +
-                    '            <div class="thread-pool-info-label">拒绝策略<br>(rejectedExecutionHandler)</div>' +
+                    '            <div class="thread-pool-info-label">' + I18nUtils.t('instanceDetail.threadPool.rejectedExecutionHandler') + '</div>' +
                     '            <div class="thread-pool-info-value">' + rejectedExecutionHandlerName + '</div>' +
                     '        </div>' +
                     '    </div>' +
                     '    <div class="layui-col-md3">' +
                     '        <div class="thread-pool-info-container">' +
-                    '            <div class="thread-pool-info-label">核心线程空闲回收<br>(allowCoreThreadTimeOut)</div>' +
+                    '            <div class="thread-pool-info-label">' + I18nUtils.t('instanceDetail.threadPool.allowCoreThreadTimeOut') + '</div>' +
                     '            <div class="thread-pool-info-value">' + allowCoreThreadTimeOut + '</div>' +
                     '        </div>' +
                     '    </div>' +
                     '    <div class="layui-col-md3">' +
                     '        <div class="thread-pool-info-container">' +
-                    '            <div class="thread-pool-info-label">空闲回收时间<br>(keepAliveTime)</div>' +
+                    '            <div class="thread-pool-info-label">' + I18nUtils.t('instanceDetail.threadPool.keepAliveTime') + '</div>' +
                     '            <div class="thread-pool-info-value">' + keepAliveTime + '</div>' +
                     '        </div>' +
                     '    </div>' +
@@ -261,7 +261,7 @@
                     '<div class="layui-row layui-col-space10">' +
                     '    <div class="layui-col-md3">' +
                     '        <div class="thread-pool-info-container">' +
-                    '            <div class="thread-pool-info-label">利用率<br>(utilizationRate)</div>' +
+                    '            <div class="thread-pool-info-label">' + I18nUtils.t('instanceDetail.threadPool.utilizationRate') + '</div>' +
                     '            <div class="thread-pool-info-value">' + utilizationRate + '</div>' +
                     '        </div>' +
                     '    </div>' +
@@ -324,7 +324,7 @@
     function playUpJavaThreadPoolActiveInfoChart(time, activeCount) {
         var option = {
             title: {
-                text: '活跃线程数',
+                text: I18nUtils.t('instanceDetail.chartText.activeThreadCount'),
                 left: 'center',
                 textStyle: {
                     color: '#696969',
@@ -349,7 +349,7 @@
                 }
             },
             legend: {
-                data: ['数量'],
+                data: [I18nUtils.t('instanceDetail.chartText.count')],
                 orient: 'vertical',
                 x: '80%' //图例位置，设置right发现图例和文字位置反了，设置一个数值就好了
             },
@@ -392,13 +392,13 @@
             },
             yAxis: {
                 type: 'value',
-                name: '数量',
+                name: I18nUtils.t('instanceDetail.chartText.count'),
                 axisLabel: {
                     formatter: '{value}'
                 }
             }, // 数据
             series: [{
-                name: '数量',
+                name: I18nUtils.t('instanceDetail.chartText.count'),
                 data: activeCount,
                 type: 'line',
                 smooth: true,
@@ -433,7 +433,7 @@
     function playUpJavaThreadPoolQueueInfoChart(time, queueSize) {
         var option = {
             title: {
-                text: '当前队列大小',
+                text: I18nUtils.t('instanceDetail.chartText.queueSize'),
                 left: 'center',
                 textStyle: {
                     color: '#696969',
@@ -458,7 +458,7 @@
                 }
             },
             legend: {
-                data: ['数量'],
+                data: [I18nUtils.t('instanceDetail.chartText.count')],
                 orient: 'vertical',
                 x: '80%' //图例位置，设置right发现图例和文字位置反了，设置一个数值就好了
             },
@@ -501,13 +501,13 @@
             },
             yAxis: {
                 type: 'value',
-                name: '数量',
+                name: I18nUtils.t('instanceDetail.chartText.count'),
                 axisLabel: {
                     formatter: '{value}'
                 }
             }, // 数据
             series: [{
-                name: '数量',
+                name: I18nUtils.t('instanceDetail.chartText.count'),
                 data: queueSize,
                 type: 'line',
                 smooth: true,
@@ -542,7 +542,7 @@
     function playUpJavaThreadPoolCompletedInfoChart(time, completedTaskCount) {
         var option = {
             title: {
-                text: '已完成的任务数',
+                text: I18nUtils.t('instanceDetail.chartText.completedTaskCount'),
                 left: 'center',
                 textStyle: {
                     color: '#696969',
@@ -567,7 +567,7 @@
                 }
             },
             legend: {
-                data: ['数量'],
+                data: [I18nUtils.t('instanceDetail.chartText.count')],
                 orient: 'vertical',
                 x: '80%' //图例位置，设置right发现图例和文字位置反了，设置一个数值就好了
             },
@@ -610,13 +610,13 @@
             },
             yAxis: {
                 type: 'value',
-                name: '数量',
+                name: I18nUtils.t('instanceDetail.chartText.count'),
                 axisLabel: {
                     formatter: '{value}'
                 }
             }, // 数据
             series: [{
-                name: '数量',
+                name: I18nUtils.t('instanceDetail.chartText.count'),
                 data: completedTaskCount,
                 type: 'line',
                 smooth: true,
@@ -651,7 +651,7 @@
     function playUpJavaThreadPoolRejectedInfoChart(time, rejectedTaskCount) {
         var option = {
             title: {
-                text: '拒绝的任务数',
+                text: I18nUtils.t('instanceDetail.chartText.rejectedTaskCount'),
                 left: 'center',
                 textStyle: {
                     color: '#696969',
@@ -676,7 +676,7 @@
                 }
             },
             legend: {
-                data: ['数量'],
+                data: [I18nUtils.t('instanceDetail.chartText.count')],
                 orient: 'vertical',
                 x: '80%' //图例位置，设置right发现图例和文字位置反了，设置一个数值就好了
             },
@@ -719,13 +719,13 @@
             },
             yAxis: {
                 type: 'value',
-                name: '数量',
+                name: I18nUtils.t('instanceDetail.chartText.count'),
                 axisLabel: {
                     formatter: '{value}'
                 }
             }, // 数据
             series: [{
-                name: '数量',
+                name: I18nUtils.t('instanceDetail.chartText.count'),
                 data: rejectedTaskCount,
                 type: 'line',
                 smooth: true,

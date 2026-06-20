@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="utf-8">
-    <title>应用详情</title>
+    <title th:text="#{instance.detail}">应用详情</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport"
@@ -12,6 +12,11 @@
     <link rel="stylesheet" href="./style/admin.css" th:href="@{/style/admin.css}" media="all">
     <link rel="stylesheet" href="./style/myself.css" th:href="@{/style/myself.css}" media="all">
     <link rel="stylesheet" href="./lib/xterm/xterm.css" th:href="@{/lib/xterm/xterm.css}" media="all">
+    <!-- 引入国际化工具 -->
+    <script th:src="@{/js/i18n/i18n-config.js}"></script>
+    <script th:src="@{/js/i18n/i18n-utils.js}"></script>
+    <script th:src="@{/js/i18n/messages/zh_CN.js}"></script>
+    <script th:src="@{/js/i18n/messages/en_US.js}"></script>
     <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
     <!--[if lt IE 9]>
     <script src="./js/html5.min.js" th:src="@{/js/html5.min.js}"></script>
@@ -35,18 +40,22 @@
             <ul class="layui-tab-title">
                 <li th:class="${isCollectVmMetrics?'layui-this':''}"
                     lay-id="memory"
-                    th:if="${isCollectVmMetrics}">内存
+                    th:if="${isCollectVmMetrics}">
+                    <span id="tab-memory">内存</span>
                 </li>
                 <li lay-id="jvm"
-                    th:if="${isCollectVmMetrics}">JVM
+                    th:if="${isCollectVmMetrics}">
+                    <span id="tab-jvm">JVM</span>
                 </li>
                 <li th:class="${!isCollectVmMetrics&&isCollectThreadPoolMetrics?'layui-this':''}"
                     lay-id="threadPool"
-                    th:if="${isCollectThreadPoolMetrics}">线程池
+                    th:if="${isCollectThreadPoolMetrics}">
+                    <span id="tab-threadPool">线程池</span>
                 </li>
                 <li th:class="${!isCollectVmMetrics&&!isCollectThreadPoolMetrics&&isEnableArthas?'layui-this':''}"
                     lay-id="arthas"
-                    th:if="${isEnableArthas}">Arthas
+                    th:if="${isEnableArthas}">
+                    <span id="tab-arthas">Arthas</span>
                 </li>
             </ul>
             <div class="layui-tab-content">
@@ -56,21 +65,18 @@
                         <form class="layui-form layuiadmin-card-header-auto layui-card-header-my">
                             <div class="layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="jvmMemoryTime">时间范围(T)</label>
+                                    <label class="layui-form-label" for="jvmMemoryTime" id="label-jvmMemoryTime">时间范围(T)</label>
                                     <div class="layui-input-block">
                                         <select id="jvmMemoryTime" name="jvmMemoryTime" lay-filter="jvmMemoryTime">
-                                            <option value="hour">1小时</option>
-                                            <option value="day">1天</option>
-                                            <option value="week">1周</option>
-                                            <option value="month">1月</option>
-                                            <!--<option value="halfYear">6月</option>-->
-                                            <!--<option value="year">1年</option>-->
-                                            <!--<option value="all">全部</option>-->
+                                            <option value="hour" id="opt-hour">1小时</option>
+                                            <option value="day" id="opt-day">1天</option>
+                                            <option value="week" id="opt-week">1周</option>
+                                            <option value="month" id="opt-month">1月</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="autoRefreshJvmMemory">自动刷新</label>
+                                    <label class="layui-form-label" for="autoRefreshJvmMemory" id="label-autoRefreshJvmMemory">自动刷新</label>
                                     <div class="layui-input-block">
                                         <input checked lay-filter="autoRefreshJvmMemory" type="checkbox"
                                                id="autoRefreshJvmMemory" name="autoRefreshJvmMemory"
@@ -90,7 +96,7 @@
                         <form class="layui-form layui-card-header layuiadmin-card-header-auto layui-card-header-my">
                             <div class="layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="jvmMemoryChart">图表(C)</label>
+                                    <label class="layui-form-label" for="jvmMemoryChart" id="label-jvmMemoryChart">图表(C)</label>
                                     <div class="layui-input-block">
                                         <select id="jvmMemoryChart" name="jvmMemoryChart" lay-filter="jvmMemoryChart">
                                             <option th:each="types:${jvmMemoryTypes}" th:value="${types}"
@@ -111,28 +117,28 @@
                      class="layui-tab-item">
                     <div class="layui-collapse">
                         <div class="layui-colla-item">
-                            <h2 class="layui-colla-title">类</h2>
+                            <h2 class="layui-colla-title" id="collapse-class">类</h2>
                             <div class="layui-colla-content layui-show">
                                 <div class="layui-row layui-col-space10" id="class-loading">
                                 </div>
                             </div>
                         </div>
                         <div class="layui-colla-item">
-                            <h2 class="layui-colla-title">GC</h2>
+                            <h2 class="layui-colla-title" id="collapse-gc">GC</h2>
                             <div class="layui-colla-content layui-show">
                                 <div class="layui-row layui-col-space10" id="gc">
                                 </div>
                             </div>
                         </div>
                         <div class="layui-colla-item">
-                            <h2 class="layui-colla-title">线程</h2>
+                            <h2 class="layui-colla-title" id="collapse-thread">线程</h2>
                             <div class="layui-colla-content layui-show">
                                 <div class="layui-row layui-col-space10" id="thread" style="word-wrap:break-word;">
                                 </div>
                             </div>
                         </div>
                         <div class="layui-colla-item">
-                            <h2 class="layui-colla-title">VM</h2>
+                            <h2 class="layui-colla-title" id="collapse-vm">VM</h2>
                             <div class="layui-colla-content layui-show">
                                 <div class="layui-row layui-col-space10" id="runtime"
                                      style="word-wrap:break-word;">
@@ -148,22 +154,19 @@
                         <form class="layui-form layuiadmin-card-header-auto layui-card-header-my">
                             <div class="layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="javaThreadPoolTime">时间范围(T)</label>
+                                    <label class="layui-form-label" for="javaThreadPoolTime" id="label-javaThreadPoolTime">时间范围(T)</label>
                                     <div class="layui-input-block">
                                         <select id="javaThreadPoolTime" name="javaThreadPoolTime"
                                                 lay-filter="javaThreadPoolTime">
-                                            <option value="hour">1小时</option>
-                                            <option value="day">1天</option>
-                                            <option value="week">1周</option>
-                                            <option value="month">1月</option>
-                                            <!--<option value="halfYear">6月</option>-->
-                                            <!--<option value="year">1年</option>-->
-                                            <!--<option value="all">全部</option>-->
+                                            <option value="hour" id="opt-tp-hour">1小时</option>
+                                            <option value="day" id="opt-tp-day">1天</option>
+                                            <option value="week" id="opt-tp-week">1周</option>
+                                            <option value="month" id="opt-tp-month">1月</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="javaThreadPoolNameChart">线程池名字</label>
+                                    <label class="layui-form-label" for="javaThreadPoolNameChart" id="label-javaThreadPoolNameChart">线程池名字</label>
                                     <div class="layui-input-block">
                                         <select id="javaThreadPoolNameChart" name="javaThreadPoolNameChart"
                                                 lay-filter="javaThreadPoolNameChart">
@@ -173,7 +176,7 @@
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="autoRefreshJavaThreadPool">自动刷新</label>
+                                    <label class="layui-form-label" for="autoRefreshJavaThreadPool" id="label-autoRefreshJavaThreadPool">自动刷新</label>
                                     <div class="layui-input-block">
                                         <input checked lay-filter="autoRefreshJavaThreadPool"
                                                type="checkbox" lay-skin="switch" lay-text="开启|关闭"
@@ -183,7 +186,7 @@
                                 <div class="layui-inline" sec:authorize="hasAuthority('超级管理员')">
                                     <div class="layui-input-block">
                                         <button id="javaThreadPoolSetup" type="button"
-                                                class="layui-btn layuiadmin-btn-useradmin">配置
+                                                class="layui-btn layuiadmin-btn-useradmin" th:text="#{common.settings}">配置
                                         </button>
                                     </div>
                                 </div>
@@ -197,7 +200,7 @@
                                     <div class="layui-row layui-col-space10">
                                         <div class="layui-col-md3">
                                             <div class="thread-pool-info-container">
-                                                <div class="thread-pool-info-label">
+                                                <div class="thread-pool-info-label" id="tp-label-name">
                                                     线程池名字<br>(name)
                                                 </div>
                                                 <div class="thread-pool-info-value">
@@ -207,7 +210,7 @@
                                         </div>
                                         <div class="layui-col-md3">
                                             <div class="thread-pool-info-container">
-                                                <div class="thread-pool-info-label">
+                                                <div class="thread-pool-info-label" id="tp-label-corePoolSize">
                                                     核心线程数<br>(corePoolSize)
                                                 </div>
                                                 <div class="thread-pool-info-value">
@@ -217,7 +220,7 @@
                                         </div>
                                         <div class="layui-col-md3">
                                             <div class="thread-pool-info-container">
-                                                <div class="thread-pool-info-label">
+                                                <div class="thread-pool-info-label" id="tp-label-maximumPoolSize">
                                                     最大线程数<br>(maximumPoolSize)
                                                 </div>
                                                 <div class="thread-pool-info-value">
@@ -227,7 +230,7 @@
                                         </div>
                                         <div class="layui-col-md3">
                                             <div class="thread-pool-info-container">
-                                                <div class="thread-pool-info-label">
+                                                <div class="thread-pool-info-label" id="tp-label-largestPoolSize">
                                                     历史最大线程数<br>(largestPoolSize)
                                                 </div>
                                                 <div class="thread-pool-info-value">
@@ -240,7 +243,7 @@
                                     <div class="layui-row layui-col-space10">
                                         <div class="layui-col-md3">
                                             <div class="thread-pool-info-container">
-                                                <div class="thread-pool-info-label">
+                                                <div class="thread-pool-info-label" id="tp-label-poolSize">
                                                     当前线程数<br>(poolSize)
                                                 </div>
                                                 <div class="thread-pool-info-value">
@@ -250,7 +253,7 @@
                                         </div>
                                         <div class="layui-col-md3">
                                             <div class="thread-pool-info-container">
-                                                <div class="thread-pool-info-label">
+                                                <div class="thread-pool-info-label" id="tp-label-activeCount">
                                                     活跃线程数<br>(activeCount)
                                                 </div>
                                                 <div class="thread-pool-info-value">
@@ -260,7 +263,7 @@
                                         </div>
                                         <div class="layui-col-md3">
                                             <div class="thread-pool-info-container">
-                                                <div class="thread-pool-info-label">
+                                                <div class="thread-pool-info-label" id="tp-label-taskCount">
                                                     总任务数<br>(taskCount)
                                                 </div>
                                                 <div class="thread-pool-info-value">
@@ -270,7 +273,7 @@
                                         </div>
                                         <div class="layui-col-md3">
                                             <div class="thread-pool-info-container">
-                                                <div class="thread-pool-info-label">
+                                                <div class="thread-pool-info-label" id="tp-label-completedTaskCount">
                                                     已完成任务数<br>(completedTaskCount)
                                                 </div>
                                                 <div class="thread-pool-info-value">
@@ -283,7 +286,7 @@
                                     <div class="layui-row layui-col-space10">
                                         <div class="layui-col-md3">
                                             <div class="thread-pool-info-container">
-                                                <div class="thread-pool-info-label">
+                                                <div class="thread-pool-info-label" id="tp-label-queueType">
                                                     队列类型<br>(queueType)
                                                 </div>
                                                 <div class="thread-pool-info-value">
@@ -293,7 +296,7 @@
                                         </div>
                                         <div class="layui-col-md3">
                                             <div class="thread-pool-info-container">
-                                                <div class="thread-pool-info-label">
+                                                <div class="thread-pool-info-label" id="tp-label-queueCapacity">
                                                     队列容量<br>(queueCapacity)
                                                 </div>
                                                 <div class="thread-pool-info-value">
@@ -303,7 +306,7 @@
                                         </div>
                                         <div class="layui-col-md3">
                                             <div class="thread-pool-info-container">
-                                                <div class="thread-pool-info-label">
+                                                <div class="thread-pool-info-label" id="tp-label-queueRemainingCapacity">
                                                     队列剩余容量<br>(queueRemainingCapacity)
                                                 </div>
                                                 <div class="thread-pool-info-value">
@@ -313,7 +316,7 @@
                                         </div>
                                         <div class="layui-col-md3">
                                             <div class="thread-pool-info-container">
-                                                <div class="thread-pool-info-label">
+                                                <div class="thread-pool-info-label" id="tp-label-queueSize">
                                                     当前队列大小<br>(queueSize)
                                                 </div>
                                                 <div class="thread-pool-info-value">
@@ -326,7 +329,7 @@
                                     <div class="layui-row layui-col-space10">
                                         <div class="layui-col-md3">
                                             <div class="thread-pool-info-container">
-                                                <div class="thread-pool-info-label">
+                                                <div class="thread-pool-info-label" id="tp-label-rejectedTaskCount">
                                                     拒绝任务数<br>(rejectedTaskCount)
                                                 </div>
                                                 <div class="thread-pool-info-value">
@@ -336,7 +339,7 @@
                                         </div>
                                         <div class="layui-col-md3">
                                             <div class="thread-pool-info-container">
-                                                <div class="thread-pool-info-label">
+                                                <div class="thread-pool-info-label" id="tp-label-rejectedExecutionHandler">
                                                     拒绝策略<br>(rejectedExecutionHandler)
                                                 </div>
                                                 <div class="thread-pool-info-value">
@@ -346,21 +349,21 @@
                                         </div>
                                         <div class="layui-col-md3">
                                             <div class="thread-pool-info-container">
-                                                <div class="thread-pool-info-label">
+                                                <div class="thread-pool-info-label" id="tp-label-allowCoreThreadTimeOut">
                                                     核心线程空闲回收<br>(allowCoreThreadTimeOut)
                                                 </div>
                                                 <div class="thread-pool-info-value">
-                                                    [[${monitorJavaThreadPoolVo==null?'':(monitorJavaThreadPoolVo.allowCoreThreadTimeOut==true?'回收':(monitorJavaThreadPoolVo.allowCoreThreadTimeOut==false?'不回收':''))}]]
+                                                    <span id="tp-value-allowCoreThreadTimeOut" th:data-value="${monitorJavaThreadPoolVo==null?'':monitorJavaThreadPoolVo.allowCoreThreadTimeOut}"></span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="layui-col-md3">
                                             <div class="thread-pool-info-container">
-                                                <div class="thread-pool-info-label">
+                                                <div class="thread-pool-info-label" id="tp-label-keepAliveTime">
                                                     空闲回收时间<br>(keepAliveTime)
                                                 </div>
                                                 <div class="thread-pool-info-value">
-                                                    [[${monitorJavaThreadPoolVo?.keepAliveTime}]] 秒
+                                                    [[${monitorJavaThreadPoolVo?.keepAliveTime}]] <span id="tp-unit-seconds">秒</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -369,7 +372,7 @@
                                     <div class="layui-row layui-col-space10">
                                         <div class="layui-col-md3">
                                             <div class="thread-pool-info-container">
-                                                <div class="thread-pool-info-label">
+                                                <div class="thread-pool-info-label" id="tp-label-utilizationRate">
                                                     利用率<br>(utilizationRate)
                                                 </div>
                                                 <div class="thread-pool-info-value">
@@ -411,14 +414,14 @@
                         <div class="layui-form layui-card-header layuiadmin-card-header-auto">
                             <form class="layui-form-item" onsubmit="return false;">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="websocketIp">IP</label>
+                                    <label class="layui-form-label" for="websocketIp" id="label-websocketIp">IP</label>
                                     <div class="layui-input-block">
                                         <input type="text" id="websocketIp" name="websocketIp" placeholder="127.0.0.1"
                                                autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="websocketPort">端口号</label>
+                                    <label class="layui-form-label" for="websocketPort" id="label-websocketPort">端口号</label>
                                     <div class="layui-input-block">
                                         <input type="text" id="websocketPort" name="websocketPort" placeholder=""
                                                autocomplete="off" class="layui-input">
@@ -426,10 +429,10 @@
                                 </div>
                                 <div class="layui-inline">
                                     <button id="connect" type="button" class="layui-btn layuiadmin-btn-useradmin">
-                                        连接
+                                        <span id="btn-connect">连接</span>
                                     </button>
                                     <button id="disconnect" type="button" class="layui-btn layuiadmin-btn-useradmin">
-                                        断开
+                                        <span id="btn-disconnect">断开</span>
                                     </button>
                                 </div>
                             </form>
@@ -452,6 +455,78 @@
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/lib/xterm/xterm.js}"></script>
 <script th:src="@{/lib/xterm/xterm-addon-fit.js}"></script>
+<script charset="utf-8">
+    // i18n 初始化
+    I18nConfig.init();
+    // Tab标签
+    var elMemory = document.getElementById('tab-memory');
+    if (elMemory) elMemory.innerText = I18nUtils.t('instanceDetail.tab.memory');
+    var elJvm = document.getElementById('tab-jvm');
+    if (elJvm) elJvm.innerText = I18nUtils.t('instanceDetail.tab.jvm');
+    var elThreadPool = document.getElementById('tab-threadPool');
+    if (elThreadPool) elThreadPool.innerText = I18nUtils.t('instanceDetail.tab.threadPool');
+    var elArthas = document.getElementById('tab-arthas');
+    if (elArthas) elArthas.innerText = I18nUtils.t('instanceDetail.tab.arthas');
+    // 通用表单标签
+    var labels = {
+        'label-jvmMemoryTime': 'instanceDetail.timeRange',
+        'label-autoRefreshJvmMemory': 'instanceDetail.autoRefresh',
+        'label-jvmMemoryChart': 'instanceDetail.chart',
+        'label-javaThreadPoolTime': 'instanceDetail.timeRange',
+        'label-javaThreadPoolNameChart': 'instanceDetail.threadPoolName',
+        'label-autoRefreshJavaThreadPool': 'instanceDetail.autoRefresh',
+        'label-websocketIp': 'instanceDetail.arthas.ip',
+        'label-websocketPort': 'instanceDetail.arthas.port'
+    };
+    for (var id in labels) {
+        var el = document.getElementById(id);
+        if (el) el.innerText = I18nUtils.t(labels[id]);
+    }
+    // 时间选项
+    var timeOpts = {'opt-hour': 'hour', 'opt-day': 'day', 'opt-week': 'week', 'opt-month': 'month',
+        'opt-tp-hour': 'hour', 'opt-tp-day': 'day', 'opt-tp-week': 'week', 'opt-tp-month': 'month'};
+    for (var id in timeOpts) {
+        var el = document.getElementById(id);
+        if (el) el.innerText = I18nUtils.t('instanceDetail.timeOption.' + timeOpts[id]);
+    }
+    // 开关文本
+    var switchOnOff = I18nUtils.t('instanceDetail.switchOn') + '|' + I18nUtils.t('instanceDetail.switchOff');
+    var sw1 = document.getElementById('autoRefreshJvmMemory');
+    if (sw1) sw1.setAttribute('lay-text', switchOnOff);
+    var sw2 = document.getElementById('autoRefreshJavaThreadPool');
+    if (sw2) sw2.setAttribute('lay-text', switchOnOff);
+    // Arthas按钮
+    var btnConnect = document.getElementById('btn-connect');
+    if (btnConnect) btnConnect.innerText = I18nUtils.t('instanceDetail.arthas.connect');
+    var btnDisconnect = document.getElementById('btn-disconnect');
+    if (btnDisconnect) btnDisconnect.innerText = I18nUtils.t('instanceDetail.arthas.disconnect');
+    // JVM折叠面板
+    var collapseIds = {'collapse-class': 'classLoading', 'collapse-gc': 'gc', 'collapse-thread': 'thread', 'collapse-vm': 'vm'};
+    for (var id in collapseIds) {
+        var el = document.getElementById(id);
+        if (el) el.innerText = I18nUtils.t('instanceDetail.jvmSection.' + collapseIds[id]);
+    }
+    // 线程池信息标签
+    var tpLabels = ['name', 'corePoolSize', 'maximumPoolSize', 'largestPoolSize', 'poolSize', 'activeCount',
+        'taskCount', 'completedTaskCount', 'queueType', 'queueCapacity', 'queueRemainingCapacity', 'queueSize',
+        'rejectedTaskCount', 'rejectedExecutionHandler', 'allowCoreThreadTimeOut', 'keepAliveTime', 'utilizationRate'];
+    tpLabels.forEach(function(key) {
+        var el = document.getElementById('tp-label-' + key);
+        if (el) el.innerHTML = I18nUtils.t('instanceDetail.threadPool.' + key);
+    });
+    // 线程池静态值（allowCoreThreadTimeOut）
+    var elAllowCore = document.getElementById('tp-value-allowCoreThreadTimeOut');
+    if (elAllowCore) {
+        var rawValue = elAllowCore.getAttribute('data-value');
+        if (rawValue === 'true') {
+            elAllowCore.innerText = I18nUtils.t('instanceDetail.threadPool.recycle');
+        } else if (rawValue === 'false') {
+            elAllowCore.innerText = I18nUtils.t('instanceDetail.threadPool.notRecycle');
+        }
+    }
+    var elSeconds = document.getElementById('tp-unit-seconds');
+    if (elSeconds) elSeconds.innerText = I18nUtils.t('instanceDetail.threadPool.seconds');
+</script>
 <script th:inline="javascript">
     var extend = {
         index: 'lib/index' //主入口模块

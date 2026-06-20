@@ -35,7 +35,23 @@ if (typeof EnMessages === 'undefined') {
         updateTime: 'Update Time',
         actions: 'Actions',
         pleaseEnter: 'Please enter',
-        clear: 'Clear'
+        clear: 'Clear',
+        // Table toolbar (filter, export, print)
+        toolbar: {
+            filterColumns: 'Filter Columns',
+            export: 'Export',
+            print: 'Print',
+            exportCsv: 'Export to CSV File',
+            exportXls: 'Export to Excel File'
+        },
+        // Pagination component
+        pagination: {
+            total: 'Total {count}',
+            perPage: '{count} / page',
+            skipTo: 'Go to',
+            page: '',
+            go: 'Go'
+        }
     },
 
     // 导航菜单
@@ -329,7 +345,8 @@ if (typeof EnMessages === 'undefined') {
         import: 'Import',
         detail: 'Detail',
         back: 'Back',
-        more: 'More'
+        more: 'More',
+        clear: 'Clear'
     },
 
     // 登录模块
@@ -639,6 +656,19 @@ if (typeof EnMessages === 'undefined') {
         no: 'No',
         notSet: 'Not Set',
         description: 'Description',
+        offlineCount: 'Offline Count',
+        cpu: 'CPU(%)',
+        memory: 'Memory(%)',
+        loadAverage: 'Load Average',
+        downloadSpeed: 'Download Speed(↓)',
+        uploadSpeed: 'Upload Speed(↑)',
+        finalHeartbeat: 'Last Heartbeat',
+        monitorEnv: 'Environment',
+        monitorGroup: 'Group',
+        insertTime: 'Created Time',
+        isEnableMonitor: 'Enable Monitor',
+        isEnableAlarm: 'Enable Alarm',
+        actions: 'Actions',
         placeholder: {
             description: 'Please enter description',
             search: 'Please enter'
@@ -666,6 +696,359 @@ if (typeof EnMessages === 'undefined') {
         },
         validation: {
             descriptionRequired: 'Description is required'
+        }
+    },
+
+    // Instance module
+    instance: {
+        title: 'Application',
+        instanceId: 'App ID',
+        instanceName: 'App Name',
+        endpoint: 'Endpoint',
+        ip: 'IP',
+        status: 'App Status',
+        offlineCount: 'Offline Count',
+        appServerType: 'App Server',
+        language: 'Language',
+        finalHeartbeat: 'Last Heartbeat',
+        monitorEnv: 'Environment',
+        monitorGroup: 'Group',
+        description: 'Description',
+        insertTime: 'Created Time',
+        isEnableMonitor: 'Enable Monitor',
+        isEnableAlarm: 'Enable Alarm',
+        actions: 'Actions',
+        // Endpoint options
+        endpointOptions: {
+            client: 'Client',
+            agent: 'Agent',
+            server: 'Server',
+            ui: 'UI'
+        },
+        // Status options
+        statusOptions: {
+            online: 'Online',
+            offline: 'Offline',
+            unknown: 'Unknown'
+        },
+        // Action menu
+        menu: {
+            edit: 'Edit',
+            delete: 'Delete',
+            clear: 'Clear'
+        },
+        // Dialog titles
+        dialog: {
+            detail: 'App Detail({instanceId})',
+            editDesc: 'Edit Instance Description',
+            clearData: 'Select History Data to Clear'
+        },
+        // Messages
+        msg: {
+            selectData: 'Please select data',
+            confirmDelete: 'Are you sure to delete?',
+            deleteSuccess: 'Deleted successfully!',
+            deleteFailed: 'Delete failed!',
+            editSuccess: 'Edited successfully!',
+            editFailed: 'Edit failed!',
+            clearSuccess: 'Cleared successfully!',
+            clearFailed: 'Clear failed!',
+            requiredNull: 'Required field cannot be empty!',
+            setSuccess: 'Set successfully!',
+            setFailed: 'Set failed!',
+            systemError: 'System error!'
+        }
+    },
+
+    // Instance Detail module
+    instanceDetail: {
+        // Tab labels
+        tab: {
+            memory: 'Memory',
+            jvm: 'JVM',
+            threadPool: 'Thread Pool',
+            arthas: 'Arthas'
+        },
+        // Common form
+        timeRange: 'Time Range(T)',
+        autoRefresh: 'Auto Refresh',
+        chart: 'Chart(C)',
+        config: 'Config',
+        switchOn: 'ON',
+        switchOff: 'OFF',
+        // Time options
+        timeOption: {
+            hour: '1 Hour',
+            day: '1 Day',
+            week: '1 Week',
+            month: '1 Month'
+        },
+        // Thread pool form
+        threadPoolName: 'Thread Pool Name',
+        // JVM collapse sections
+        jvmSection: {
+            classLoading: 'Class',
+            gc: 'GC',
+            thread: 'Thread',
+            vm: 'VM'
+        },
+        // Thread pool info labels
+        threadPool: {
+            name: 'Thread Pool Name<br>(name)',
+            corePoolSize: 'Core Pool Size<br>(corePoolSize)',
+            maximumPoolSize: 'Max Pool Size<br>(maximumPoolSize)',
+            largestPoolSize: 'Largest Pool Size<br>(largestPoolSize)',
+            poolSize: 'Pool Size<br>(poolSize)',
+            activeCount: 'Active Count<br>(activeCount)',
+            taskCount: 'Task Count<br>(taskCount)',
+            completedTaskCount: 'Completed Tasks<br>(completedTaskCount)',
+            queueType: 'Queue Type<br>(queueType)',
+            queueCapacity: 'Queue Capacity<br>(queueCapacity)',
+            queueRemainingCapacity: 'Queue Remaining<br>(queueRemainingCapacity)',
+            queueSize: 'Queue Size<br>(queueSize)',
+            rejectedTaskCount: 'Rejected Tasks<br>(rejectedTaskCount)',
+            rejectedExecutionHandler: 'Rejection Policy<br>(rejectedExecutionHandler)',
+            allowCoreThreadTimeOut: 'Core Thread Timeout<br>(allowCoreThreadTimeOut)',
+            keepAliveTime: 'Keep Alive Time<br>(keepAliveTime)',
+            utilizationRate: 'Utilization Rate<br>(utilizationRate)',
+            recycle: 'Recycle',
+            notRecycle: 'No Recycle',
+            seconds: 's'
+        },
+        // JVM detail labels
+        jvmDetail: {
+            activeThreadCount: 'Active Threads: ',
+            peakThreadCount: 'Peak Threads: ',
+            daemonThreadCount: 'Daemon Threads: ',
+            totalThreadCount: 'Total Threads: ',
+            threadDetail: 'Thread Details: ',
+            gcName: 'Name: ',
+            gcCount: 'Total GC Count: ',
+            gcTime: 'Total GC Time(ms): ',
+            totalLoadedClassCount: 'Total Loaded Classes: ',
+            loadedClassCount: 'Loaded Classes: ',
+            unloadedClassCount: 'Unloaded Classes: ',
+            verbose: 'Verbose Mode: ',
+            vmStartTime: 'VM Start Time: ',
+            vmUptime: 'VM Uptime(ms): ',
+            vmName: 'VM Name: ',
+            vmImplName: 'VM Impl Name: ',
+            vmImplVendor: 'VM Impl Vendor: ',
+            vmImplVersion: 'VM Impl Version: ',
+            vmSpecName: 'VM Spec Name: ',
+            vmSpecVendor: 'VM Spec Vendor: ',
+            vmSpecVersion: 'VM Spec Version: ',
+            managementSpecVersion: 'Management Spec Version: ',
+            vmArgs: 'VM Arguments: ',
+            classPath: 'Java Class Path: ',
+            libraryPath: 'Java Library Path: ',
+            bootClassPathSupported: 'Boot Class Path Supported: ',
+            bootClassPath: 'Boot Class Path: ',
+            yes: 'Yes',
+            no: 'No'
+        },
+        // Arthas
+        arthas: {
+            ip: 'IP',
+            port: 'Port',
+            connect: 'Connect',
+            disconnect: 'Disconnect',
+            connected: 'Connection established!',
+            errorIpEmpty: 'Connection error: IP cannot be empty!',
+            errorPortEmpty: 'Connection error: Port cannot be empty!',
+            errorConnect: 'Connection error!',
+            disconnectSuccess: 'Connection closed successfully!',
+            notConnected: 'Please connect first!'
+        },
+        // Chart text
+        chartText: {
+            used: 'Used',
+            committed: 'Committed',
+            count: 'Count',
+            noData: 'No data',
+            undefined: 'Undefined',
+            initMemory: 'Init Memory: ',
+            maxMemory: ', Max Memory: ',
+            memoryUsage: ' Memory Usage',
+            activeThreadCount: 'Active Thread Count',
+            queueSize: 'Current Queue Size',
+            completedTaskCount: 'Completed Task Count',
+            rejectedTaskCount: 'Rejected Task Count'
+        },
+        // Thread pool config dialog
+        configDialog: {
+            title: 'Java Thread Pool Config ({name})',
+            configSuccess: 'Configured successfully!',
+            configFailed: 'Configuration failed!',
+            systemError: 'System error!'
+        }
+    },
+
+    // Server Detail module
+    serverDetail: {
+        title: 'Server Detail (IP: {ip})',
+        chartTab: 'Charts',
+        summary: 'Summary',
+        timeRange: 'Time Range(T)',
+        autoRefresh: 'Auto Refresh',
+        switchOn: 'ON',
+        switchOff: 'OFF',
+        timeHour: '1 Hour',
+        timeDay: '1 Day',
+        timeWeek: '1 Week',
+        timeMonth: '1 Month',
+        diskTitle: 'Disk',
+        batteryTitle: 'Battery',
+        cpuTemperature: 'CPU Temp',
+        netcardAddress: 'NIC Address',
+        sectionOS: 'Operating System',
+        sectionCPU: 'CPU',
+        sectionGPU: 'GPU',
+        sectionNetwork: 'Network',
+        sectionBattery: 'Battery',
+        sectionSensor: 'Sensors',
+        sectionProcess: 'Processes (Top 20 by Memory)',
+        unknown: 'Unknown',
+        noData: 'No Data',
+        unit: '',
+        core: ' Cores',
+        charging: 'Charging',
+        discharging: 'Discharging',
+        tempHigh: 'Temp High',
+        tempNormal: 'Temp Normal',
+        tempLow: 'Temp Low',
+        os: {
+            ipAddress: 'IP Address',
+            serverName: 'Server Name',
+            timeZone: 'Time Zone',
+            osName: 'OS Name',
+            osArch: 'OS Architecture',
+            osVersion: 'OS Version',
+            userName: 'User',
+            userHome: 'User Home'
+        },
+        cpu: {
+            frequency: 'Frequency',
+            vendor: 'Vendor',
+            model: 'Model',
+            totalUsage: 'Total Usage',
+            idle: 'Idle',
+            userUsage: 'User Usage',
+            systemUsage: 'System Usage',
+            wait: 'Wait',
+            nice: 'Nice'
+        },
+        gpu: {
+            deviceId: 'Device ID',
+            name: 'Name',
+            vendor: 'Vendor',
+            versionInfo: 'Version Info',
+            vramTotal: 'VRAM Total'
+        },
+        netcard: {
+            name: 'NIC Name',
+            type: 'NIC Type',
+            address: 'NIC Address',
+            mask: 'Subnet Mask',
+            broadcast: 'Broadcast',
+            mac: 'MAC Address',
+            description: 'Description',
+            rxTotal: 'Total RX Data',
+            rxPackets: 'Total RX Packets',
+            rxErrors: 'RX Errors',
+            rxDropped: 'RX Dropped',
+            txTotal: 'Total TX Data',
+            txPackets: 'Total TX Packets',
+            txErrors: 'TX Errors',
+            txDropped: 'TX Dropped',
+            downloadSpeed: 'Download Speed(↓)',
+            uploadSpeed: 'Upload Speed(↑)'
+        },
+        process: {
+            pid: 'PID',
+            name: 'Process Name',
+            cpuUsage: 'CPU Usage',
+            memoryRss: 'Memory (RSS)',
+            state: 'State',
+            bitness: 'Bitness',
+            startTime: 'Start Time',
+            upTime: 'Up Time',
+            user: 'User',
+            ports: 'Ports',
+            commandLine: 'Command Line',
+            path: 'Path',
+            workingDir: 'Working Dir'
+        },
+        battery: {
+            name: 'Battery Name',
+            serialNumber: 'Serial Number',
+            type: 'Battery Type',
+            manufacturer: 'Manufacturer',
+            manufactureDate: 'Manufacture Date',
+            designCapacity: 'Design Capacity',
+            maxCapacity: 'Max Capacity',
+            currentCapacity: 'Current Capacity',
+            remainingPercent: 'Remaining Percent',
+            timeRemainingEstimated: 'Time Remaining (System)',
+            timeRemainingInstant: 'Time Remaining (Battery)',
+            voltage: 'Voltage',
+            amperage: 'Amperage',
+            powerUsageRate: 'Power Usage',
+            temperature: 'Temperature'
+        },
+        sensor: {
+            cpuTemperature: 'CPU Temp',
+            cpuVoltage: 'CPU Voltage',
+            fanSpeed: 'Fan Speed'
+        },
+        disk: {
+            devName: 'Device Name',
+            dirName: 'Mount Path',
+            type: 'Disk Type',
+            capacity: 'Capacity',
+            available: 'Available',
+            total: 'Total'
+        },
+        chart: {
+            memSwapTitle: 'Memory/Swap',
+            memSwapSubtitle: 'Physical Memory: {memTotal}, Usage: {memUsedPercent}, Swap: {swapTotal}, Swap Usage: {swapUsedPercent}',
+            processTitle: 'Processes',
+            processSubtitle: 'Max Processes: {max}, Min Processes: {min}',
+            cpuSubtitle: 'Total Usage: {current}, Max Usage: {max}, Min Usage: {min}',
+            netSpeedTitle: '{address}({name}) Upload/Download Speed',
+            netSpeedSubtitle: '↑ Upload: {upload}, ↓ Download: {download}',
+            loadAverageTitle: 'Load Average',
+            loadAverageSubtitle: '1min: {one}, 5min: {five}, 15min: {fifteen}',
+            cpuTempTitle: 'CPU Temp',
+            batteryGaugeName: 'Battery Level',
+            batteryGaugeDetail: 'Level',
+            yAxisUsage: 'Usage',
+            yAxisSpeed: 'Speed',
+            yAxisLoad: 'Load',
+            yAxisCount: 'Count'
+        },
+        series: {
+            memUsed: 'Memory Used',
+            swapUsed: 'Swap Used',
+            runningProcess: 'Running Processes',
+            idle: 'Idle',
+            totalUsage: 'Total Usage',
+            userUsage: 'User',
+            systemUsage: 'System',
+            wait: 'Wait',
+            nice: 'Nice',
+            downloadSpeed: 'Download',
+            uploadSpeed: 'Upload',
+            oneMin: '1min',
+            fiveMin: '5min',
+            fifteenMin: '15min',
+            avg: '(Avg)',
+            avgIdle: '(Idle Avg)',
+            avgTotal: '(Total Avg)',
+            ideal: '(Ideal)',
+            overload: '(Overload)',
+            critical: '(Critical)',
+            alarm: '(Alarm)'
         }
     }
 };

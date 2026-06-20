@@ -23,15 +23,15 @@
         // 内存池类型
         chartPool = data.value;
         // 发送ajax请求，获取内存图表数据
-        getJvmMemoryChartInfo(chartTime, chartPool, chartPool + '内存使用量');
+        getJvmMemoryChartInfo(chartTime, chartPool, chartPool + I18nUtils.t('instanceDetail.chartText.memoryUsage'));
     });
     // 时间条件发生改变
     form.on('select(jvmMemoryTime)', function (data) {
         chartTime = data.value;
         // 发送ajax请求，获取内存图表数据
-        getJvmMemoryChartInfo(chartTime, 'Heap', 'Heap内存使用量');
-        getJvmMemoryChartInfo(chartTime, 'Non_Heap', 'Non_Heap内存使用量');
-        getJvmMemoryChartInfo(chartTime, chartPool, chartPool + '内存使用量');
+        getJvmMemoryChartInfo(chartTime, 'Heap', 'Heap' + I18nUtils.t('instanceDetail.chartText.memoryUsage'));
+        getJvmMemoryChartInfo(chartTime, 'Non_Heap', 'Non_Heap' + I18nUtils.t('instanceDetail.chartText.memoryUsage'));
+        getJvmMemoryChartInfo(chartTime, chartPool, chartPool + I18nUtils.t('instanceDetail.chartText.memoryUsage'));
     });
     // 自动刷新条件改变
     form.on('switch(autoRefreshJvmMemory)', function (data) {
@@ -73,16 +73,16 @@
                     return item.committed;
                 });
                 // 初始内存值
-                var init = '无数据';
+                var init = I18nUtils.t('instanceDetail.chartText.noData');
                 // 最大内存量
-                var max = '无数据';
+                var max = I18nUtils.t('instanceDetail.chartText.noData');
                 if (data.length !== 0) {
-                    if (data[data.length - 1].init !== '未定义') {
+                    if (data[data.length - 1].init !== I18nUtils.t('instanceDetail.chartText.undefined')) {
                         init = data[data.length - 1].init + ' MB';
                     } else {
                         init = data[data.length - 1].init;
                     }
-                    if (data[data.length - 1].max !== '未定义') {
+                    if (data[data.length - 1].max !== I18nUtils.t('instanceDetail.chartText.undefined')) {
                         max = data[data.length - 1].max + ' MB';
                     } else {
                         max = data[data.length - 1].max;
@@ -96,7 +96,7 @@
                             color: '#696969',
                             fontSize: 14
                         },
-                        subtext: '初始内存：' + init + '，最大内存：' + max,
+                        subtext: I18nUtils.t('instanceDetail.chartText.initMemory') + init + I18nUtils.t('instanceDetail.chartText.maxMemory') + max,
                         subtextStyle: {
                             color: '#BEBEBE'
                         }
@@ -115,7 +115,7 @@
                         }
                     },
                     legend: {
-                        data: ['使用量', '提交量'],
+                        data: [I18nUtils.t('instanceDetail.chartText.used'), I18nUtils.t('instanceDetail.chartText.committed')],
                         orient: 'vertical',
                         x: '80%' //图例位置，设置right发现图例和文字位置反了，设置一个数值就好了
                     },
@@ -158,13 +158,13 @@
                     },
                     yAxis: {
                         type: 'value',
-                        name: '使用量',
+                        name: I18nUtils.t('instanceDetail.chartText.used'),
                         axisLabel: {
                             formatter: '{value} MB'
                         }
                     }, // 数据
                     series: [{
-                        name: '使用量',
+                        name: I18nUtils.t('instanceDetail.chartText.used'),
                         data: used,
                         type: 'line',
                         smooth: true,
@@ -191,7 +191,7 @@
                             }
                         }
                     }, {
-                        name: '提交量',
+                        name: I18nUtils.t('instanceDetail.chartText.committed'),
                         data: committed,
                         type: 'line',
                         smooth: true,
@@ -240,9 +240,9 @@
     function execute() {
         if (autoRefresh) {
             // 发送ajax请求，获取内存图表数据
-            getJvmMemoryChartInfo(chartTime, 'Heap', 'Heap内存使用量');
-            getJvmMemoryChartInfo(chartTime, 'Non_Heap', 'Non_Heap内存使用量');
-            getJvmMemoryChartInfo(chartTime, chartPool, chartPool + '内存使用量');
+            getJvmMemoryChartInfo(chartTime, 'Heap', 'Heap' + I18nUtils.t('instanceDetail.chartText.memoryUsage'));
+            getJvmMemoryChartInfo(chartTime, 'Non_Heap', 'Non_Heap' + I18nUtils.t('instanceDetail.chartText.memoryUsage'));
+            getJvmMemoryChartInfo(chartTime, chartPool, chartPool + I18nUtils.t('instanceDetail.chartText.memoryUsage'));
         }
     }
 

@@ -3,6 +3,19 @@
     background-color: #f1f1f1;
 }
 
+/* 搜索表单：label 和 input 垂直居中对齐（英文下 label 换行时 input 不错位） */
+.layuiadmin-card-header-auto .layui-inline {
+    display: inline-flex;
+    align-items: center;
+}
+.layuiadmin-card-header-auto .layui-form-label {
+    float: none;
+    flex-shrink: 0;
+}
+.layuiadmin-card-header-auto .layui-input-block {
+    margin-left: 0;
+}
+
 /* 自定义滚动条滑块样式 */
 ::-webkit-scrollbar-thumb {
     background-color: #c1c1c1;

@@ -161,6 +161,21 @@
 <script th:src="@{/js/common.js}" charset="utf-8"></script>
 <script th:src="@{/layui/layui.js}"></script>
 <script charset="utf-8" th:inline="javascript">
+    // 格式化速率（bps -> Kbps/Mbps/Gbps）
+    function formatSpeed(speed) {
+        if (speed === null || speed === undefined || speed === '') {
+            return '-';
+        }
+        if (speed >= 1000000000) {
+            return (speed / 1000000000).toFixed(2) + ' Gbps';
+        } else if (speed >= 1000000) {
+            return (speed / 1000000).toFixed(2) + ' Mbps';
+        } else if (speed >= 1000) {
+            return (speed / 1000).toFixed(2) + ' Kbps';
+        } else {
+            return speed + ' bps';
+        }
+    }
     layui.config({
         base: ctxPath //静态资源所在路径
     }).extend({
@@ -215,6 +230,32 @@
                 title: '离线次数',
                 minWidth: 110,
                 sort: !0
+            }, {
+                field: 'ifNumber',
+                title: '总端口数',
+                minWidth: 110,
+                sort: !0
+            }, {
+                field: 'ifUsedCount',
+                title: '占用端口数',
+                minWidth: 110,
+                sort: !0
+            }, {
+                field: 'totalInSpeed',
+                title: '总接收速率',
+                minWidth: 130,
+                sort: !0,
+                templet: function (d) {
+                    return formatSpeed(d.totalInSpeed);
+                }
+            }, {
+                field: 'totalOutSpeed',
+                title: '总发送速率',
+                minWidth: 130,
+                sort: !0,
+                templet: function (d) {
+                    return formatSpeed(d.totalOutSpeed);
+                }
             }, {
                 field: 'insertType',
                 title: '添加方式',

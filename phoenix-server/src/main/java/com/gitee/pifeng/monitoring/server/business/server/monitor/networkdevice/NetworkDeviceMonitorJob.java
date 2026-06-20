@@ -24,13 +24,13 @@ import com.gitee.pifeng.monitoring.common.util.snmp.v2c.NetworkDeviceUtils;
 import com.gitee.pifeng.monitoring.server.business.server.core.MonitoringConfigPropertiesLoader;
 import com.gitee.pifeng.monitoring.server.business.server.core.ServerPackageConstructor;
 import com.gitee.pifeng.monitoring.server.business.server.entity.MonitorNetworkDevice;
+import com.gitee.pifeng.monitoring.server.business.server.monitor.enums.MonitorEventTitleEnum;
 import com.gitee.pifeng.monitoring.server.business.server.service.IAlarmService;
 import com.gitee.pifeng.monitoring.server.business.server.service.INetworkDeviceIfService;
 import com.gitee.pifeng.monitoring.server.business.server.service.INetworkDeviceService;
 import com.gitee.pifeng.monitoring.server.business.server.service.INetworkDeviceSysService;
 import com.gitee.pifeng.monitoring.server.constant.ComponentOrderConstants;
 import com.gitee.pifeng.monitoring.server.inf.INetworkDeviceListener;
-import com.gitee.pifeng.monitoring.server.business.server.monitor.enums.MonitorEventTitleEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -298,6 +298,8 @@ public class NetworkDeviceMonitorJob extends QuartzJobBean implements CommandLin
             this.networkDeviceSysService.operateNetworkDeviceSys(ip, sysDomain);
             // 把网络设备接口信息添加或更新到数据库
             this.networkDeviceIfService.operateNetworkDeviceIf(ip, ifDomain);
+            // 从IfDomain中计算端口汇总信息
+            setIfSummary(monitorNetworkDevice, ifDomain);
         }
         // 更新网络设备状态
         monitorNetworkDevice.setIsOnline(ZeroOrOneConstants.ONE);
@@ -422,6 +424,49 @@ public class NetworkDeviceMonitorJob extends QuartzJobBean implements CommandLin
                 .build();
         AlarmPackage alarmPackage = this.serverPackageConstructor.structureAlarmPackage(alarm);
         this.alarmService.dealAlarmPackage(alarmPackage);
+    }
+
+    /**
+     * <p>
+     * 从IfDomain中计算端口汇总信息，设置到MonitorNetworkDevice上
+     * </p>
+     *
+     * @param monitorNetworkDevice 网络设备
+     * @param ifDomain            网络接口信息
+     * @author 皮锋
+     * @custom.date 2025/06/18
+     */
+    private void setIfSummary(MonitorNetworkDevice monitorNetworkDevice, IfDomain ifDomain) {
+        if (ifDomain == null) {
+            return;
+        }
+        // 总端口数
+        monitorNetworkDevice.setIfNumber(ifDomain.getIfNumber());
+        List<IfDomain.IfInfoDomain> ifList = ifDomain.getIfList();
+        if (CollectionUtils.isEmpty(ifList)) {
+            monitorNetworkDevice.setIfUsedCount(0);
+            monitorNetworkDevice.setTotalInSpeed(0L);
+            monitorNetworkDevice.setTotalOutSpeed(0L);
+            return;
+        }
+        // 统计占用端口数（ifOperStatus 包含 "up"）
+        int usedCount = 0;
+        long totalInSpeed = 0L;
+        long totalOutSpeed = 0L;
+        for (IfDomain.IfInfoDomain ifInfo : ifList) {
+            if (StringUtils.containsIgnoreCase(ifInfo.getIfOperStatus(), "up")) {
+                usedCount++;
+            }
+            if (ifInfo.getIfInRealTimeSpeed() != null) {
+                totalInSpeed += ifInfo.getIfInRealTimeSpeed();
+            }
+            if (ifInfo.getIfOutRealTimeSpeed() != null) {
+                totalOutSpeed += ifInfo.getIfOutRealTimeSpeed();
+            }
+        }
+        monitorNetworkDevice.setIfUsedCount(usedCount);
+        monitorNetworkDevice.setTotalInSpeed(totalInSpeed);
+        monitorNetworkDevice.setTotalOutSpeed(totalOutSpeed);
     }
 
 }

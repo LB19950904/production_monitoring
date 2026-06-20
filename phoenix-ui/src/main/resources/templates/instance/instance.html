@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="utf-8">
-    <title>应用程序</title>
+    <title th:text="#{menu.instance}">应用程序</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport"
@@ -11,6 +11,11 @@
     <link rel="stylesheet" href="./layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
     <link rel="stylesheet" href="./style/admin.css" th:href="@{/style/admin.css}" media="all">
     <link rel="stylesheet" href="./style/myself.css" th:href="@{/style/myself.css}" media="all">
+    <!-- 引入国际化工具 -->
+    <script th:src="@{/js/i18n/i18n-config.js}"></script>
+    <script th:src="@{/js/i18n/i18n-utils.js}"></script>
+    <script th:src="@{/js/i18n/messages/zh_CN.js}"></script>
+    <script th:src="@{/js/i18n/messages/en_US.js}"></script>
     <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
     <!--[if lt IE 9]>
     <script src="./js/html5.min.js" th:src="@{/js/html5.min.js}"></script>
@@ -27,100 +32,100 @@
         <div class="layui-form layui-card-header layuiadmin-card-header-auto">
             <form class="layui-form-item" onsubmit="return false;">
                 <div class="layui-inline">
-                    <label class="layui-form-label" for="instanceName">应用名称</label>
+                    <label class="layui-form-label" for="instanceName" th:text="#{instance.instanceName}">应用名称</label>
                     <div class="layui-input-block">
-                        <input type="text" id="instanceName" name="instanceName" placeholder="请输入" autocomplete="off"
+                        <input type="text" id="instanceName" name="instanceName" th:placeholder="#{server.placeholder.search}" autocomplete="off"
                                class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label" for="endpoint">端点</label>
+                    <label class="layui-form-label" for="endpoint" th:text="#{instance.endpoint}">端点</label>
                     <div class="layui-input-block" style="width: 182px;">
                         <select id="endpoint" name="endpoint">
-                            <option value="">所有</option>
-                            <option value="client">客户端</option>
-                            <option value="agent">代理端</option>
-                            <option value="server">服务端</option>
-                            <option value="ui">UI端</option>
+                            <option value="" th:text="#{server.all}">所有</option>
+                            <option value="client" th:text="#{instance.endpoint.client}">客户端</option>
+                            <option value="agent" th:text="#{instance.endpoint.agent}">代理端</option>
+                            <option value="server" th:text="#{instance.endpoint.server}">服务端</option>
+                            <option value="ui" th:text="#{instance.endpoint.ui}">UI端</option>
                         </select>
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label" for="ip">IP</label>
+                    <label class="layui-form-label" for="ip" th:text="#{server.ip}">IP</label>
                     <div class="layui-input-block">
-                        <input type="text" id="ip" name="ip" placeholder="请输入" autocomplete="off"
+                        <input type="text" id="ip" name="ip" th:placeholder="#{server.placeholder.search}" autocomplete="off"
                                class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label" for="isOnline">应用状态</label>
+                    <label class="layui-form-label" for="isOnline" th:text="#{instance.appStatus}">应用状态</label>
                     <div class="layui-input-block" style="width: 182px;">
                         <select id="isOnline" name="isOnline">
-                            <option value="">所有</option>
-                            <option value="1">在线</option>
-                            <option value="0">离线</option>
-                            <option value="-1">未知</option>
+                            <option value="" th:text="#{server.all}">所有</option>
+                            <option value="1" th:text="#{server.online}">在线</option>
+                            <option value="0" th:text="#{server.offline}">离线</option>
+                            <option value="-1" th:text="#{server.unknown}">未知</option>
                         </select>
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label" for="appServerType">应用服务器</label>
+                    <label class="layui-form-label" for="appServerType" th:text="#{instance.appServerType}">应用服务器</label>
                     <div class="layui-input-block">
-                        <input type="text" id="appServerType" name="appServerType" placeholder="请输入"
+                        <input type="text" id="appServerType" name="appServerType" th:placeholder="#{server.placeholder.search}"
                                autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label" for="language">程序语言</label>
+                    <label class="layui-form-label" for="language" th:text="#{instance.language}">程序语言</label>
                     <div class="layui-input-block">
-                        <input type="text" id="language" name="language" placeholder="请输入"
+                        <input type="text" id="language" name="language" th:placeholder="#{server.placeholder.search}"
                                autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label" for="monitorEnv">环境</label>
+                    <label class="layui-form-label" for="monitorEnv" th:text="#{env.name}">环境</label>
                     <div class="layui-input-block" style="width: 182px;">
                         <select id="monitorEnv" name="monitorEnv">
-                            <option value="">所有</option>
+                            <option value="" th:text="#{server.all}">所有</option>
                             <option th:each="monitorEnv:${monitorEnvs}" th:value="${monitorEnv}"
                                     th:text="${monitorEnv}"></option>
                         </select>
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label" for="monitorGroup">分组</label>
+                    <label class="layui-form-label" for="monitorGroup" th:text="#{group.name}">分组</label>
                     <div class="layui-input-block" style="width: 182px;">
                         <select id="monitorGroup" name="monitorGroup">
-                            <option value="">所有</option>
+                            <option value="" th:text="#{server.all}">所有</option>
                             <option th:each="monitorGroup:${monitorGroups}" th:value="${monitorGroup}"
                                     th:text="${monitorGroup}"></option>
                         </select>
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label" for="instanceDesc">描述</label>
+                    <label class="layui-form-label" for="instanceDesc" th:text="#{server.description}">描述</label>
                     <div class="layui-input-block">
-                        <input type="text" id="instanceDesc" name="instanceDesc" placeholder="请输入" autocomplete="off"
+                        <input type="text" id="instanceDesc" name="instanceDesc" th:placeholder="#{server.placeholder.search}" autocomplete="off"
                                class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label" for="isEnableMonitor">是否监控</label>
+                    <label class="layui-form-label" for="isEnableMonitor" th:text="#{database.isEnableMonitor}">是否监控</label>
                     <div class="layui-input-block" style="width: 182px;">
                         <select id="isEnableMonitor" name="isEnableMonitor">
-                            <option value="">所有</option>
-                            <option value="1">是</option>
-                            <option value="0">否</option>
+                            <option value="" th:text="#{server.all}">所有</option>
+                            <option value="1" th:text="#{server.yes}">是</option>
+                            <option value="0" th:text="#{server.no}">否</option>
                         </select>
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label" for="isEnableAlarm">是否告警</label>
+                    <label class="layui-form-label" for="isEnableAlarm" th:text="#{database.isEnableAlarm}">是否告警</label>
                     <div class="layui-input-block" style="width: 182px;">
                         <select id="isEnableAlarm" name="isEnableAlarm">
-                            <option value="">所有</option>
-                            <option value="1">是</option>
-                            <option value="0">否</option>
+                            <option value="" th:text="#{server.all}">所有</option>
+                            <option value="1" th:text="#{server.yes}">是</option>
+                            <option value="0" th:text="#{server.no}">否</option>
                         </select>
                     </div>
                 </div>
@@ -128,7 +133,7 @@
                     <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="list-table-search">
                         <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                     </button>
-                    <button id="reset" type="reset" class="layui-btn" lay-filter="list-table-reset" lay-submit>清空
+                    <button id="reset" type="reset" class="layui-btn" lay-filter="list-table-reset" lay-submit th:text="#{btn.reset}">清空
                     </button>
                 </div>
             </form>
@@ -152,7 +157,7 @@
             <script type="text/html" id="list-table-toolbar">
                 <div class="layui-btn-container" sec:authorize="hasAuthority('超级管理员')">
                     <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchdel">
-                        <i class="layui-icon layui-icon-delete"></i>删除
+                        <i class="layui-icon layui-icon-delete"></i><span th:text="#{btn.delete}">删除</span>
                     </button>
                 </div>
             </script>
@@ -160,11 +165,11 @@
                 <div class="layui-btn-group">
                     {{# if(d.isEnableArthas || d.isCollectVmMetrics || d.isCollectThreadPoolMetrics) { }}
                     <a class="layui-btn layui-btn-sm layui-btn-xs" lay-event="info">
-                        <i class="layui-icon layui-icon-about"></i>详情</a>
+                        <i class="layui-icon layui-icon-about"></i><span th:text="#{btn.detail}">详情</span></a>
                     {{# } }}
                     <a class="layui-btn layui-btn-normal layui-btn-xs"
                        lay-event="more" sec:authorize="hasAuthority('超级管理员')">
-                        <i class="layui-icon layui-icon-down"></i>更多
+                        <i class="layui-icon layui-icon-down"></i><span th:text="#{btn.more}">更多</span>
                     </a>
                 </div>
             </script>
@@ -181,6 +186,8 @@
     }).use(['index', 'admin', 'form', 'table', 'dropdown', 'layer'], function () {
         var $ = layui.$, admin = layui.admin, form = layui.form, layer = layui.layer,
             table = layui.table, dropdown = layui.dropdown, device = layui.device();
+        // 初始化表格工具栏导出下拉菜单国际化
+        I18nUtils.initTableExportDropdownI18n();
         // 列定义
         const allColumns = [
             [{
@@ -195,85 +202,85 @@
                 hide: true
             }, {
                 field: 'instanceId',
-                title: '应用ID',
+                title: I18nUtils.t('instance.instanceId'),
                 width: 180,
                 sort: !0
             }, {
                 field: 'instanceName',
-                title: '应用名称',
+                title: I18nUtils.t('instance.instanceName'),
                 minWidth: 200,
                 sort: !0
             }, {
                 field: 'endpoint',
-                title: '端点',
+                title: I18nUtils.t('instance.endpoint'),
                 minWidth: 100,
                 sort: !0
             }, {
                 field: 'ip',
-                title: 'IP',
+                title: I18nUtils.t('instance.ip'),
                 minWidth: 150,
                 sort: !0
             }, {
                 field: 'isOnline',
-                title: '应用状态',
+                title: I18nUtils.t('instance.status'),
                 minWidth: 120,
                 sort: !0
             }, {
                 field: 'offlineCount',
-                title: '离线次数',
+                title: I18nUtils.t('instance.offlineCount'),
                 minWidth: 110,
                 sort: !0
             }, {
                 field: 'appServerType',
-                title: '应用服务器',
+                title: I18nUtils.t('instance.appServerType'),
                 minWidth: 120,
                 sort: !0
             }, {
                 field: 'language',
-                title: '程序语言',
+                title: I18nUtils.t('instance.language'),
                 minWidth: 120,
                 sort: !0
             }, {
                 field: 'finalHeartbeat',
-                title: '最后心跳',
+                title: I18nUtils.t('instance.finalHeartbeat'),
                 minWidth: 170,
                 sort: !0
             }, {
                 field: 'monitorEnv',
-                title: '环境',
+                title: I18nUtils.t('instance.monitorEnv'),
                 minWidth: 120,
                 sort: !0
             }, {
                 field: 'monitorGroup',
-                title: '分组',
+                title: I18nUtils.t('instance.monitorGroup'),
                 minWidth: 120,
                 sort: !0
             }, {
                 field: 'instanceDesc',
-                title: '描述',
+                title: I18nUtils.t('instance.description'),
                 minWidth: 250,
                 sort: !0
             }, {
                 field: 'insertTime',
-                title: '新增时间',
+                title: I18nUtils.t('instance.insertTime'),
                 minWidth: 170,
                 sort: !0
             }, {
                 field: 'isEnableMonitor',
-                title: '是否监控',
+                title: I18nUtils.t('instance.isEnableMonitor'),
                 width: 90,
                 templet: '#isEnableMonitorTpl',
                 unresize: true,
                 permission: authority
             }, {
                 field: 'isEnableAlarm',
-                title: '是否告警',
+                title: I18nUtils.t('instance.isEnableAlarm'),
                 width: 90,
                 templet: '#isEnableAlarmTpl',
                 unresize: true,
                 permission: authority
             }, {
-                title: '操作',
+                title: I18nUtils.t('instance.actions'),
                 width: authority ? 140 : 100,
                 align: 'center',
                 fixed: (device.ios || device.android) ? false : 'right',
@@ -283,6 +290,7 @@
         table.render({
             elem: '#list-table',
             url: ctxPath + 'monitor-instance/get-monitor-instance-list',
+            defaultToolbar: I18nUtils.getDefaultToolbar(),
             toolbar: '#list-table-toolbar',
             request: {
                 pageName: 'current',//页码的参数名称，默认：page
@@ -304,29 +312,31 @@
                 };
             },
             done: function () {
+                // 翻译分页组件
+                I18nUtils.translateLaypage();
                 $('[data-field="isOnline"]').children().each(function () {
                     if ($(this).text() === '0') {
-                        $(this).html('<span style="color: #FF4500;font-weight: bold;">离线</span>');
+                        $(this).html('<span style="color: #FF4500;font-weight: bold;">' + I18nUtils.t('instance.statusOptions.offline') + '</span>');
                     }
                     if ($(this).text() === '1') {
-                        $(this).text('在线');
+                        $(this).text(I18nUtils.t('instance.statusOptions.online'));
                     }
                     if ($(this).text() === null || $(this).text() === '' || $(this).text() === undefined) {
-                        $(this).text('未知');
+                        $(this).text(I18nUtils.t('instance.statusOptions.unknown'));
                     }
                 });
                 $('[data-field="endpoint"]').children().each(function () {
                     if ($(this).text() === 'client') {
-                        $(this).text('客户端');
+                        $(this).text(I18nUtils.t('instance.endpointOptions.client'));
                     }
                     if ($(this).text() === 'agent') {
-                        $(this).text('代理端');
+                        $(this).text(I18nUtils.t('instance.endpointOptions.agent'));
                     }
                     if ($(this).text() === 'server') {
-                        $(this).text('服务端');
+                        $(this).text(I18nUtils.t('instance.endpointOptions.server'));
                     }
                     if ($(this).text() === 'ui') {
-                        $(this).text('UI端');
+                        $(this).text(I18nUtils.t('instance.endpointOptions.ui'));
                     }
                 });
             },
@@ -367,9 +377,9 @@
                 case 'batchdel':
                     var checkStatus = table.checkStatus('list-table'), checkData = checkStatus.data; //得到选中的数据
                     if (checkData.length === 0) {
-                        return layer.msg('请选择数据');
+                        return layer.msg(I18nUtils.t('instance.msg.selectData'));
                     }
-                    layer.confirm('确定删除吗？', function (index) {
+                    layer.confirm(I18nUtils.t('instance.msg.confirmDelete'), function (index) {
                         var loading = layer.load(1, {
                             shade: [0.1, '#fff'] //0.1透明度的白色背景
                         });
@@ -386,14 +396,14 @@
                                 var data = result.data;
                                 if (data === webConst.SUCCESS) {
                                     table.reload('list-table'); //数据刷新
-                                    layer.msg('删除成功！', {icon: 6});
+                                    layer.msg(I18nUtils.t('instance.msg.deleteSuccess'), {icon: 6});
                                 } else {
-                                    layer.msg('删除失败！', {icon: 5, shift: 6});
+                                    layer.msg(I18nUtils.t('instance.msg.deleteFailed'), {icon: 5, shift: 6});
                                 }
                                 layer.close(loading);
                             },
                             error: function () {
-                                layer.msg('系统错误！', {icon: 5, shift: 6});
+                                layer.msg(I18nUtils.t('instance.msg.systemError'), {icon: 5, shift: 6});
                                 layer.close(loading);
                             },
                             complete: function () {
@@ -427,7 +437,7 @@
                 }
                 var infoLayerIndex = layer.open({
                     type: 2,
-                    title: '应用详情(' + data.instanceId + ')',
+                    title: I18nUtils.t('instance.dialog.detail', {instanceId: data.instanceId}),
                     content: ctxPath + 'monitor-instance/instance-detail?id=' + data.id + '&instanceId=' + data.instanceId,
                     maxmin: true,
                     shade: 0,
@@ -451,13 +461,13 @@
                     align: 'right',  //右对齐弹出（v2.6.8 新增）
                     style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);', //设置额外样式
                     data: [{
-                        title: '编辑',
+                        title: I18nUtils.t('instance.menu.edit'),
                         id: 'edit'
                     }, {
-                        title: '删除',
+                        title: I18nUtils.t('instance.menu.delete'),
                         id: 'del'
                     }, {
-                        title: '清理',
+                        title: I18nUtils.t('instance.menu.clear'),
                         id: 'clear'
                     }],
                     click: function (object) {
@@ -480,11 +490,11 @@
                             }
                             var infoLayerEditIndex = layer.open({
                                 type: 2,
-                                title: '编辑应用实例描述',
+                                title: I18nUtils.t('instance.dialog.editDesc'),
                                 content: ctxPath + 'monitor-instance/edit-monitor-instance-form?instanceId=' + data.instanceId,
                                 maxmin: true,
                                 area: [width, height],
-                                btn: ['确定', '取消'],
+                                btn: [I18nUtils.t('common.confirm'), I18nUtils.t('common.cancel')],
                                 yes: function (index, layero) {
                                     var iframeWindow = window['layui-layer-iframe' + index],
                                         submitID = 'LAY-front-submit',
@@ -508,14 +518,14 @@
                                                 if (data === webConst.SUCCESS) {
                                                     table.reload('list-table'); //数据刷新
                                                     layer.close(index); //关闭弹层
-                                                    layer.msg('编辑成功！', {icon: 6});
+                                                    layer.msg(I18nUtils.t('instance.msg.editSuccess'), {icon: 6});
                                                 } else {
-                                                    layer.msg('编辑失败！', {icon: 5, shift: 6});
+                                                    layer.msg(I18nUtils.t('instance.msg.editFailed'), {icon: 5, shift: 6});
                                                 }
                                                 layer.close(loading);
                                             },
                                             error: function () {
-                                                layer.msg('系统错误！', {icon: 5, shift: 6});
+                                                layer.msg(I18nUtils.t('instance.msg.systemError'), {icon: 5, shift: 6});
                                                 layer.close(loading);
                                             }
                                         });
@@ -528,7 +538,7 @@
                             }
                         }
                         if (object.id === 'del') {
-                            layer.confirm('确定删除吗？', function (index) {
+                            layer.confirm(I18nUtils.t('instance.msg.confirmDelete'), function (index) {
                                 var loading = layer.load(1, {
                                     shade: [0.1, '#fff'] //0.1透明度的白色背景
                                 });
@@ -546,14 +556,14 @@
                                         if (data === webConst.SUCCESS) {
                                             obj.del();
                                             table.reload('list-table'); //数据刷新
-                                            layer.msg('删除成功！', {icon: 6});
+                                            layer.msg(I18nUtils.t('instance.msg.deleteSuccess'), {icon: 6});
                                         } else {
-                                            layer.msg('删除失败！', {icon: 5, shift: 6});
+                                            layer.msg(I18nUtils.t('instance.msg.deleteFailed'), {icon: 5, shift: 6});
                                         }
                                         layer.close(loading);
                                     },
                                     error: function () {
-                                        layer.msg('系统错误！', {icon: 5, shift: 6});
+                                        layer.msg(I18nUtils.t('instance.msg.systemError'), {icon: 5, shift: 6});
                                         layer.close(loading);
                                     },
                                     complete: function () {
@@ -581,11 +591,11 @@
                             }
                             var infoLayerClearIndex = layer.open({
                                 type: 2,
-                                title: '请选择要清理的历史数据',
+                                title: I18nUtils.t('instance.dialog.clearData'),
                                 content: ctxPath + 'monitor-instance/instance-clear?instanceId=' + data.instanceId,
                                 maxmin: true,
                                 area: [width, height],
-                                btn: ['确定', '取消'],
+                                btn: [I18nUtils.t('common.confirm'), I18nUtils.t('common.cancel')],
                                 yes: function (index, layero) {
                                     var iframeWindow = window['layui-layer-iframe' + index],
                                         submitID = 'LAY-front-submit',
@@ -608,16 +618,16 @@
                                                 var data = result.data;
                                                 if (data === webConst.SUCCESS) {
                                                     layer.close(index); //关闭弹层
-                                                    layer.msg('清理成功！', {icon: 6});
+                                                    layer.msg(I18nUtils.t('instance.msg.clearSuccess'), {icon: 6});
                                                 } else if (data === webConst.REQUIRED_IS_NULL) {
-                                                    layer.msg('必选项不能为空！', {icon: 5, shift: 6});
+                                                    layer.msg(I18nUtils.t('instance.msg.requiredNull'), {icon: 5, shift: 6});
                                                 } else {
-                                                    layer.msg('清理失败！', {icon: 5, shift: 6});
+                                                    layer.msg(I18nUtils.t('instance.msg.clearFailed'), {icon: 5, shift: 6});
                                                 }
                                                 layer.close(loading);
                                             },
                                             error: function () {
-                                                layer.msg('系统错误！', {icon: 5, shift: 6});
+                                                layer.msg(I18nUtils.t('instance.msg.systemError'), {icon: 5, shift: 6});
                                                 layer.close(loading);
                                             },
                                             complete: function () {
@@ -657,13 +667,13 @@
                     var data = result.data;
                     if (data === webConst.SUCCESS) {
                         // table.reload('list-table'); //数据刷新
-                        layer.msg('设置成功！', {icon: 6});
+                        layer.msg(I18nUtils.t('instance.msg.setSuccess'), {icon: 6});
                     } else {
-                        layer.msg('设置失败！', {icon: 5, shift: 6});
+                        layer.msg(I18nUtils.t('instance.msg.setFailed'), {icon: 5, shift: 6});
                     }
                 },
                 error: function () {
-                    layer.msg('系统错误！', {icon: 5, shift: 6});
+                    layer.msg(I18nUtils.t('instance.msg.systemError'), {icon: 5, shift: 6});
                 }
             });
         });
@@ -688,13 +698,13 @@
                     var data = result.data;
                     if (data === webConst.SUCCESS) {
                         // table.reload('list-table'); //数据刷新
-                        layer.msg('设置成功！', {icon: 6});
+                        layer.msg(I18nUtils.t('instance.msg.setSuccess'), {icon: 6});
                     } else {
-                        layer.msg('设置失败！', {icon: 5, shift: 6});
+                        layer.msg(I18nUtils.t('instance.msg.setFailed'), {icon: 5, shift: 6});
                     }
                 },
                 error: function () {
-                    layer.msg('系统错误！', {icon: 5, shift: 6});
+                    layer.msg(I18nUtils.t('instance.msg.systemError'), {icon: 5, shift: 6});
                 }
             });
         });

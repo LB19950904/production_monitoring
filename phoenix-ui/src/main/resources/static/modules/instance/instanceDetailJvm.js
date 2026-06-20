@@ -29,19 +29,19 @@
                     // 所有线程信息
                     var threadInfoList = data.threadInfoList;
                     var html = '<div class="layui-col-md3">' +
-                        '           <label class="label-font-weight">活动线程数：</label>' + threadCount +
+                        '           <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.activeThreadCount') + '</label>' + threadCount +
                         '       </div>' +
                         '       <div class="layui-col-md3">' +
-                        '           <label class="label-font-weight">线程峰值：</label>' + peakThreadCount +
+                        '           <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.peakThreadCount') + '</label>' + peakThreadCount +
                         '       </div>' +
                         '       <div class="layui-col-md3">' +
-                        '           <label class="label-font-weight">守护线程数：</label>' + daemonThreadCount +
+                        '           <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.daemonThreadCount') + '</label>' + daemonThreadCount +
                         '       </div>' +
                         '       <div class="layui-col-md3">' +
-                        '           <label class="label-font-weight">线程总数：</label>' + totalStartedThreadCount +
+                        '           <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.totalThreadCount') + '</label>' + totalStartedThreadCount +
                         '       </div>';
                     if (Array.isArray(threadInfoList)) {
-                        html += '<div class="layui-col-md12"><label class="label-font-weight">线程详情：</label>';
+                        html += '<div class="layui-col-md12"><label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.threadDetail') + '</label>';
                         for (let threadInfo of threadInfoList) {
                             html += '<br>' + threadInfo;
                         }
@@ -77,13 +77,13 @@
                         // GC总时间（毫秒）
                         var collectionTime = isEmpty(obj.collectionTime) ? webConstCn.NOT_OBTAINED_CN : obj.collectionTime;
                         html += '<div class="layui-col-md4">' +
-                            '        <label class="label-font-weight">名称：</label>' + garbageCollectorName +
+                            '        <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.gcName') + '</label>' + garbageCollectorName +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '        <label class="label-font-weight">GC总次数：</label>' + collectionCount +
+                            '        <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.gcCount') + '</label>' + collectionCount +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '        <label class="label-font-weight">GC总时间(毫秒)：</label>' + collectionTime +
+                            '        <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.gcTime') + '</label>' + collectionTime +
                             '    </div>';
                     }
                     $('#gc').empty().append(html);
@@ -113,18 +113,18 @@
                     // 卸载的类总数
                     var unloadedClassCount = isEmpty(data.unloadedClassCount) ? webConstCn.NOT_OBTAINED_CN : data.unloadedClassCount;
                     // 是否启用了类加载系统的详细输出
-                    var isVerbose = isEmpty(data.isVerbose) ? webConstCn.NOT_OBTAINED_CN : (data.isVerbose === '0' ? '否' : '是');
+                    var isVerbose = isEmpty(data.isVerbose) ? webConstCn.NOT_OBTAINED_CN : (data.isVerbose === '0' ? I18nUtils.t('instanceDetail.jvmDetail.no') : I18nUtils.t('instanceDetail.jvmDetail.yes'));
                     var html = '<div class="layui-col-md3">' +
-                        '           <label class="label-font-weight">累计加载类数量：</label>' + totalLoadedClassCount +
+                        '           <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.totalLoadedClassCount') + '</label>' + totalLoadedClassCount +
                         '       </div>' +
                         '       <div class="layui-col-md3">' +
-                        '          <label class="label-font-weight">已加载类数量：</label>' + loadedClassCount +
+                        '          <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.loadedClassCount') + '</label>' + loadedClassCount +
                         '       </div>' +
                         '       <div class="layui-col-md3">' +
-                        '           <label class="label-font-weight">以卸载类总数：</label>' + unloadedClassCount +
+                        '           <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.unloadedClassCount') + '</label>' + unloadedClassCount +
                         '       </div>' +
                         '       <div class="layui-col-md3">' +
-                        '           <label class="label-font-weight">是否启用详细模式：</label>' + isVerbose +
+                        '           <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.verbose') + '</label>' + isVerbose +
                         '       </div>';
                     $('#class-loading').empty().append(html);
                 }
@@ -167,7 +167,7 @@
                     // Java库路径
                     var libraryPath = isEmpty(data.libraryPath) ? webConstCn.NOT_OBTAINED_CN : data.libraryPath;
                     // Java虚拟机是否支持引导类路径
-                    var isBootClassPathSupported = isEmpty(data.isBootClassPathSupported) ? webConstCn.NOT_OBTAINED_CN : (data.isBootClassPathSupported === '0' ? '否' : '是');
+                    var isBootClassPathSupported = isEmpty(data.isBootClassPathSupported) ? webConstCn.NOT_OBTAINED_CN : (data.isBootClassPathSupported === '0' ? I18nUtils.t('instanceDetail.jvmDetail.no') : I18nUtils.t('instanceDetail.jvmDetail.yes'));
                     // 引导类路径
                     var bootClassPath = isEmpty(data.bootClassPath) ? webConstCn.NOT_OBTAINED_CN : data.bootClassPath;
                     // Java虚拟机入参
@@ -177,49 +177,49 @@
                     // Java虚拟机的开始时间
                     var startTime = isEmpty(data.startTime) ? webConstCn.NOT_OBTAINED_CN : data.startTime;
                     var html = '<div class="layui-col-md12">' +
-                        '            <label class="label-font-weight">虚拟机开始时间：</label>' + startTime +
+                        '            <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.vmStartTime') + '</label>' + startTime +
                         '       </div>' +
                         '       <div class="layui-col-md12">' +
-                        '            <label class="label-font-weight">虚拟机正常运行时间(毫秒)：</label>' + uptime +
+                        '            <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.vmUptime') + '</label>' + uptime +
                         '       </div>' +
                         '       <div class="layui-col-md12">' +
-                        '           <label class="label-font-weight">虚拟机名称：</label>' + name +
+                        '           <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.vmName') + '</label>' + name +
                         '       </div>' +
                         '       <div class="layui-col-md12">' +
-                        '           <label class="label-font-weight">虚拟机实现名称：</label>' + vmName +
+                        '           <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.vmImplName') + '</label>' + vmName +
                         '       </div>' +
                         '       <div class="layui-col-md12">' +
-                        '           <label class="label-font-weight">虚拟机实现供应商：</label>' + vmVendor +
+                        '           <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.vmImplVendor') + '</label>' + vmVendor +
                         '       </div>' +
                         '       <div class="layui-col-md12">' +
-                        '           <label class="label-font-weight">虚拟机实现版本：</label>' + vmVersion +
+                        '           <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.vmImplVersion') + '</label>' + vmVersion +
                         '       </div>' +
                         '       <div class="layui-col-md12">' +
-                        '            <label class="label-font-weight">虚拟机规范名称：</label>' + specName +
+                        '            <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.vmSpecName') + '</label>' + specName +
                         '       </div>' +
                         '       <div class="layui-col-md12">' +
-                        '            <label class="label-font-weight">虚拟机规范供应商：</label>' + specVendor +
+                        '            <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.vmSpecVendor') + '</label>' + specVendor +
                         '       </div>' +
                         '       <div class="layui-col-md12">' +
-                        '            <label class="label-font-weight">虚拟机规范版本：</label>' + specVersion +
+                        '            <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.vmSpecVersion') + '</label>' + specVersion +
                         '       </div>' +
                         '       <div class="layui-col-md12">' +
-                        '            <label class="label-font-weight">管理接口规范版本：</label>' + managementSpecVersion +
+                        '            <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.managementSpecVersion') + '</label>' + managementSpecVersion +
                         '       </div>' +
                         '       <div class="layui-col-md12">' +
-                        '            <label class="label-font-weight">虚拟机入参：</label>' + inputArguments +
+                        '            <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.vmArgs') + '</label>' + inputArguments +
                         '       </div>' +
                         '       <div class="layui-col-md12">' +
-                        '            <label class="label-font-weight">Java类路径：</label>' + classPath +
+                        '            <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.classPath') + '</label>' + classPath +
                         '       </div>' +
                         '       <div class="layui-col-md12">' +
-                        '            <label class="label-font-weight">Java库路径：</label>' + libraryPath +
+                        '            <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.libraryPath') + '</label>' + libraryPath +
                         '       </div>' +
                         '       <div class="layui-col-md12">' +
-                        '            <label class="label-font-weight">虚拟机是否支持引导类路径：</label>' + isBootClassPathSupported +
+                        '            <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.bootClassPathSupported') + '</label>' + isBootClassPathSupported +
                         '       </div>' +
                         '       <div class="layui-col-md12">' +
-                        '            <label class="label-font-weight">引导类路径：</label>' + bootClassPath +
+                        '            <label class="label-font-weight">' + I18nUtils.t('instanceDetail.jvmDetail.bootClassPath') + '</label>' + bootClassPath +
                         '       </div>';
                     $('#runtime').empty().append(html);
                 }

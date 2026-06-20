@@ -171,6 +171,8 @@
     }).use(['index', 'admin', 'form', 'table', 'dropdown', 'layer'], function () {
         var $ = layui.$, admin = layui.admin, form = layui.form, layer = layui.layer,
             table = layui.table, dropdown = layui.dropdown, device = layui.device();
+        // 初始化表格工具栏导出下拉菜单国际化
+        I18nUtils.initTableExportDropdownI18n();
         // 列定义
         const allColumns = [
             [{
@@ -185,95 +187,95 @@
                 hide: true
             }, {
                 field: 'osName',
-                title: '系统',
+                title: I18nUtils.t('server.system'),
                 minWidth: 120,
                 sort: !0
             }, {
                 field: 'ip',
-                title: 'IP',
+                title: I18nUtils.t('server.ip'),
                 minWidth: 140,
                 sort: !0
             }, {
                 field: 'serverName',
-                title: '服务器名',
+                title: I18nUtils.t('server.serverName'),
                 minWidth: 180,
                 sort: !0
             }, {
                 field: 'isOnline',
-                title: '状态',
+                title: I18nUtils.t('server.status'),
                 minWidth: 80,
                 sort: !0
             }, {
                 field: 'offlineCount',
-                title: '离线次数',
+                title: I18nUtils.t('server.offlineCount'),
                 minWidth: 110,
                 sort: !0
             }, {
                 field: 'cpuUserPercent',
-                title: 'CPU(%)',
+                title: I18nUtils.t('server.cpu'),
                 minWidth: 100,
                 sort: !0
             }, {
                 field: 'menUsedPercent',
-                title: '内存(%)',
+                title: I18nUtils.t('server.memory'),
                 minWidth: 100,
                 sort: !0
             }, {
                 field: 'loadAverage',
-                title: '负载',
+                title: I18nUtils.t('server.loadAverage'),
                 minWidth: 100,
                 sort: !0
             }, {
                 field: 'downloadBps',
-                title: '下行速率(↓)',
+                title: I18nUtils.t('server.downloadSpeed'),
                 minWidth: 120,
                 sort: !0
             }, {
                 field: 'uploadBps',
-                title: '上行速率(↑)',
+                title: I18nUtils.t('server.uploadSpeed'),
                 minWidth: 120,
                 sort: !0
             }, {
                 field: 'finalHeartbeat',
-                title: '最后心跳',
+                title: I18nUtils.t('server.finalHeartbeat'),
                 minWidth: 170,
                 sort: !0
             }, {
                 field: 'monitorEnv',
-                title: '环境',
+                title: I18nUtils.t('server.monitorEnv'),
                 minWidth: 120,
                 sort: !0
             }, {
                 field: 'monitorGroup',
-                title: '分组',
+                title: I18nUtils.t('server.monitorGroup'),
                 minWidth: 120,
                 sort: !0
             }, {
                 field: 'serverSummary',
-                title: '描述',
+                title: I18nUtils.t('server.description'),
                 minWidth: 250,
                 sort: !0
             }, {
                 field: 'insertTime',
-                title: '新增时间',
+                title: I18nUtils.t('server.insertTime'),
                 minWidth: 170,
                 sort: !0
             }, {
                 field: 'isEnableMonitor',
-                title: '是否监控',
+                title: I18nUtils.t('server.isEnableMonitor'),
                 width: 90,
                 templet: '#isEnableMonitorTpl',
                 unresize: true,
                 permission: authority
             }, {
                 field: 'isEnableAlarm',
-                title: '是否告警',
+                title: I18nUtils.t('server.isEnableAlarm'),
                 width: 90,
                 templet: '#isEnableAlarmTpl',
                 unresize: true,
                 permission: authority
             }, {
-                title: '操作',
+                title: I18nUtils.t('server.actions'),
                 width: authority ? 140 : 100,
                 align: 'center',
                 fixed: (device.ios || device.android) ? false : 'right',
@@ -283,6 +285,7 @@
         table.render({
             elem: '#list-table',
             url: ctxPath + 'monitor-server/get-monitor-server-list',
+            defaultToolbar: I18nUtils.getDefaultToolbar(),
             toolbar: '#list-table-toolbar',
             request: {
                 pageName: 'current',//页码的参数名称，默认：page
@@ -304,6 +307,8 @@
                 };
             },
             done: function () {
+                // 翻译分页组件
+                I18nUtils.translateLaypage();
                 $('[data-field="isOnline"]').children().each(function () {
                     if ($(this).text() === '0') {
                         $(this).html('<span style="color: #FF4500;font-weight: bold;">离线</span>');
@@ -423,7 +428,7 @@
                 }
                 var infoLayerIndex = layer.open({
                     type: 2,
-                    title: '服务器详情（IP：' + data.ip + '）',
+                    title: I18nUtils.t('serverDetail.title', {ip: data.ip}),
                     content: ctxPath + 'monitor-server/server-detail?id=' + data.id + '&ip=' + data.ip,
                     maxmin: true,
                     shade: 0,
@@ -444,13 +449,13 @@
                     align: 'right',  //右对齐弹出（v2.6.8 新增）
                     style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);', //设置额外样式
                     data: [{
-                        title: '编辑',
+                        title: I18nUtils.t('btn.edit'),
                         id: 'edit'
                     }, {
-                        title: '删除',
+                        title: I18nUtils.t('btn.delete'),
                         id: 'del'
                     }, {
-                        title: '清理',
+                        title: I18nUtils.t('btn.clear'),
                         id: 'clear'
                     }],
                     click: function (object) {

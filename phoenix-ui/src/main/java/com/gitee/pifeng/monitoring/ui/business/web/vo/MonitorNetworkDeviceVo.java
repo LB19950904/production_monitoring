@@ -62,6 +62,18 @@ public class MonitorNetworkDeviceVo implements ISuperBean {
     @Schema(description = "网络设备摘要")
     private String networkDeviceSummary;
 
+    @Schema(description = "总端口数")
+    private Integer ifNumber;
+
+    @Schema(description = "占用端口数")
+    private Integer ifUsedCount;
+
+    @Schema(description = "总接收速率（bps）")
+    private Long totalInSpeed;
+
+    @Schema(description = "总发送速率（bps）")
+    private Long totalOutSpeed;
+
     @Schema(description = "网络设备状态（0：离线，1：在线）")
     private String isOnline;
 

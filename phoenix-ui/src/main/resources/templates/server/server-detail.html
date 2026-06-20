@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="./layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
     <link rel="stylesheet" href="./style/admin.css" th:href="@{/style/admin.css}" media="all">
     <link rel="stylesheet" href="./style/myself.css" th:href="@{/style/myself.css}" media="all">
+    <!-- 引入国际化工具 -->
+    <script th:src="@{/js/i18n/i18n-config.js}"></script>
+    <script th:src="@{/js/i18n/i18n-utils.js}"></script>
+    <script th:src="@{/js/i18n/messages/zh_CN.js}"></script>
+    <script th:src="@{/js/i18n/messages/en_US.js}"></script>
     <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
     <!--[if lt IE 9]>
     <script th:src="@{/js/html5.min.js}"></script>
@@ -31,8 +36,8 @@
     <div class="layui-card">
         <div class="layui-tab layui-tab-brief">
             <ul class="layui-tab-title">
-                <li class="layui-this">图表</li>
-                <li>概要</li>
+                <li class="layui-this" id="tab-chart"></li>
+                <li id="tab-summary"></li>
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
@@ -40,13 +45,13 @@
                         <form class="layui-form layuiadmin-card-header-auto layui-card-header-my">
                             <div class="layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="time">时间范围(T)</label>
+                                    <label class="layui-form-label" for="time" id="label-time"></label>
                                     <div class="layui-input-block">
                                         <select name="time" id="time" lay-filter="time">
-                                            <option value="hour">1小时</option>
-                                            <option value="day">1天</option>
-                                            <option value="week">1周</option>
-                                            <option value="month">1月</option>
+                                            <option value="hour" id="opt-hour"></option>
+                                            <option value="day" id="opt-day"></option>
+                                            <option value="week" id="opt-week"></option>
+                                            <option value="month" id="opt-month"></option>
                                             <!--<option value="halfYear">6月</option>-->
                                             <!--<option value="year">1年</option>-->
                                             <!--<option value="all">全部</option>-->
@@ -54,10 +59,10 @@
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="autoRefresh">自动刷新</label>
+                                    <label class="layui-form-label" for="autoRefresh" id="label-autoRefresh"></label>
                                     <div class="layui-input-block">
                                         <input type="checkbox" id="autoRefresh" name="autoRefresh"
-                                               lay-filter="autoRefresh" checked lay-skin="switch" lay-text="开启|关闭">
+                                               lay-filter="autoRefresh" checked lay-skin="switch">
                                     </div>
                                 </div>
                             </div>
@@ -68,8 +73,7 @@
                             <div class="layui-row layui-col-space5">
                                 <div class="layadmin-dataview-my-330px" style="overflow: auto;" id="niceScroll1">
                                     <div class="layui-card">
-                                        <div class="layui-card-header" style="text-align: center;color: #696969;">
-                                            磁盘
+                                        <div class="layui-card-header" style="text-align: center;color: #696969;" id="card-disk">
                                         </div>
                                         <div class="layui-card-body layadmin-takerates-my layadmin-dataview-my-270px"
                                              id="get-server-disk-info">
@@ -93,7 +97,7 @@
                         <form class="layui-form layui-card-header layuiadmin-card-header-auto layui-card-header-my">
                             <div class="layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="address">网卡地址</label>
+                                    <label class="layui-form-label" for="address" id="label-address"></label>
                                     <div class="layui-input-block">
                                         <select name="address" id="address" lay-filter="address">
                                             <option th:each="address:${netcardAddresses}" th:value="${address}"
@@ -116,8 +120,7 @@
                                 <div class="layui-col-md6">
                                     <div class="layadmin-dataview-my-330px" style="overflow: auto;" id="niceScroll2">
                                         <div class="layui-card">
-                                            <div class="layui-card-header" style="text-align: center;color: #696969;">
-                                                电池
+                                            <div class="layui-card-header" style="text-align: center;color: #696969;" id="card-battery">
                                             </div>
                                             <div class="layui-card-body layadmin-takerates-my layadmin-dataview-my-270px layadmin-dataview-my-270px-text"
                                                  id="get-server-power-source-info">
@@ -128,8 +131,7 @@
                                 <div class="layui-col-md6">
                                     <div class="layadmin-dataview-my-330px" style="overflow: auto;" id="niceScroll3">
                                         <div class="layui-card">
-                                            <div class="layui-card-header" style="text-align: center;color: #696969;">
-                                                CPU温度
+                                            <div class="layui-card-header" style="text-align: center;color: #696969;" id="card-cpu-temp">
                                             </div>
                                             <div class="layui-card-body layadmin-takerates-my layadmin-dataview-my-270px layadmin-dataview-my-270px-text"
                                                  id="get-server-sensors-info">
@@ -144,49 +146,49 @@
                 <div class="layui-tab-item">
                     <div class="layui-collapse">
                         <div class="layui-colla-item">
-                            <h2 class="layui-colla-title">操作系统</h2>
+                            <h2 class="layui-colla-title" id="section-os"></h2>
                             <div class="layui-colla-content layui-show">
                                 <div class="layui-row layui-col-space10" id="os">
                                 </div>
                             </div>
                         </div>
                         <div class="layui-colla-item">
-                            <h2 class="layui-colla-title">CPU<span id="cpuHead"></span></h2>
+                            <h2 class="layui-colla-title"><span id="section-cpu"></span><span id="cpuHead"></span></h2>
                             <div class="layui-colla-content layui-show">
                                 <div class="layui-row layui-col-space10" id="cpu">
                                 </div>
                             </div>
                         </div>
                         <div class="layui-colla-item" id="gpuDiv">
-                            <h2 class="layui-colla-title">GPU</h2>
+                            <h2 class="layui-colla-title" id="section-gpu"></h2>
                             <div class="layui-colla-content layui-show">
                                 <div class="layui-row layui-col-space10" id="gpu">
                                 </div>
                             </div>
                         </div>
                         <div class="layui-colla-item">
-                            <h2 class="layui-colla-title">网络</h2>
+                            <h2 class="layui-colla-title" id="section-network"></h2>
                             <div class="layui-colla-content layui-show">
                                 <div class="layui-row layui-col-space10" id="netcard">
                                 </div>
                             </div>
                         </div>
                         <div class="layui-colla-item" id="powerSourcesDiv">
-                            <h2 class="layui-colla-title">电池</h2>
+                            <h2 class="layui-colla-title" id="section-battery"></h2>
                             <div class="layui-colla-content layui-show">
                                 <div class="layui-row layui-col-space10" id="powerSources">
                                 </div>
                             </div>
                         </div>
                         <div class="layui-colla-item">
-                            <h2 class="layui-colla-title">传感器</h2>
+                            <h2 class="layui-colla-title" id="section-sensor"></h2>
                             <div class="layui-colla-content layui-show">
                                 <div class="layui-row layui-col-space10" id="sensors">
                                 </div>
                             </div>
                         </div>
                         <div class="layui-colla-item">
-                            <h2 class="layui-colla-title">进程(内存占用倒序前20个)</h2>
+                            <h2 class="layui-colla-title" id="section-process"></h2>
                             <div class="layui-colla-content layui-show">
                                 <div class="layui-row layui-col-space10" id="process"
                                      style="word-wrap:break-word;">
@@ -200,6 +202,30 @@
     </div>
 </div>
 <script th:src="@{/js/common.js}" charset="utf-8"></script>
+<script charset="utf-8">
+    // 初始化静态文本国际化
+    I18nConfig.init();
+    document.getElementById('tab-chart').innerText = I18nUtils.t('serverDetail.chartTab');
+    document.getElementById('tab-summary').innerText = I18nUtils.t('serverDetail.summary');
+    document.getElementById('label-time').innerText = I18nUtils.t('serverDetail.timeRange');
+    document.getElementById('opt-hour').innerText = I18nUtils.t('serverDetail.timeHour');
+    document.getElementById('opt-day').innerText = I18nUtils.t('serverDetail.timeDay');
+    document.getElementById('opt-week').innerText = I18nUtils.t('serverDetail.timeWeek');
+    document.getElementById('opt-month').innerText = I18nUtils.t('serverDetail.timeMonth');
+    document.getElementById('label-autoRefresh').innerText = I18nUtils.t('serverDetail.autoRefresh');
+    document.getElementById('autoRefresh').setAttribute('lay-text', I18nUtils.t('serverDetail.switchOn') + '|' + I18nUtils.t('serverDetail.switchOff'));
+    document.getElementById('card-disk').innerText = I18nUtils.t('serverDetail.diskTitle');
+    document.getElementById('card-battery').innerText = I18nUtils.t('serverDetail.batteryTitle');
+    document.getElementById('card-cpu-temp').innerText = I18nUtils.t('serverDetail.cpuTemperature');
+    document.getElementById('label-address').innerText = I18nUtils.t('serverDetail.netcardAddress');
+    document.getElementById('section-os').innerText = I18nUtils.t('serverDetail.sectionOS');
+    document.getElementById('section-cpu').innerText = I18nUtils.t('serverDetail.sectionCPU');
+    document.getElementById('section-gpu').innerText = I18nUtils.t('serverDetail.sectionGPU');
+    document.getElementById('section-network').innerText = I18nUtils.t('serverDetail.sectionNetwork');
+    document.getElementById('section-battery').innerText = I18nUtils.t('serverDetail.sectionBattery');
+    document.getElementById('section-sensor').innerText = I18nUtils.t('serverDetail.sectionSensor');
+    document.getElementById('section-process').innerText = I18nUtils.t('serverDetail.sectionProcess');
+</script>
 <script th:src="@{/js/jquery.min.js}"></script>
 <script th:src="@{/js/jquery.nicescroll.min.js}"></script>
 <script th:src="@{/js/echarts.min.js}"></script>

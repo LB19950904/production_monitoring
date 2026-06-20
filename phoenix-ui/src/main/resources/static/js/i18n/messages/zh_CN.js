@@ -34,7 +34,23 @@ if (typeof ZhMessages === 'undefined') {
         updateTime: '更新时间',
         actions: '操作',
         pleaseEnter: '请输入',
-        clear: '清空'
+        clear: '清空',
+        // 表格工具栏（筛选、导出、打印）
+        toolbar: {
+            filterColumns: '筛选列',
+            export: '导出',
+            print: '打印',
+            exportCsv: '导出到 Csv 文件',
+            exportXls: '导出到 Excel 文件'
+        },
+        // 分页组件
+        pagination: {
+            total: '共 {count} 条',
+            perPage: '{count} 条/页',
+            skipTo: '到第',
+            page: '页',
+            go: '确定'
+        }
     },
 
     // 导航菜单
@@ -329,7 +345,8 @@ if (typeof ZhMessages === 'undefined') {
         import: '导入',
         detail: '详情',
         back: '返回',
-        more: '更多'
+        more: '更多',
+        clear: '清理'
     },
 
     // 登录模块
@@ -638,6 +655,19 @@ if (typeof ZhMessages === 'undefined') {
         no: '否',
         notSet: '不设置',
         description: '描述',
+        offlineCount: '离线次数',
+        cpu: 'CPU(%)',
+        memory: '内存(%)',
+        loadAverage: '负载',
+        downloadSpeed: '下行速率(↓)',
+        uploadSpeed: '上行速率(↑)',
+        finalHeartbeat: '最后心跳',
+        monitorEnv: '环境',
+        monitorGroup: '分组',
+        insertTime: '新增时间',
+        isEnableMonitor: '是否监控',
+        isEnableAlarm: '是否告警',
+        actions: '操作',
         placeholder: {
             description: '请输入描述',
             search: '请输入'
@@ -665,6 +695,375 @@ if (typeof ZhMessages === 'undefined') {
         },
         validation: {
             descriptionRequired: '描述不能为空'
+        }
+    },
+
+    // 应用程序模块
+    instance: {
+        title: '应用程序',
+        instanceId: '应用ID',
+        instanceName: '应用名称',
+        endpoint: '端点',
+        ip: 'IP',
+        status: '应用状态',
+        offlineCount: '离线次数',
+        appServerType: '应用服务器',
+        language: '程序语言',
+        finalHeartbeat: '最后心跳',
+        monitorEnv: '环境',
+        monitorGroup: '分组',
+        description: '描述',
+        insertTime: '新增时间',
+        isEnableMonitor: '是否监控',
+        isEnableAlarm: '是否告警',
+        actions: '操作',
+        // 端点选项
+        endpointOptions: {
+            client: '客户端',
+            agent: '代理端',
+            server: '服务端',
+            ui: 'UI端'
+        },
+        // 状态选项
+        statusOptions: {
+            online: '在线',
+            offline: '离线',
+            unknown: '未知'
+        },
+        // 操作菜单
+        menu: {
+            edit: '编辑',
+            delete: '删除',
+            clear: '清理'
+        },
+        // 弹窗标题
+        dialog: {
+            detail: '应用详情({instanceId})',
+            editDesc: '编辑应用实例描述',
+            clearData: '请选择要清理的历史数据'
+        },
+        // 消息
+        msg: {
+            selectData: '请选择数据',
+            confirmDelete: '确定删除吗？',
+            deleteSuccess: '删除成功！',
+            deleteFailed: '删除失败！',
+            editSuccess: '编辑成功！',
+            editFailed: '编辑失败！',
+            clearSuccess: '清理成功！',
+            clearFailed: '清理失败！',
+            requiredNull: '必选项不能为空！',
+            setSuccess: '设置成功！',
+            setFailed: '设置失败！',
+            systemError: '系统错误！'
+        }
+    },
+
+    // 应用详情模块
+    instanceDetail: {
+        // Tab标签
+        tab: {
+            memory: '内存',
+            jvm: 'JVM',
+            threadPool: '线程池',
+            arthas: 'Arthas'
+        },
+        // 通用表单
+        timeRange: '时间范围(T)',
+        autoRefresh: '自动刷新',
+        chart: '图表(C)',
+        config: '配置',
+        switchOn: '开启',
+        switchOff: '关闭',
+        // 时间选项
+        timeOption: {
+            hour: '1小时',
+            day: '1天',
+            week: '1周',
+            month: '1月'
+        },
+        // 线程池表单
+        threadPoolName: '线程池名字',
+        // JVM 折叠面板
+        jvmSection: {
+            classLoading: '类',
+            gc: 'GC',
+            thread: '线程',
+            vm: 'VM'
+        },
+        // 线程池信息标签
+        threadPool: {
+            name: '线程池名字<br>(name)',
+            corePoolSize: '核心线程数<br>(corePoolSize)',
+            maximumPoolSize: '最大线程数<br>(maximumPoolSize)',
+            largestPoolSize: '历史最大线程数<br>(largestPoolSize)',
+            poolSize: '当前线程数<br>(poolSize)',
+            activeCount: '活跃线程数<br>(activeCount)',
+            taskCount: '总任务数<br>(taskCount)',
+            completedTaskCount: '已完成任务数<br>(completedTaskCount)',
+            queueType: '队列类型<br>(queueType)',
+            queueCapacity: '队列容量<br>(queueCapacity)',
+            queueRemainingCapacity: '队列剩余容量<br>(queueRemainingCapacity)',
+            queueSize: '当前队列大小<br>(queueSize)',
+            rejectedTaskCount: '拒绝任务数<br>(rejectedTaskCount)',
+            rejectedExecutionHandler: '拒绝策略<br>(rejectedExecutionHandler)',
+            allowCoreThreadTimeOut: '核心线程空闲回收<br>(allowCoreThreadTimeOut)',
+            keepAliveTime: '空闲回收时间<br>(keepAliveTime)',
+            utilizationRate: '利用率<br>(utilizationRate)',
+            recycle: '回收',
+            notRecycle: '不回收',
+            seconds: '秒'
+        },
+        // JVM详情标签
+        jvmDetail: {
+            activeThreadCount: '活动线程数：',
+            peakThreadCount: '线程峰值：',
+            daemonThreadCount: '守护线程数：',
+            totalThreadCount: '线程总数：',
+            threadDetail: '线程详情：',
+            gcName: '名称：',
+            gcCount: 'GC总次数：',
+            gcTime: 'GC总时间(毫秒)：',
+            totalLoadedClassCount: '累计加载类数量：',
+            loadedClassCount: '已加载类数量：',
+            unloadedClassCount: '已卸载类总数：',
+            verbose: '是否启用详细模式：',
+            vmStartTime: '虚拟机开始时间：',
+            vmUptime: '虚拟机正常运行时间(毫秒)：',
+            vmName: '虚拟机名称：',
+            vmImplName: '虚拟机实现名称：',
+            vmImplVendor: '虚拟机实现供应商：',
+            vmImplVersion: '虚拟机实现版本：',
+            vmSpecName: '虚拟机规范名称：',
+            vmSpecVendor: '虚拟机规范供应商：',
+            vmSpecVersion: '虚拟机规范版本：',
+            managementSpecVersion: '管理接口规范版本：',
+            vmArgs: '虚拟机入参：',
+            classPath: 'Java类路径：',
+            libraryPath: 'Java库路径：',
+            bootClassPathSupported: '虚拟机是否支持引导类路径：',
+            bootClassPath: '引导类路径：',
+            yes: '是',
+            no: '否'
+        },
+        // Arthas
+        arthas: {
+            ip: 'IP',
+            port: '端口号',
+            connect: '连接',
+            disconnect: '断开',
+            connected: '连接已经建立！',
+            errorIpEmpty: '连接错误，IP不能为空！',
+            errorPortEmpty: '连接错误，端口号不能为空！',
+            errorConnect: '连接错误！',
+            disconnectSuccess: '连接关闭成功！',
+            notConnected: '请先建立连接！'
+        },
+        // 图表文本
+        chartText: {
+            used: '使用量',
+            committed: '提交量',
+            count: '数量',
+            noData: '无数据',
+            undefined: '未定义',
+            initMemory: '初始内存：',
+            maxMemory: '，最大内存：',
+            memoryUsage: '内存使用量',
+            activeThreadCount: '活跃线程数',
+            queueSize: '当前队列大小',
+            completedTaskCount: '已完成的任务数',
+            rejectedTaskCount: '拒绝的任务数'
+        },
+        // 线程池配置弹窗
+        configDialog: {
+            title: 'Java线程池配置({name})',
+            configSuccess: '配置成功！',
+            configFailed: '配置失败！',
+            systemError: '系统错误！'
+        }
+    },
+
+    // 服务器详情模块
+    serverDetail: {
+        // 弹窗标题
+        title: '服务器详情（IP：{ip}）',
+        // Tab
+        chartTab: '图表',
+        summary: '概要',
+        // 表单
+        timeRange: '时间范围(T)',
+        autoRefresh: '自动刷新',
+        switchOn: '开启',
+        switchOff: '关闭',
+        timeHour: '1小时',
+        timeDay: '1天',
+        timeWeek: '1周',
+        timeMonth: '1月',
+        // 卡片标题
+        diskTitle: '磁盘',
+        batteryTitle: '电池',
+        cpuTemperature: 'CPU温度',
+        netcardAddress: '网卡地址',
+        // 折叠面板标题
+        sectionOS: '操作系统',
+        sectionCPU: 'CPU',
+        sectionGPU: 'GPU',
+        sectionNetwork: '网络',
+        sectionBattery: '电池',
+        sectionSensor: '传感器',
+        sectionProcess: '进程(内存占用倒序前20个)',
+        // 通用状态
+        unknown: '未知',
+        noData: '没数据',
+        unit: '个',
+        core: '核',
+        charging: '充电',
+        discharging: '放电',
+        tempHigh: '温度偏高',
+        tempNormal: '温度正常',
+        tempLow: '温度偏低',
+        // 操作系统字段
+        os: {
+            ipAddress: 'IP地址',
+            serverName: '服务器名',
+            timeZone: '系统时区',
+            osName: '系统名称',
+            osArch: '系统架构',
+            osVersion: '系统版本',
+            userName: '系统用户',
+            userHome: '用户目录'
+        },
+        // CPU字段
+        cpu: {
+            frequency: '频率',
+            vendor: '供应商',
+            model: '类型',
+            totalUsage: '总使用率',
+            idle: '剩余率',
+            userUsage: '用户使用率',
+            systemUsage: '系统使用率',
+            wait: '等待率',
+            nice: '错误率'
+        },
+        // GPU字段
+        gpu: {
+            deviceId: '设备ID',
+            name: '名称',
+            vendor: '供应商',
+            versionInfo: '版本信息',
+            vramTotal: '显存总量'
+        },
+        // 网卡字段
+        netcard: {
+            name: '网卡名字',
+            type: '网卡类型',
+            address: '网卡地址',
+            mask: '子网掩码',
+            broadcast: '广播地址',
+            mac: 'MAC地址',
+            description: '网卡信息描述',
+            rxTotal: '接收的总数据大小',
+            rxPackets: '接收的总包数',
+            rxErrors: '接收到的错误包数',
+            rxDropped: '接收时丢弃的包数',
+            txTotal: '发送的总数据大小',
+            txPackets: '发送的总包数',
+            txErrors: '发送时的错误包数',
+            txDropped: '发送时丢弃的包数',
+            downloadSpeed: '下行速率(↓)',
+            uploadSpeed: '上行速率(↑)'
+        },
+        // 进程字段
+        process: {
+            pid: '进程ID',
+            name: '进程名',
+            cpuUsage: 'CPU使用率',
+            memoryRss: '占用内存(RSS)',
+            state: '状态',
+            bitness: '位数',
+            startTime: '开始时间',
+            upTime: '运行时长',
+            user: '用户名',
+            ports: '占用端口',
+            commandLine: '命令行',
+            path: '路径',
+            workingDir: '工作目录'
+        },
+        // 电池字段
+        battery: {
+            name: '电池名称',
+            serialNumber: '序列号',
+            type: '电池类型',
+            manufacturer: '供应商',
+            manufactureDate: '生产日期',
+            designCapacity: '原始容量',
+            maxCapacity: '最大容量',
+            currentCapacity: '剩余容量',
+            remainingPercent: '剩余百分比',
+            timeRemainingEstimated: '剩余使用时间(系统报告)',
+            timeRemainingInstant: '剩余时间(电池报告)',
+            voltage: '电压',
+            amperage: '电流',
+            powerUsageRate: '功率',
+            temperature: '温度'
+        },
+        // 传感器字段
+        sensor: {
+            cpuTemperature: 'CPU温度',
+            cpuVoltage: 'CPU电压',
+            fanSpeed: '风扇转速'
+        },
+        // 磁盘字段
+        disk: {
+            devName: '盘符名称',
+            dirName: '盘符路径',
+            type: '磁盘类型',
+            capacity: '容量',
+            available: '可用',
+            total: '共'
+        },
+        // 图表
+        chart: {
+            memSwapTitle: '内存/交换区',
+            memSwapSubtitle: '物理内存：{memTotal}，物理内存使用率：{memUsedPercent}，交换区：{swapTotal}，交换区使用率：{swapUsedPercent}',
+            processTitle: '进程',
+            processSubtitle: '最大进程数：{max}，最小进程数：{min}',
+            cpuSubtitle: '总使用率：{current}，最大使用率：{max}，最小使用率：{min}',
+            netSpeedTitle: '{address}({name}) 上行/下行 速率',
+            netSpeedSubtitle: '↑ 上行速率：{upload}，↓ 下行速率：{download}',
+            loadAverageTitle: '平均负载',
+            loadAverageSubtitle: '1分钟：{one}，5分钟：{five}，15分钟：{fifteen}',
+            cpuTempTitle: 'CPU温度',
+            batteryGaugeName: '电池电量',
+            batteryGaugeDetail: '电量',
+            yAxisUsage: '利用率',
+            yAxisSpeed: '网速',
+            yAxisLoad: '负载',
+            yAxisCount: '个'
+        },
+        // 图例/系列名
+        series: {
+            memUsed: '内存使用量',
+            swapUsed: '交换区使用量',
+            runningProcess: '运行中进程数',
+            idle: '剩余率',
+            totalUsage: '总使用率',
+            userUsage: '用户使用率',
+            systemUsage: '系统使用率',
+            wait: '等待率',
+            nice: '错误率',
+            downloadSpeed: '下行速率',
+            uploadSpeed: '上行速率',
+            oneMin: '1分钟',
+            fiveMin: '5分钟',
+            fifteenMin: '15分钟',
+            avg: '(均值)',
+            avgIdle: '(剩余率均值)',
+            avgTotal: '(总使用率均值)',
+            ideal: '(理想)',
+            overload: '(过载)',
+            critical: '(严重)',
+            alarm: '(告警值)'
         }
     }
 };

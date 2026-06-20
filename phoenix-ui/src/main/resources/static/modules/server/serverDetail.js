@@ -75,7 +75,7 @@
                 success: function (result) {
                     var cpuTemperature = result.data;
                     if (isNaN(cpuTemperature)) {
-                        $('#get-server-sensors-info').text('未知');
+                        $('#get-server-sensors-info').text(I18nUtils.t('serverDetail.unknown'));
                         // 关闭loading框
                         // layer.close(loadingIndex);
                         return;
@@ -102,7 +102,7 @@
                     }
                     //中间线的渐变色和文本内容
                     if (TP_value > 80) {
-                        TP_txt = '温度偏高';
+                        TP_txt = I18nUtils.t('serverDetail.tempHigh');
                         Gradient.push({
                             offset: 0,
                             color: '#93FE94'
@@ -114,7 +114,7 @@
                             color: '#E01F28'
                         });
                     } else if (TP_value > 10) {
-                        TP_txt = '温度正常';
+                        TP_txt = I18nUtils.t('serverDetail.tempNormal');
                         Gradient.push({
                             offset: 0,
                             color: '#93FE94'
@@ -123,7 +123,7 @@
                             color: '#E4D225'
                         });
                     } else {
-                        TP_txt = '温度偏低';
+                        TP_txt = I18nUtils.t('serverDetail.tempLow');
                         Gradient.push({
                             offset: 1,
                             color: '#93FE94'
@@ -133,7 +133,7 @@
                     // 因为柱状初始化为0，温度存在负值，所以加上负值60和空出距离10
                     var option = {
                         title: {
-                            text: 'CPU温度',
+                            text: I18nUtils.t('serverDetail.chart.cpuTempTitle'),
                             show: false
                         },
                         grid: {
@@ -373,7 +373,7 @@
                 success: function (result) {
                     var rCapacityPercentAvg = result.data;
                     if (isNaN(rCapacityPercentAvg)) {
-                        $('#get-server-power-source-info').text('未知');
+                        $('#get-server-power-source-info').text(I18nUtils.t('serverDetail.unknown'));
                         // 关闭loading框
                         // layer.close(loadingIndex);
                         return;
@@ -392,7 +392,7 @@
                         },
                         series: [
                             {
-                                name: '电池电量',		// 系列名称,用于tooltip的显示，legend 的图例筛选，在 setOption 更新数据和配置项时用于指定对应的系列。
+                                name: I18nUtils.t('serverDetail.chart.batteryGaugeName'),		// 系列名称,用于tooltip的显示，legend 的图例筛选，在 setOption 更新数据和配置项时用于指定对应的系列。
                                 type: 'gauge',			// 系列类型
                                 radius: '95%',			// 参数:number, string。 仪表盘半径,默认 75% ，可以是相对于容器高宽中较小的一项的一半的百分比，也可以是绝对的数值。
                                 center: ['50%', '55%'],	// 仪表盘位置(圆心坐标)
@@ -478,7 +478,7 @@
                                     formatter: '{value}%'	// 格式化函数或者字符串
                                 },
                                 data: [{
-                                    name: '电量',
+                                    name: I18nUtils.t('serverDetail.chart.batteryGaugeDetail'),
                                     value: rCapacityPercentAvg
                                 }]
                             }
@@ -516,15 +516,15 @@
                     var data = result.data;
                     var cpuTemperature = data.cpuTemperature;
                     var cpuVoltage = data.cpuVoltage;
-                    var fanSpeed = data.fanSpeed != null ? data.fanSpeed : '未知';
+                    var fanSpeed = data.fanSpeed != null ? data.fanSpeed : I18nUtils.t('serverDetail.unknown');
                     var html = '<div class="layui-col-md4">' +
-                        '           <label class="label-font-weight">CPU温度：</label>' + cpuTemperature +
+                        '           <label class="label-font-weight">' + I18nUtils.t('serverDetail.sensor.cpuTemperature') + '：</label>' + cpuTemperature +
                         '       </div>' +
                         '       <div class="layui-col-md4">' +
-                        '           <label class="label-font-weight">CPU电压：</label>' + cpuVoltage +
+                        '           <label class="label-font-weight">' + I18nUtils.t('serverDetail.sensor.cpuVoltage') + '：</label>' + cpuVoltage +
                         '       </div>' +
                         '       <div class="layui-col-md4">' +
-                        '           <label class="label-font-weight">风扇转速：</label>' + fanSpeed +
+                        '           <label class="label-font-weight">' + I18nUtils.t('serverDetail.sensor.fanSpeed') + '：</label>' + fanSpeed +
                         '       </div>';
                     $('#sensors').empty().append(html);
                     // 关闭loading框
@@ -567,65 +567,65 @@
                         var obj = data[i];
                         var name = obj.name;
                         var deviceName = obj.deviceName;
-                        var amperage = obj.amperage.startsWith('-') ? '放电 ' + obj.amperage.replace('-', '') : '充电 ' + obj.amperage;
+                        var amperage = obj.amperage.startsWith('-') ? I18nUtils.t('serverDetail.discharging') + ' ' + obj.amperage.replace('-', '') : I18nUtils.t('serverDetail.charging') + ' ' + obj.amperage;
                         var chemistry = obj.chemistry;
                         var currentCapacity = obj.currentCapacity;
                         var designCapacity = obj.designCapacity;
                         var manufactureDate = obj.manufactureDate;
                         var manufacturer = obj.manufacturer;
                         var maxCapacity = obj.maxCapacity;
-                        var powerUsageRate = obj.powerUsageRate.startsWith('-') ? '放电 ' + obj.powerUsageRate.replace('-', '') : '充电 ' + obj.powerUsageRate;
+                        var powerUsageRate = obj.powerUsageRate.startsWith('-') ? I18nUtils.t('serverDetail.discharging') + ' ' + obj.powerUsageRate.replace('-', '') : I18nUtils.t('serverDetail.charging') + ' ' + obj.powerUsageRate;
                         var remainingCapacityPercent = (obj.remainingCapacityPercent * 100).toFixed(2) + '%';
                         var serialNumber = obj.serialNumber;
                         var temperature = obj.temperature;
                         var timeRemainingEstimated = obj.timeRemainingEstimated;
                         var timeRemainingInstant = obj.timeRemainingInstant;
-                        var isPowerOnLine = obj.isPowerOnLine === '1' ? '充电' : '放电';
+                        var isPowerOnLine = obj.isPowerOnLine === '1' ? I18nUtils.t('serverDetail.charging') : I18nUtils.t('serverDetail.discharging');
                         var voltage = obj.voltage;
                         html += '<div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">电池名称：</label>' + name + '(' + deviceName + ')' +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.battery.name') + '：</label>' + name + '(' + deviceName + ')' +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">序列号：</label>' + serialNumber +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.battery.serialNumber') + '：</label>' + serialNumber +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">电池类型：</label>' + chemistry +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.battery.type') + '：</label>' + chemistry +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">供应商：</label>' + manufacturer +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.battery.manufacturer') + '：</label>' + manufacturer +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">生产日期：</label>' + manufactureDate +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.battery.manufactureDate') + '：</label>' + manufactureDate +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">原始容量：</label>' + designCapacity +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.battery.designCapacity') + '：</label>' + designCapacity +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">最大容量：</label>' + maxCapacity +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.battery.maxCapacity') + '：</label>' + maxCapacity +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">剩余容量：</label>' + currentCapacity +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.battery.currentCapacity') + '：</label>' + currentCapacity +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">剩余百分比：</label>' + remainingCapacityPercent +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.battery.remainingPercent') + '：</label>' + remainingCapacityPercent +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">剩余使用时间(系统报告)：</label>' + timeRemainingEstimated +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.battery.timeRemainingEstimated') + '：</label>' + timeRemainingEstimated +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">' + isPowerOnLine + '剩余时间(电池报告)：</label>' + timeRemainingInstant +
+                            '       <label class="label-font-weight">' + isPowerOnLine + I18nUtils.t('serverDetail.battery.timeRemainingInstant') + '：</label>' + timeRemainingInstant +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">电压：</label>' + voltage +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.battery.voltage') + '：</label>' + voltage +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">电流：</label>' + amperage +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.battery.amperage') + '：</label>' + amperage +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">功率：</label>' + powerUsageRate +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.battery.powerUsageRate') + '：</label>' + powerUsageRate +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">温度：</label>' + temperature +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.battery.temperature') + '：</label>' + temperature +
                             '    </div>';
                         if (i !== data.length - 1) {
                             html += '<hr class="layui-bg-gray hr-padding">';
@@ -694,50 +694,50 @@
                         // 占用端口
                         var ports = obj.ports;
                         html += '<div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">进程ID：</label>' + processId +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.process.pid') + '：</label>' + processId +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">进程名：</label>' + name +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.process.name') + '：</label>' + name +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">CPU使用率：</label>' + cpuLoadCumulative + '%' +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.process.cpuUsage') + '：</label>' + cpuLoadCumulative + '%' +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">占用内存(RSS)：</label>' + memorySize +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.process.memoryRss') + '：</label>' + memorySize +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">状态：</label>' + state +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.process.state') + '：</label>' + state +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">位数：</label>' + bitness +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.process.bitness') + '：</label>' + bitness +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">开始时间：</label>' + startTime +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.process.startTime') + '：</label>' + startTime +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">运行时长：</label>' + upTime +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.process.upTime') + '：</label>' + upTime +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">用户名：</label>' + user +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.process.user') + '：</label>' + user +
                             '    </div>';
                         if (!isEmpty(ports)) {
                             html += '<div class="layui-col-md12">' +
-                                '       <label class="label-font-weight">占用端口：</label>' + ports +
+                                '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.process.ports') + '：</label>' + ports +
                                 '    </div>';
                         }
                         if (!isEmpty(commandLine)) {
                             html += '<div class="layui-col-md12">' +
-                                '       <label class="label-font-weight">命令行：</label>' + commandLine +
+                                '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.process.commandLine') + '：</label>' + commandLine +
                                 '    </div>';
                         }
                         if (!isEmpty(path)) {
                             html += '<div class="layui-col-md12">' +
-                                '       <label class="label-font-weight">路径：</label>' + path +
+                                '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.process.path') + '：</label>' + path +
                                 '    </div>';
                         }
                         if (!isEmpty(currentWorkingDirectory)) {
                             html += '<div class="layui-col-md12">' +
-                                '       <label class="label-font-weight">工作目录：</label>' + currentWorkingDirectory +
+                                '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.process.workingDir') + '：</label>' + currentWorkingDirectory +
                                 '    </div>';
                         }
                         if (i !== data.length - 1) {
@@ -777,7 +777,7 @@
                     var html = '';
                     // 设置CPU核数
                     var cpuCores = data.length;
-                    $('#cpuHead').empty().append('(' + cpuCores + '核)');
+                    $('#cpuHead').empty().append('(' + cpuCores + I18nUtils.t('serverDetail.core') + ')');
                     for (var i = 0; i < data.length; i++) {
                         var obj = data[i];
                         var cpuVendor = obj.cpuVendor;
@@ -790,31 +790,31 @@
                         var cpuUser = obj.cpuUser;
                         var cpuWait = obj.cpuWait;
                         html += '<div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">频率：</label>' + cpuMhz + 'MHz' +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.cpu.frequency') + '：</label>' + cpuMhz + 'MHz' +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">供应商：</label>' + cpuVendor +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.cpu.vendor') + '：</label>' + cpuVendor +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">类型：</label>' + cpuModel +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.cpu.model') + '：</label>' + cpuModel +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">总使用率：</label>' + (cpuCombined * 100).toFixed(2) + '%' +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.cpu.totalUsage') + '：</label>' + (cpuCombined * 100).toFixed(2) + '%' +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">剩余率：</label>' + (cpuIdle * 100).toFixed(2) + '%' +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.cpu.idle') + '：</label>' + (cpuIdle * 100).toFixed(2) + '%' +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">用户使用率：</label>' + (cpuUser * 100).toFixed(2) + '%' +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.cpu.userUsage') + '：</label>' + (cpuUser * 100).toFixed(2) + '%' +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">系统使用率：</label>' + (cpuSys * 100).toFixed(2) + '%' +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.cpu.systemUsage') + '：</label>' + (cpuSys * 100).toFixed(2) + '%' +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">等待率：</label>' + (cpuWait * 100).toFixed(2) + '%' +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.cpu.wait') + '：</label>' + (cpuWait * 100).toFixed(2) + '%' +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">错误率：</label>' + (cpuNice * 100).toFixed(2) + '%' +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.cpu.nice') + '：</label>' + (cpuNice * 100).toFixed(2) + '%' +
                             '    </div>';
                         if (i !== data.length - 1) {
                             html += '<hr class="layui-bg-gray hr-padding">';
@@ -861,19 +861,19 @@
                         var gpuVersionInfo = obj.gpuVersionInfo;
                         var gpuVramTotal = obj.gpuVramTotal;
                         html += '<div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">设备ID：</label>' + gpuDeviceId +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.gpu.deviceId') + '：</label>' + gpuDeviceId +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">名称：</label>' + gpuName +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.gpu.name') + '：</label>' + gpuName +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">供应商：</label>' + gpuVendor +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.gpu.vendor') + '：</label>' + gpuVendor +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">版本信息：</label>' + gpuVersionInfo +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.gpu.versionInfo') + '：</label>' + gpuVersionInfo +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">显存总量：</label>' + gpuVramTotal +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.gpu.vramTotal') + '：</label>' + gpuVramTotal +
                             '    </div>';
                         if (i !== data.length - 1) {
                             html += '<hr class="layui-bg-gray hr-padding">';
@@ -926,55 +926,55 @@
                         var uploadSpeed = obj.uploadSpeed;
                         var type = obj.type;
                         html += '<div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">网卡名字：</label>' + name +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.netcard.name') + '：</label>' + name +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">网卡类型：</label>' + type +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.netcard.type') + '：</label>' + type +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">网卡地址：</label>' + address +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.netcard.address') + '：</label>' + address +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">子网掩码：</label>' + mask +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.netcard.mask') + '：</label>' + mask +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">广播地址：</label>' + broadcast +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.netcard.broadcast') + '：</label>' + broadcast +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">MAC地址：</label>' + hwAddr +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.netcard.mac') + '：</label>' + hwAddr +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">网卡信息描述：</label>' + description +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.netcard.description') + '：</label>' + description +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">接收的总数据大小：</label>' + rx +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.netcard.rxTotal') + '：</label>' + rx +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">接收的总包数：</label>' + rxPackets + ' 个' +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.netcard.rxPackets') + '：</label>' + rxPackets + ' ' + I18nUtils.t('serverDetail.unit') +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">接收到的错误包数：</label>' + rxErrors + ' 个' +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.netcard.rxErrors') + '：</label>' + rxErrors + ' ' + I18nUtils.t('serverDetail.unit') +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">接收时丢弃的包数：</label>' + rxDropped + ' 个' +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.netcard.rxDropped') + '：</label>' + rxDropped + ' ' + I18nUtils.t('serverDetail.unit') +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">发送的总数据大小：</label>' + tx +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.netcard.txTotal') + '：</label>' + tx +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">发送的总包数：</label>' + txPackets + ' 个' +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.netcard.txPackets') + '：</label>' + txPackets + ' ' + I18nUtils.t('serverDetail.unit') +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">发送时的错误包数：</label>' + txErrors + ' 个' +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.netcard.txErrors') + '：</label>' + txErrors + ' ' + I18nUtils.t('serverDetail.unit') +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">发送时丢弃的包数：</label>' + txDropped + ' 个' +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.netcard.txDropped') + '：</label>' + txDropped + ' ' + I18nUtils.t('serverDetail.unit') +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">下行速率(↓)：</label>' + downloadSpeed +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.netcard.downloadSpeed') + '：</label>' + downloadSpeed +
                             '    </div>' +
                             '    <div class="layui-col-md4">' +
-                            '       <label class="label-font-weight">上行速率(↑)：</label>' + uploadSpeed +
+                            '       <label class="label-font-weight">' + I18nUtils.t('serverDetail.netcard.uploadSpeed') + '：</label>' + uploadSpeed +
                             '    </div>';
                         if (i !== data.length - 1) {
                             html += '<hr class="layui-bg-gray hr-padding">';
@@ -1019,28 +1019,28 @@
                     var userHome = data.userHome;
                     var userName = data.userName;
                     var html = '<div class="layui-col-md4">' +
-                        '           <label class="label-font-weight">IP地址：</label>' + ip +
+                        '           <label class="label-font-weight">' + I18nUtils.t('serverDetail.os.ipAddress') + '：</label>' + ip +
                         '       </div>' +
                         '       <div class="layui-col-md4">' +
-                        '           <label class="label-font-weight">服务器名：</label>' + serverName +
+                        '           <label class="label-font-weight">' + I18nUtils.t('serverDetail.os.serverName') + '：</label>' + serverName +
                         '       </div>' +
                         '       <div class="layui-col-md4">' +
-                        '           <label class="label-font-weight">系统时区：</label>' + osTimeZone +
+                        '           <label class="label-font-weight">' + I18nUtils.t('serverDetail.os.timeZone') + '：</label>' + osTimeZone +
                         '       </div>' +
                         '       <div class="layui-col-md4">' +
-                        '           <label class="label-font-weight">系统名称：</label>' + osName +
+                        '           <label class="label-font-weight">' + I18nUtils.t('serverDetail.os.osName') + '：</label>' + osName +
                         '       </div>' +
                         '       <div class="layui-col-md4">' +
-                        '           <label class="label-font-weight">系统架构：</label>' + osArch +
+                        '           <label class="label-font-weight">' + I18nUtils.t('serverDetail.os.osArch') + '：</label>' + osArch +
                         '       </div>' +
                         '       <div class="layui-col-md4">' +
-                        '           <label class="label-font-weight">系统版本：</label>' + osVersion +
+                        '           <label class="label-font-weight">' + I18nUtils.t('serverDetail.os.osVersion') + '：</label>' + osVersion +
                         '       </div>' +
                         '       <div class="layui-col-md4">' +
-                        '           <label class="label-font-weight">系统用户：</label>' + userName +
+                        '           <label class="label-font-weight">' + I18nUtils.t('serverDetail.os.userName') + '：</label>' + userName +
                         '       </div>' +
                         '       <div class="layui-col-md4">' +
-                        '           <label class="label-font-weight">用户目录：</label>' + userHome +
+                        '           <label class="label-font-weight">' + I18nUtils.t('serverDetail.os.userHome') + '：</label>' + userHome +
                         '       </div>';
                     $('#os').empty().append(html);
                     // 关闭loading框
@@ -1089,10 +1089,10 @@
                         var usePercent = obj.usePercent;
                         html += '<div class="layui-col-md4" style="padding-right: 30px;">' +
                             '         <div class="layui-progress layui-progress-big" style="margin: 100px 0 15px;" lay-showPercent="yes">' +
-                            '              <h3 style="top: -85px;">盘符名称：' + devName + '</h3>' +
-                            '              <h3 style="top: -65px;">盘符路径：' + dirName + '</h3>' +
-                            '              <h3 style="top: -45px;">磁盘类型：' + sysTypeName + '</h3>' +
-                            '              <h3 style="top: -25px;">容量：可用' + availStr + '/共' + totalStr + '</h3>';
+                            '              <h3 style="top: -85px;">' + I18nUtils.t('serverDetail.disk.devName') + '：' + devName + '</h3>' +
+                            '              <h3 style="top: -65px;">' + I18nUtils.t('serverDetail.disk.dirName') + '：' + dirName + '</h3>' +
+                            '              <h3 style="top: -45px;">' + I18nUtils.t('serverDetail.disk.type') + '：' + sysTypeName + '</h3>' +
+                            '              <h3 style="top: -25px;">' + I18nUtils.t('serverDetail.disk.capacity') + '：' + I18nUtils.t('serverDetail.disk.available') + availStr + '/' + I18nUtils.t('serverDetail.disk.total') + totalStr + '</h3>';
                         if (usePercent >= 90) {
                             html += '<div class="layui-progress-bar layui-bg-red" lay-percent="' + usePercent + '%"></div>';
                         } else if (usePercent >= 80 && usePercent < 90) {
@@ -1136,13 +1136,13 @@
                 success: function (result) {
                     var data = result.data;
                     // 物理内存总量（单位：GB）
-                    var memTotal = data.length !== 0 ? data[data.length - 1].memTotal + ' GB' : '没数据';
+                    var memTotal = data.length !== 0 ? data[data.length - 1].memTotal + ' GB' : I18nUtils.t('serverDetail.noData');
                     // 物理内存使用率
-                    var menUsedPercent = data.length !== 0 ? data[data.length - 1].menUsedPercent + '%' : '没数据';
+                    var menUsedPercent = data.length !== 0 ? data[data.length - 1].menUsedPercent + '%' : I18nUtils.t('serverDetail.noData');
                     // 交换区总量（单位：GB）
-                    var swapTotal = data.length !== 0 ? data[data.length - 1].swapTotal + ' GB' : '没数据';
+                    var swapTotal = data.length !== 0 ? data[data.length - 1].swapTotal + ' GB' : I18nUtils.t('serverDetail.noData');
                     // 交换区使用率
-                    var swapUsedPercent = data.length !== 0 ? data[data.length - 1].swapUsedPercent + '%' : '没数据';
+                    var swapUsedPercent = data.length !== 0 ? data[data.length - 1].swapUsedPercent + '%' : I18nUtils.t('serverDetail.noData');
                     var memUsed = data.map(function (item) {
                         return item.memUsed;
                     });
@@ -1156,13 +1156,13 @@
                     });
                     var option = {
                         title: {
-                            text: '内存/交换区',
+                            text: I18nUtils.t('serverDetail.chart.memSwapTitle'),
                             left: 'center',
                             textStyle: {
                                 color: '#696969',
                                 fontSize: 14
                             },
-                            subtext: '物理内存：' + memTotal + '，物理内存使用率：' + menUsedPercent + '，交换区：' + swapTotal + '，交换区使用率：' + swapUsedPercent,
+                            subtext: I18nUtils.t('serverDetail.chart.memSwapSubtitle', {memTotal: memTotal, memUsedPercent: menUsedPercent, swapTotal: swapTotal, swapUsedPercent: swapUsedPercent}),
                             subtextStyle: {
                                 color: '#BEBEBE'
                             }
@@ -1182,7 +1182,7 @@
                             }
                         },
                         legend: {
-                            data: ['内存使用量', '交换区使用量'],
+                            data: [I18nUtils.t('serverDetail.series.memUsed'), I18nUtils.t('serverDetail.series.swapUsed')],
                             x: 'center',
                             y: '12%',
                             orient: 'horizontal'
@@ -1227,7 +1227,7 @@
                         },
                         yAxis: [{
                             type: 'value',
-                            name: '内存使用量',
+                            name: I18nUtils.t('serverDetail.series.memUsed'),
                             min: 0,  //一定要设置最小刻度
                             max: Math.ceil(Math.max.apply(null, data.map(function (item) {
                                 return item.memTotal;
@@ -1237,7 +1237,7 @@
                             }
                         }, {
                             type: 'value',
-                            name: '交换区使用量',
+                            name: I18nUtils.t('serverDetail.series.swapUsed'),
                             min: 0,  //一定要设置最小刻度
                             max: Math.ceil(Math.max.apply(null, data.map(function (item) {
                                 return item.swapTotal;
@@ -1248,14 +1248,14 @@
                         }],
                         // 数据
                         series: [{
-                            name: '内存使用量',
+                            name: I18nUtils.t('serverDetail.series.memUsed'),
                             yAxisIndex: 0,
                             data: memUsed,
                             type: 'line',
                             smooth: true,
                             markLine: {
                                 data: [{
-                                    name: '(均值)',
+                                    name: I18nUtils.t('serverDetail.series.avg'),
                                     type: 'average',
                                     itemStyle: {
                                         color: '#9400D3'
@@ -1291,14 +1291,14 @@
                                 }
                             }
                         }, {
-                            name: '交换区使用量',
+                            name: I18nUtils.t('serverDetail.series.swapUsed'),
                             yAxisIndex: 1,
                             data: swapUsed,
                             type: 'line',
                             smooth: true,
                             markLine: {
                                 data: [{
-                                    name: '(均值)',
+                                    name: I18nUtils.t('serverDetail.series.avg'),
                                     type: 'average',
                                     itemStyle: {
                                         color: '#228B22'
@@ -1371,22 +1371,22 @@
                         return item.processNum;
                     });
                     // 最大进程数
-                    var maxProcessNum = data.length !== 0 ? Math.max(...processNum) : '没数据';
+                    var maxProcessNum = data.length !== 0 ? Math.max(...processNum) : I18nUtils.t('serverDetail.noData');
                     // 最小进程数
-                    var minProcessNum = data.length !== 0 ? Math.min(...processNum) : '没数据';
+                    var minProcessNum = data.length !== 0 ? Math.min(...processNum) : I18nUtils.t('serverDetail.noData');
                     // 新增时间
                     var insertTime = data.map(function (item) {
                         return item.insertTime.replace(' ', '\n');
                     });
                     var option = {
                         title: {
-                            text: '进程',
+                            text: I18nUtils.t('serverDetail.chart.processTitle'),
                             left: 'center',
                             textStyle: {
                                 color: '#696969',
                                 fontSize: 14
                             },
-                            subtext: '最大进程数：' + maxProcessNum + '，最小进程数：' + minProcessNum,
+                            subtext: I18nUtils.t('serverDetail.chart.processSubtitle', {max: maxProcessNum, min: minProcessNum}),
                             subtextStyle: {
                                 color: '#BEBEBE'
                             }
@@ -1399,14 +1399,14 @@
                                 var axisName = '';
                                 params.forEach(function (item) {
                                     axisName = item.axisValue;
-                                    var itemValue = item.marker + item.seriesName + ': ' + item.data + ' 个</br>';
+                                    var itemValue = item.marker + item.seriesName + ': ' + item.data + ' ' + I18nUtils.t('serverDetail.unit') + '</br>';
                                     result += itemValue;
                                 });
                                 return axisName + '</br>' + result;
                             }
                         },
                         legend: {
-                            data: ['运行中进程数'],
+                            data: [I18nUtils.t('serverDetail.series.runningProcess')],
                             x: 'center',
                             y: '12%',
                             orient: 'horizontal'
@@ -1451,21 +1451,21 @@
                         },
                         yAxis: [{
                             type: 'value',
-                            name: '个',
+                            name: I18nUtils.t('serverDetail.chart.yAxisCount'),
                             axisLabel: {
                                 formatter: '{value}'
                             }
                         }],
                         // 数据
                         series: [{
-                            name: '运行中进程数',
+                            name: I18nUtils.t('serverDetail.series.runningProcess'),
                             yAxisIndex: 0,
                             data: processNum,
                             type: 'line',
                             smooth: true,
                             markLine: {
                                 data: [{
-                                    name: '(均值)',
+                                    name: I18nUtils.t('serverDetail.series.avg'),
                                     type: 'average',
                                     itemStyle: {
                                         color: '#228B22'
@@ -1558,13 +1558,13 @@
                         return item.cpuIdle;
                     });
                     // 最新CPU总利用率
-                    var lastCpuCombined = data.length !== 0 ? data[data.length - 1].cpuCombined.toFixed(2) + '%' : '没数据';
+                    var lastCpuCombined = data.length !== 0 ? data[data.length - 1].cpuCombined.toFixed(2) + '%' : I18nUtils.t('serverDetail.noData');
                     // 最新CPU剩余率
-                    // var lastCpuIdle = data.length !== 0 ? (100 - data[data.length - 1].cpuCombined).toFixed(2) + '%' : '没数据';
+                    // var lastCpuIdle = data.length !== 0 ? (100 - data[data.length - 1].cpuCombined).toFixed(2) + '%' : I18nUtils.t('serverDetail.noData');
                     // 最大CPU总使用率
-                    var maxCpuCombined = data.length !== 0 ? Math.max(...cpuCombined).toFixed(2) + '%' : '没数据';
+                    var maxCpuCombined = data.length !== 0 ? Math.max(...cpuCombined).toFixed(2) + '%' : I18nUtils.t('serverDetail.noData');
                     // 最小CPU总使用率
-                    var minCpuCombined = data.length !== 0 ? Math.min(...cpuCombined).toFixed(2) + '%' : '没数据';
+                    var minCpuCombined = data.length !== 0 ? Math.min(...cpuCombined).toFixed(2) + '%' : I18nUtils.t('serverDetail.noData');
                     // 新增时间
                     var insertTime = data.map(function (item) {
                         return item.insertTime.replace(' ', '\n');
@@ -1578,7 +1578,7 @@
                                 fontSize: 14
                             },
                             // subtext: '剩余率：' + lastCpuIdle + '，总使用率：' + lastCpuCombined,
-                            subtext: '总使用率：' + lastCpuCombined + '，最大使用率：' + maxCpuCombined + '，最小使用率：' + minCpuCombined,
+                            subtext: I18nUtils.t('serverDetail.chart.cpuSubtitle', {current: lastCpuCombined, max: maxCpuCombined, min: minCpuCombined}),
                             subtextStyle: {
                                 color: '#BEBEBE'
                             }
@@ -1598,7 +1598,7 @@
                             }
                         },
                         legend: {
-                            data: ['剩余率', '总使用率', '用户使用率', '系统使用率', '等待率', '错误率'],
+                            data: [I18nUtils.t('serverDetail.series.idle'), I18nUtils.t('serverDetail.series.totalUsage'), I18nUtils.t('serverDetail.series.userUsage'), I18nUtils.t('serverDetail.series.systemUsage'), I18nUtils.t('serverDetail.series.wait'), I18nUtils.t('serverDetail.series.nice')],
                             // selected: {'用户使用率': false, '系统使用率': false, '等待率': false, '错误率': false},
                             x: 'center',
                             y: '12%',
@@ -1644,7 +1644,7 @@
                         },
                         yAxis: {
                             type: 'value',
-                            name: '利用率',
+                            name: I18nUtils.t('serverDetail.chart.yAxisUsage'),
                             min: 0,  //一定要设置最小刻度
                             max: 100,  //一定要设置最大刻度
                             minInterval: 20, //这个可自己设置刻度间隔
@@ -1654,13 +1654,13 @@
                         },
                         // 数据
                         series: [{
-                            name: '剩余率',
+                            name: I18nUtils.t('serverDetail.series.idle'),
                             data: cpuIdle,
                             type: 'line',
                             smooth: true,
                             markLine: {
                                 data: [{
-                                    name: '(剩余率均值)',
+                                    name: I18nUtils.t('serverDetail.series.avgIdle'),
                                     type: 'average',
                                     itemStyle: {
                                         color: '#228B22'
@@ -1696,13 +1696,13 @@
                                 }
                             }
                         }, {
-                            name: '总使用率',
+                            name: I18nUtils.t('serverDetail.series.totalUsage'),
                             data: cpuCombined,
                             type: 'line',
                             smooth: true,
                             markLine: {
                                 data: [{
-                                    name: '(总使用率均值)',
+                                    name: I18nUtils.t('serverDetail.series.avgTotal'),
                                     type: 'average',
                                     itemStyle: {
                                         color: '#B22222'
@@ -1738,7 +1738,7 @@
                                 }
                             }
                         }, {
-                            name: '用户使用率',
+                            name: I18nUtils.t('serverDetail.series.userUsage'),
                             data: cpuUser,
                             type: 'line',
                             smooth: true,
@@ -1765,7 +1765,7 @@
                                 }
                             }
                         }, {
-                            name: '系统使用率',
+                            name: I18nUtils.t('serverDetail.series.systemUsage'),
                             data: cpuSys,
                             type: 'line',
                             smooth: true,
@@ -1792,7 +1792,7 @@
                                 }
                             }
                         }, {
-                            name: '等待率',
+                            name: I18nUtils.t('serverDetail.series.wait'),
                             data: cpuWait,
                             type: 'line',
                             smooth: true,
@@ -1819,7 +1819,7 @@
                                 }
                             }
                         }, {
-                            name: '错误率',
+                            name: I18nUtils.t('serverDetail.series.nice'),
                             data: cpuNice,
                             type: 'line',
                             smooth: true,
@@ -1894,18 +1894,18 @@
                         return item.uploadSpeed;
                     });
                     // 最新下载速率
-                    var lastDownloadSpeed = data.length !== 0 ? convertSize(data[data.length - 1].downloadSpeed) + '/s' : '没数据';
+                    var lastDownloadSpeed = data.length !== 0 ? convertSize(data[data.length - 1].downloadSpeed) + '/s' : I18nUtils.t('serverDetail.noData');
                     // 最新上传速率
-                    var lastUploadSpeed = data.length !== 0 ? convertSize(data[data.length - 1].uploadSpeed) + '/s' : '没数据';
+                    var lastUploadSpeed = data.length !== 0 ? convertSize(data[data.length - 1].uploadSpeed) + '/s' : I18nUtils.t('serverDetail.noData');
                     var option = {
                         title: {
-                            text: chartAddress + '(' + name + ') 上行/下行 速率',
+                            text: I18nUtils.t('serverDetail.chart.netSpeedTitle', {address: chartAddress, name: name}),
                             left: 'center',
                             textStyle: {
                                 color: '#696969',
                                 fontSize: 14
                             },
-                            subtext: '↑ 上行速率：' + lastUploadSpeed + '，↓ 下行速率：' + lastDownloadSpeed,
+                            subtext: I18nUtils.t('serverDetail.chart.netSpeedSubtitle', {upload: lastUploadSpeed, download: lastDownloadSpeed}),
                             subtextStyle: {
                                 color: '#BEBEBE'
                             }
@@ -1925,7 +1925,7 @@
                             }
                         },
                         legend: {
-                            data: ['上行速率', '下行速率'],
+                            data: [I18nUtils.t('serverDetail.series.uploadSpeed'), I18nUtils.t('serverDetail.series.downloadSpeed')],
                             orient: 'vertical',
                             x: '80%' //图例位置，设置right发现图例和文字位置反了，设置一个数值就好了
                         },
@@ -1969,7 +1969,7 @@
                         },
                         yAxis: {
                             type: 'value',
-                            name: '网速',
+                            name: I18nUtils.t('serverDetail.chart.yAxisSpeed'),
                             axisLabel: {
                                 formatter: function (value, index) {
                                     return convertSize(value) + '/s';
@@ -1978,13 +1978,13 @@
                         },
                         // 数据
                         series: [{
-                            name: '下行速率',
+                            name: I18nUtils.t('serverDetail.series.downloadSpeed'),
                             data: downloadSpeed,
                             type: 'line',
                             smooth: true,
                             markLine: {
                                 data: [{
-                                    name: '(均值)',
+                                    name: I18nUtils.t('serverDetail.series.avg'),
                                     type: 'average',
                                     itemStyle: {
                                         color: '#228B22'
@@ -2020,13 +2020,13 @@
                                 }
                             }
                         }, {
-                            name: '上行速率',
+                            name: I18nUtils.t('serverDetail.series.uploadSpeed'),
                             data: uploadSpeed,
                             type: 'line',
                             smooth: true,
                             markLine: {
                                 data: [{
-                                    name: '(均值)',
+                                    name: I18nUtils.t('serverDetail.series.avg'),
                                     type: 'average',
                                     itemStyle: {
                                         color: '#1E90FF'
@@ -2114,19 +2114,19 @@
                     var lastFifteen = data.length !== 0 ? data[data.length - 1].fifteen : -1;
                     var option = {
                         title: {
-                            text: '平均负载',
+                            text: I18nUtils.t('serverDetail.chart.loadAverageTitle'),
                             left: 'center',
                             textStyle: {
                                 color: '#696969',
                                 fontSize: 14
                             },
-                            subtext: '1分钟：' + lastOne + '，5分钟：' + lastFive + '，15分钟：' + lastFifteen,
+                            subtext: I18nUtils.t('serverDetail.chart.loadAverageSubtitle', {one: lastOne, five: lastFive, fifteen: lastFifteen}),
                             subtextStyle: {
                                 color: '#BEBEBE'
                             }
                         },
                         legend: {
-                            data: ['1分钟', '5分钟', '15分钟'],
+                            data: [I18nUtils.t('serverDetail.series.oneMin'), I18nUtils.t('serverDetail.series.fiveMin'), I18nUtils.t('serverDetail.series.fifteenMin')],
                             x: 'center',
                             y: '12%',
                             orient: 'horizontal'
@@ -2168,7 +2168,7 @@
                         },
                         yAxis: {
                             type: 'value',
-                            name: '负载'
+                            name: I18nUtils.t('serverDetail.chart.yAxisLoad')
                         },
                         // 鼠标移到折线上展示数据
                         tooltip: {
@@ -2186,13 +2186,13 @@
                         },
                         // 数据
                         series: [{
-                            name: '1分钟',
+                            name: I18nUtils.t('serverDetail.series.oneMin'),
                             data: one,
                             type: 'line',
                             smooth: true,
                             markLine: {
                                 data: [{
-                                    name: '(理想)',
+                                    name: I18nUtils.t('serverDetail.series.ideal'),
                                     yAxis: logicalProcessorCount * 0.7,
                                     itemStyle: {
                                         color: '#2E8B57'
@@ -2204,7 +2204,7 @@
                                         }
                                     }
                                 }, {
-                                    name: '(过载)',
+                                    name: I18nUtils.t('serverDetail.series.overload'),
                                     yAxis: logicalProcessorCount,
                                     itemStyle: {
                                         color: '#FFB90F'
@@ -2216,7 +2216,7 @@
                                         }
                                     }
                                 }, {
-                                    name: '(严重)',
+                                    name: I18nUtils.t('serverDetail.series.critical'),
                                     yAxis: logicalProcessorCount * 5,
                                     itemStyle: {
                                         color: '#EE2C2C'
@@ -2252,13 +2252,13 @@
                                 }
                             }
                         }, {
-                            name: '5分钟',
+                            name: I18nUtils.t('serverDetail.series.fiveMin'),
                             data: five,
                             type: 'line',
                             smooth: true,
                             markLine: {
                                 data: [{
-                                    name: '(理想)',
+                                    name: I18nUtils.t('serverDetail.series.ideal'),
                                     yAxis: logicalProcessorCount * 0.7,
                                     itemStyle: {
                                         color: '#2E8B57'
@@ -2270,7 +2270,7 @@
                                         }
                                     }
                                 }, {
-                                    name: '(过载)',
+                                    name: I18nUtils.t('serverDetail.series.overload'),
                                     yAxis: logicalProcessorCount,
                                     itemStyle: {
                                         color: '#FFB90F'
@@ -2282,7 +2282,7 @@
                                         }
                                     }
                                 }, {
-                                    name: '(严重)',
+                                    name: I18nUtils.t('serverDetail.series.critical'),
                                     yAxis: logicalProcessorCount * 5,
                                     itemStyle: {
                                         color: '#EE2C2C'
@@ -2318,13 +2318,13 @@
                                 }
                             }
                         }, {
-                            name: '15分钟',
+                            name: I18nUtils.t('serverDetail.series.fifteenMin'),
                             data: fifteen,
                             type: 'line',
                             smooth: true,
                             markLine: {
                                 data: [{
-                                    name: '(告警值)',
+                                    name: I18nUtils.t('serverDetail.series.alarm'),
                                     yAxis: logicalProcessorCount * serverOverloadThreshold15minutes,
                                     itemStyle: {
                                         color: '#FF7F50'
@@ -2336,7 +2336,7 @@
                                         }
                                     }
                                 }, {
-                                    name: '(理想)',
+                                    name: I18nUtils.t('serverDetail.series.ideal'),
                                     yAxis: logicalProcessorCount * 0.7,
                                     itemStyle: {
                                         color: '#2E8B57'
@@ -2348,7 +2348,7 @@
                                         }
                                     }
                                 }, {
-                                    name: '(过载)',
+                                    name: I18nUtils.t('serverDetail.series.overload'),
                                     yAxis: logicalProcessorCount,
                                     itemStyle: {
                                         color: '#FFB90F'
@@ -2360,7 +2360,7 @@
                                         }
                                     }
                                 }, {
-                                    name: '(严重)',
+                                    name: I18nUtils.t('serverDetail.series.critical'),
                                     yAxis: logicalProcessorCount * 5,
                                     itemStyle: {
                                         color: '#EE2C2C'

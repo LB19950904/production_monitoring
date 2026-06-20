@@ -87,6 +87,30 @@ public class MonitorNetworkDevice {
     private String networkDeviceSummary;
 
     /**
+     * 总端口数
+     */
+    @TableField("IF_NUMBER")
+    private Integer ifNumber;
+
+    /**
+     * 占用端口数
+     */
+    @TableField("IF_USED_COUNT")
+    private Integer ifUsedCount;
+
+    /**
+     * 总接收速率（bps）
+     */
+    @TableField("TOTAL_IN_SPEED")
+    private Long totalInSpeed;
+
+    /**
+     * 总发送速率（bps）
+     */
+    @TableField("TOTAL_OUT_SPEED")
+    private Long totalOutSpeed;
+
+    /**
      * 网络设备状态（0：离线，1：在线）
      */
     @TableField("IS_ONLINE")

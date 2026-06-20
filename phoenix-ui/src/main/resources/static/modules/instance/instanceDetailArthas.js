@@ -61,17 +61,17 @@
     // 点击连接
     $('#connect').click(function () {
         if (isNotEmpty(websocket)) {
-            layer.msg('连接已经建立！', {icon: 6});
+            layer.msg(I18nUtils.t('instanceDetail.arthas.connected'), {icon: 6});
             return;
         }
         var websocketIp = $('#websocketIp').val();
         var websocketPort = $('#websocketPort').val();
         if (isEmpty(websocketIp)) {
-            layer.msg('连接错误，IP不能为空！', {icon: 5, shift: 6});
+            layer.msg(I18nUtils.t('instanceDetail.arthas.errorIpEmpty'), {icon: 5, shift: 6});
             return;
         }
         if (isEmpty(websocketPort)) {
-            layer.msg('连接错误，端口号不能为空！', {icon: 5, shift: 6});
+            layer.msg(I18nUtils.t('instanceDetail.arthas.errorPortEmpty'), {icon: 5, shift: 6});
             return;
         }
         var wsUrl = protocol + '//' + websocketIp
@@ -84,7 +84,7 @@
         websocket.onerror = function () {
             websocket.close();
             websocket = undefined;
-            layer.msg('连接错误！', {icon: 5, shift: 6});
+            layer.msg(I18nUtils.t('instanceDetail.arthas.errorConnect'), {icon: 5, shift: 6});
         };
         //打开连接websocket
         websocket.onopen = function (evt) {
@@ -152,12 +152,12 @@
                 }
                 // 重置
                 term.reset();
-                layer.msg('连接关闭成功！', {icon: 6});
+                layer.msg(I18nUtils.t('instanceDetail.arthas.disconnectSuccess'), {icon: 6});
             } else {
-                layer.msg('请先建立连接！', {icon: 5, shift: 6});
+                layer.msg(I18nUtils.t('instanceDetail.arthas.notConnected'), {icon: 5, shift: 6});
             }
         } catch {
-            layer.msg('请先建立连接！', {icon: 5, shift: 6});
+            layer.msg(I18nUtils.t('instanceDetail.arthas.notConnected'), {icon: 5, shift: 6});
         }
     });
 

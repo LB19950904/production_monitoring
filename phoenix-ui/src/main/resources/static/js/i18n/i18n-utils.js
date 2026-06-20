@@ -230,6 +230,113 @@ if (typeof I18nUtils === 'undefined') {
      */
     isChinese() {
         return I18nConfig.isChinese();
+    },
+
+    /**
+     * 获取layui表格默认工具栏配置（筛选、导出、打印）
+     * 用于 table.render({ defaultToolbar: I18nUtils.getDefaultToolbar() })
+     * @returns {Array} layui defaultToolbar 配置数组
+     */
+    getDefaultToolbar() {
+        return [
+            {type: 'filter', title: this.t('common.toolbar.filterColumns'), layEvent: 'LAYTABLE_COLS', icon: 'layui-icon-cols'},
+            {type: 'exports', title: this.t('common.toolbar.export'), layEvent: 'LAYTABLE_EXPORT', icon: 'layui-icon-export'},
+            {type: 'print', title: this.t('common.toolbar.print'), layEvent: 'LAYTABLE_PRINT', icon: 'layui-icon-print'}
+        ];
+    },
+
+    /**
+     * 翻译 layui 分页组件中的文本
+     * 可传入容器元素限定翻译范围，不传则翻译整个页面。
+     * @param {Element} [container] - 容器元素，默认为 document
+     */
+    translateLaypage(container) {
+        var root = container || document;
+
+        // 翻译 "共 X 条"
+        var countEls = root.querySelectorAll ? root.querySelectorAll('.layui-laypage-count') : [];
+        countEls.forEach(function (el) {
+            var text = el.textContent || '';
+            var match = text.match(/\d+/);
+            if (match) {
+                el.textContent = this.t('common.pagination.total', {count: match[0]});
+            }
+        }.bind(this));
+
+        // 翻译 "X 条/页" 下拉选项
+        var limitEls = root.querySelectorAll ? root.querySelectorAll('.layui-laypage-limits option') : [];
+        limitEls.forEach(function (el) {
+            var text = el.textContent || '';
+            var match = text.match(/\d+/);
+            if (match) {
+                el.textContent = this.t('common.pagination.perPage', {count: match[0]});
+            }
+        }.bind(this));
+
+        // 翻译 "到第 X 页 确定" 跳转区域
+        var skipEls = root.querySelectorAll ? root.querySelectorAll('.layui-laypage-skip') : [];
+        skipEls.forEach(function (el) {
+            // 遍历子节点，替换文本节点
+            for (var i = 0; i < el.childNodes.length; i++) {
+                var child = el.childNodes[i];
+                if (child.nodeType === 3) { // 文本节点
+                    var trimmed = child.textContent.trim();
+                    if (trimmed === '到第' || /^\u5230\u7b2c$/.test(trimmed) || trimmed.indexOf('\u5230\u7b2c') > -1) {
+                        child.textContent = this.t('common.pagination.skipTo');
+                    } else if (trimmed === '页' || trimmed === '\u9875') {
+                        child.textContent = this.t('common.pagination.page');
+                    }
+                }
+            }
+            // 翻译确定按钮
+            var btn = el.querySelector('.layui-laypage-btn');
+            if (btn) {
+                btn.textContent = this.t('common.pagination.go');
+            }
+        }.bind(this));
+    },
+
+    /**
+     * 初始化表格导出下拉菜单的国际化
+     * 通过 MutationObserver 监听 layui 导出下拉菜单的 DOM 变化，自动翻译菜单项文本。
+     * 每个页面只需调用一次。
+     */
+    initTableExportDropdownI18n() {
+        // 避免重复初始化
+        if (window._i18nTableExportObserver) {
+            return;
+        }
+        var self = this;
+        var observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                mutation.addedNodes.forEach(function (node) {
+                    if (node.nodeType !== 1) return;
+                    // 查找导出下拉菜单中的 li 项
+                    var items;
+                    if (node.tagName === 'LI' && node.getAttribute('data-type')) {
+                        items = [node];
+                    } else {
+                        items = node.querySelectorAll ? node.querySelectorAll('li[data-type]') : [];
+                    }
+                    items.forEach(function (li) {
+                        var type = li.getAttribute('data-type');
+                        if (type === 'csv') {
+                            li.innerText = self.t('common.toolbar.exportCsv');
+                        } else if (type === 'xls') {
+                            li.innerText = self.t('common.toolbar.exportXls');
+                        }
+                    });
+                    // 翻译分页组件
+                    if (node.classList && node.classList.contains('layui-laypage')) {
+                        self.translateLaypage(node);
+                    } else if (node.querySelector && node.querySelector('.layui-laypage')) {
+                        self.translateLaypage(node);
+                    }
+                });
+            });
+        });
+        observer.observe(document.body, {childList: true, subtree: true});
+        window._i18nTableExportObserver = observer;
     }
 };
 

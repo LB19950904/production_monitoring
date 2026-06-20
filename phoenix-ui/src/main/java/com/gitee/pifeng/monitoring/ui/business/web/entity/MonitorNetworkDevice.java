@@ -74,6 +74,22 @@ public class MonitorNetworkDevice implements Serializable {
     @TableField("NETWORK_DEVICE_SUMMARY")
     private String networkDeviceSummary;
 
+    @Schema(description = "总端口数")
+    @TableField("IF_NUMBER")
+    private Integer ifNumber;
+
+    @Schema(description = "占用端口数")
+    @TableField("IF_USED_COUNT")
+    private Integer ifUsedCount;
+
+    @Schema(description = "总接收速率（bps）")
+    @TableField("TOTAL_IN_SPEED")
+    private Long totalInSpeed;
+
+    @Schema(description = "总发送速率（bps）")
+    @TableField("TOTAL_OUT_SPEED")
+    private Long totalOutSpeed;
+
     @Schema(description = "网络设备状态（0：离线，1：在线）")
     @TableField("IS_ONLINE")
     private String isOnline;
